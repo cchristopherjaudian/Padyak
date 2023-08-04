@@ -1,6 +1,7 @@
 {
-  "name": "padyak-cfs",
+  "name": "padyak",
   "description": "Cloud Functions for Firebase",
+  "author": "Calil Christopher Jaudian - Software Engineer",
   "scripts": {
     "build": "npx tsc -b",
     "lint": "eslint .",
@@ -15,6 +16,7 @@
   },
   "main": "./dist/index.js",
   "dependencies": {
+    "firebase": "^10.1.0",
     "firebase-admin": "^11.8.0",
     "firebase-functions": "^4.3.1"
   },
