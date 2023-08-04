@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dim_main_title">52dp</dimen>
+    <dimen name="dim_main_initializing">14dp</dimen>
+    <dimen name="menu_size">140dp</dimen>
+    <dimen name="header_size">18dp</dimen>
+    <dimen name="quote_size">17dp</dimen>
+</resources>

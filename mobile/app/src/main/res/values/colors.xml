@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#34495e</color>
+    <color name="colorTextPrimary">#FFFFFF</color>
+    <color name="colorBadge">#e67e22</color>
+    <color name="colorHeader">#000</color>
+    <color name="colorSubHeader">#95a5a6</color>
+    <color name="colorProfileQuote">#000</color>
+    <color name="app_color">#e67e22</color>
+</resources>
