@@ -31,7 +31,7 @@ public class frmMain extends AppCompatActivity {
     adapterYouMayKnow adapterYouMayKnow;
     adapterCoverPhoto adapterCoverPhoto;
 
-    RelativeLayout rlEvents;
+    RelativeLayout rlEvents,rlAlert,rlHospital,rlRepair,rlPolice,rlRiding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +53,11 @@ public class frmMain extends AppCompatActivity {
         rvYouKnow.setLayoutManager(llYouMayKnow);
 
         rlEvents = findViewById(R.id.rlEvents);
+        rlAlert = findViewById(R.id.rlAlert);
+        rlHospital = findViewById(R.id.rlHospital);
+        rlRepair = findViewById(R.id.rlRepair);
+        rlPolice = findViewById(R.id.rlPolice);
+        rlRiding = findViewById(R.id.rlRiding);
 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(rvCoverPhoto);
@@ -74,6 +79,13 @@ public class frmMain extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(frmMain.this, frmEventCalendar.class);
+                startActivity(intent);
+            }
+        });
+        rlAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(frmMain.this, frmAlertInfo.class);
                 startActivity(intent);
             }
         });

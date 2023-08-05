@@ -247,7 +247,7 @@
                 android:layout_width="@dimen/logo_header_size"
                 android:layout_height="@dimen/logo_header_size"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/menuicon"
+                android:src="@drawable/cycling"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -259,13 +259,13 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/coolvetica"
                 android:text="@string/app_name_caps"
-                android:textColor="#FFF"
+                android:textColor="@color/app_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
             <RelativeLayout
-                android:id="@+id/relativeLayout"
+                android:id="@+id/rlAlert"
                 android:layout_width="@dimen/menu_size"
                 android:layout_height="@dimen/menu_size"
                 android:layout_marginStart="40dp"
@@ -301,7 +301,7 @@
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_menu"
-                app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                app:layout_constraintEnd_toStartOf="@+id/rlAlert"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView7">
 
@@ -324,13 +324,13 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayout3"
+                android:id="@+id/rlHospital"
                 android:layout_width="@dimen/menu_size"
                 android:layout_height="@dimen/menu_size"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_menu"
-                app:layout_constraintEnd_toStartOf="@+id/relativeLayout4"
+                app:layout_constraintEnd_toStartOf="@+id/rlRepair"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rlEvents">
                 <TextView
@@ -352,7 +352,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayout4"
+                android:id="@+id/rlRepair"
                 android:layout_width="@dimen/menu_size"
                 android:layout_height="@dimen/menu_size"
                 android:layout_marginStart="40dp"
@@ -360,8 +360,8 @@
                 android:layout_marginEnd="50dp"
                 android:background="@drawable/rounded_menu"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/relativeLayout3"
-                app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+                app:layout_constraintStart_toEndOf="@+id/rlHospital"
+                app:layout_constraintTop_toBottomOf="@+id/rlAlert">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -381,15 +381,15 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayout5"
+                android:id="@+id/rlPolice"
                 android:layout_width="@dimen/menu_size"
                 android:layout_height="@dimen/menu_size"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded_menu"
-                app:layout_constraintEnd_toStartOf="@+id/relativeLayout6"
+                app:layout_constraintEnd_toStartOf="@+id/rlRiding"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/relativeLayout3">
+                app:layout_constraintTop_toBottomOf="@+id/rlHospital">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -409,7 +409,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayout6"
+                android:id="@+id/rlRiding"
                 android:layout_width="@dimen/menu_size"
                 android:layout_height="@dimen/menu_size"
                 android:layout_marginStart="40dp"
@@ -417,8 +417,8 @@
                 android:layout_marginEnd="50dp"
                 android:background="@drawable/rounded_menu"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/relativeLayout5"
-                app:layout_constraintTop_toBottomOf="@+id/relativeLayout4">
+                app:layout_constraintStart_toEndOf="@+id/rlPolice"
+                app:layout_constraintTop_toBottomOf="@+id/rlRepair">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
