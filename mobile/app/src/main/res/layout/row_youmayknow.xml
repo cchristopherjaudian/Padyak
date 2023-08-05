@@ -6,20 +6,25 @@
     android:layout_width="140dp"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_menu">
-
-    <ImageView
-        android:id="@+id/imgAthleteDP"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="10dp"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/menuicon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:cardCornerRadius="60dp">
+        <ImageView
+            android:id="@+id/imgAthleteDP"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/dp" />
+    </androidx.cardview.widget.CardView>
     <TextView
         android:id="@+id/txAthleteName"
         android:layout_width="0dp"
@@ -34,7 +39,7 @@
         android:textSize="13dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgAthleteDP" />
+        app:layout_constraintTop_toBottomOf="@+id/cardImage" />
 
     <TextView
         android:id="@+id/txMutual"

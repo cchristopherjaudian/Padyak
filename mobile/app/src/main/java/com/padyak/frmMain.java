@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ public class frmMain extends AppCompatActivity {
     adapterYouMayKnow adapterYouMayKnow;
     adapterCoverPhoto adapterCoverPhoto;
 
+    RelativeLayout rlEvents;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +52,8 @@ public class frmMain extends AppCompatActivity {
         rvCoverPhoto.setLayoutManager(llmCoverPhoto);
         rvYouKnow.setLayoutManager(llYouMayKnow);
 
+        rlEvents = findViewById(R.id.rlEvents);
+
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(rvCoverPhoto);
 
@@ -65,7 +70,13 @@ public class frmMain extends AppCompatActivity {
                 return false;
             }
         });
-
+        rlEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(frmMain.this, frmEventCalendar.class);
+                startActivity(intent);
+            }
+        });
         loadYouMayKnow();
         loadCoverPhoto();
     }
