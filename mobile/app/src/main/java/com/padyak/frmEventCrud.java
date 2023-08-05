@@ -32,6 +32,17 @@ public class frmEventCrud extends AppCompatActivity implements View.OnClickListe
         clNovember = findViewById(R.id.clNovember);
         clDecember = findViewById(R.id.clDecember);
 
+        clJanuary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("month", 1);
+                intent = new Intent(frmEventCrud.this, frmEventManagement.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

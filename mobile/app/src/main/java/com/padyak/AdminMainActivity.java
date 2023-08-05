@@ -27,6 +27,10 @@ public class AdminMainActivity extends AppCompatActivity {
             intent = new Intent(AdminMainActivity.this,frmAdminAlert.class);
             startActivity(intent);
         });
+        rlTrack.setOnClickListener(v -> {
+            intent = new Intent(AdminMainActivity.this,frmTrackEvent.class);
+            startActivity(intent);
+        });
     }
 
     @Override
