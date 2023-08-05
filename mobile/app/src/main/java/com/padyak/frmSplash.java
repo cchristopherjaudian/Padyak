@@ -14,14 +14,14 @@ public class frmSplash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_splash);
-
+        LoggedUser.is_admin = true;
         spinner = findViewById(R.id.progressBar);
         spinner.getIndeterminateDrawable().setColorFilter(0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
         new Thread(() -> {
             try {
                 Thread.sleep(2000);
                 runOnUiThread(() -> {
-                            intent = new Intent(frmSplash.this, frmMain.class);
+                            intent = (LoggedUser.is_admin) ? new Intent(frmSplash.this, AdminMainActivity.class) : new Intent(frmSplash.this, frmMain.class);
                             startActivity(intent);
                             finish();
                         }

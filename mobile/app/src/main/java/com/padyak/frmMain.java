@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class frmMain extends AppCompatActivity {
 
         rlEvents = findViewById(R.id.rlEvents);
         rlAlert = findViewById(R.id.rlAlert);
-        rlHospital = findViewById(R.id.rlHospital);
+        rlHospital = findViewById(R.id.rlTrack);
         rlRepair = findViewById(R.id.rlRepair);
         rlPolice = findViewById(R.id.rlPolice);
         rlRiding = findViewById(R.id.rlRiding);

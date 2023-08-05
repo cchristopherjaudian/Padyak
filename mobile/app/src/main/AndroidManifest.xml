@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Padyak"
         tools:targetApi="31">
         <activity
+            android:name=".AdminMainActivity"
+            android:exported="false" />
+        <activity
             android:name=".frmAlertGroup"
             android:exported="false" />
         <activity
@@ -81,7 +84,7 @@
             android:name=".frmEventCalendar"
             android:configChanges="screenSize|screenLayout"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".frmMain"
             android:configChanges="screenSize|screenLayout"
