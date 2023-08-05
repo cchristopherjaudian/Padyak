@@ -23,6 +23,10 @@ public class AdminMainActivity extends AppCompatActivity {
             intent = new Intent(AdminMainActivity.this,frmEventCrud.class);
             startActivity(intent);
         });
+        rlAlert.setOnClickListener(v -> {
+            intent = new Intent(AdminMainActivity.this,frmAdminAlert.class);
+            startActivity(intent);
+        });
     }
 
     @Override

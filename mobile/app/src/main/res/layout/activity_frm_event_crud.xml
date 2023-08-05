@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/imgDP"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
@@ -36,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/cardView4">
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/frmEventMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -55,7 +56,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView19">
+            app:layout_constraintTop_toBottomOf="@+id/frmEventMonth">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clMonth"
@@ -73,6 +74,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/rlJanuary"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
