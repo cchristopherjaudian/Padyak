@@ -7,7 +7,7 @@
     android:background="@color/app_color"
     tools:context=".frmAlertSend">
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/txFindTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12">
+        app:layout_constraintTop_toBottomOf="@+id/txFindTitle">
         <TextView
             android:id="@+id/txAlertLevel"
             android:layout_width="wrap_content"

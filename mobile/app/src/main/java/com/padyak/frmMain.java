@@ -89,6 +89,37 @@ public class frmMain extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        rlHospital.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(frmMain.this, frmFindLocation.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("find","Hospital");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        rlRepair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(frmMain.this, frmFindLocation.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("find","Repair Shop");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        rlPolice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(frmMain.this, frmFindLocation.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("find","Police Station");
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
         loadYouMayKnow();
         loadCoverPhoto();
     }

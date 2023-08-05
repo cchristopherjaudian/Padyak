@@ -8,10 +8,11 @@
     <dimen name="quote_size">17dp</dimen>
     <dimen name="logo_header_size">90dp</dimen>
     <dimen name="dp_size">40dp</dimen>
-    <dimen name="header_logo_size">30dp</dimen>
+    <dimen name="header_logo_size">25dp</dimen>
     <dimen name="event_label_size">13dp</dimen>
     <dimen name="subheader_size">14dp</dimen>
     <dimen name="level_size">16dp</dimen>
     <dimen name="level_description_size">14dp</dimen>
     <dimen name="button_size">35dp</dimen>
+    <dimen name="nearest_card_size">12dp</dimen>
 </resources>

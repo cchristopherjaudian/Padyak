@@ -10,12 +10,12 @@ import android.widget.Button;
 public class frmEventInfo extends AppCompatActivity {
 
     Button btnEventRegister, btnEventCancel;
-
+    public static frmEventInfo frmEventInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_info);
-
+        frmEventInfo = this;
         btnEventRegister = findViewById(R.id.btnEventRegister);
         btnEventCancel = findViewById(R.id.btnEventCancel);
 

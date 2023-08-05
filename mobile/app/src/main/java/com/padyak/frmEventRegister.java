@@ -20,6 +20,7 @@ public class frmEventRegister extends AppCompatActivity {
         btnEventRegister.setOnClickListener(v -> {
             Intent intent = new Intent(frmEventRegister.this, frmEventParticipants.class);
             startActivity(intent);
+            frmEventInfo.frmEventInfo.finish();
             finish();
         });
     }
