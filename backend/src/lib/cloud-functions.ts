@@ -2,6 +2,9 @@ import type { Response } from "firebase-functions/v1";
 import type { Request } from "firebase-functions/v1/https";
 import * as functions from "firebase-functions";
 
+export type TReq = Request;
+export type TRes = Response;
+
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
 export type TRequestHandler = (

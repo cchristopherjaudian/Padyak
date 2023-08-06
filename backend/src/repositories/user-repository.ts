@@ -1,13 +1,16 @@
-import { IFirestore } from "../database/firestore";
+import Firstore from "../database/firestore";
+import { TUsermodel } from "../database/models/user";
+
+const instance = Firstore.getInstance();
 
 class UserRepository {
-  private _db;
+  private _colName = "users";
+  private _db = instance.getDb();
 
-  constructor(db: IFirestore) {
-    this._db = db.getDb();
+  protected async create(payload: TUsermodel) {
+    const newData = await this._db.collection(this._colName).add(payload);
+    return (await newData.get()).data()!;
   }
-
-  public createUser() {}
 }
 
 export default UserRepository;
