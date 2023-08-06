@@ -9,28 +9,6 @@ type TJoiError = {
   statusCode: string;
 };
 
-// const requestSchemaValidate =
-//   (schema: Schema) =>
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//       await schema.validateAsync(req.body, { abortEarly: false });
-
-//       return next();
-//     } catch (err) {
-//       const error = err as Partial<ValidationError> & TJoiError;
-
-//       error.message = error.details![0]?.message || "joi error";
-//       error.status = httpStatus.BAD_REQUEST;
-//       error.statusCode = ResponseCodes.BAD_REQUEST;
-
-//       if (error?.details) {
-//         delete error?.details;
-//       }
-
-//       console.log("error joi", error);
-//       return next(error);
-//     }
-//   };
 const requestSchemaValidate =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
