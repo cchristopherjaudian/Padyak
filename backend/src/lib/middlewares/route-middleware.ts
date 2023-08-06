@@ -25,6 +25,7 @@ class RouteMiddleware {
     res: Response,
     next: NextFunction
   ) => {
+    console.log("xxxxxxxxxxxxxxxxxx", "test");
     const status = error.status || httpStatus.INTERNAL_SERVER_ERROR;
     const statusCode = error.statusCode || ResponseCodes.INTERNAL_SERVER_ERROR;
     res.status(status).json({

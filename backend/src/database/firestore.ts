@@ -33,8 +33,12 @@ class Firestore implements IFirestore {
   }
 
   public async create(payload: { [key: string]: unknown }) {
-    const newData = await this.getDb().collection(this._colName).add(payload);
-    return (await newData.get()).data()!;
+    try {
+      const newData = await this.getDb().collection(this._colName).add(payload);
+      return (await newData.get()).data()!;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

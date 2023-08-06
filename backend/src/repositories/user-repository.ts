@@ -8,8 +8,28 @@ class UserRepository {
   private _db = instance.getDb();
 
   protected async create(payload: TUsermodel) {
-    const newData = await this._db.collection(this._colName).add(payload);
-    return (await newData.get()).data()!;
+    try {
+      const newData = await instance
+        .setCollectionName(this._colName)
+        .create(payload);
+      return newData;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  protected async findUserByEmail(email: string) {
+    console.log("email", email);
+    try {
+      const user = await this._db
+        .collection("users")
+        .where("email", "==", email)
+        .get();
+
+      return user.docs[0]?.data() || null;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

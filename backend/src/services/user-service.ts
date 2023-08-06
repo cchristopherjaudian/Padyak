@@ -3,23 +3,24 @@ import { TUsermodel } from "../database/models/user";
 import UserRepository from "../repositories/user-repository";
 
 class UserService extends UserRepository {
-  public async createUser(payload: TUsermodel): Promise<TDocData> {
+  public async createUser(
+    payload: TUsermodel
+  ): Promise<Record<string, boolean>> {
     try {
-      return await this.create(payload);
+      const hasAccount = await this.findUserByEmail(payload.emailAddress);
+      if (!hasAccount) {
+        await this.create(payload);
+        return { auth: true, newData: true };
+      }
+
+      return {
+        auth: true,
+        newData: false,
+      };
     } catch (error) {
       throw error;
     }
   }
 }
 
-class AdminService extends UserRepository {
-  public async createUser(payload: TUsermodel): Promise<TUsermodel> {
-    try {
-      return await this.createUser(payload);
-    } catch (error) {
-      throw error;
-    }
-  }
-}
-
-export { UserService, AdminService };
+export { UserService };
