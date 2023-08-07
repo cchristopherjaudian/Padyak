@@ -4,7 +4,7 @@ import { v4 } from "uuid";
 const genderDictionary = ["Male", "Female", "M", "F"];
 
 const createUserSchema = Joi.object({
-  uid: Joi.string().default(v4()),
+  uid: Joi.string().optional().default(v4()),
   firstname: Joi.string().required(),
   lastname: Joi.string().required(),
   emailAddress: Joi.string().email().required(),
@@ -15,7 +15,7 @@ const createUserSchema = Joi.object({
   birthday: Joi.string().required(),
   height: Joi.string().required(),
   weight: Joi.string().required(),
-  isAdmin: Joi.boolean().required().default(false),
+  isAdmin: Joi.boolean().optional().default(false),
 });
 
 export { createUserSchema };

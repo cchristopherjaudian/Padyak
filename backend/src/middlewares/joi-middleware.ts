@@ -10,7 +10,7 @@ type TJoiError = {
 
 const requestSchemaValidate =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
-    const { error } = schema.validate(req.body, { abortEarly: false });
+    const { error, value } = schema.validate(req.body, { abortEarly: false });
 
     if (error) {
       const joiError = error as Partial<ValidationError> & TJoiError;
@@ -26,7 +26,7 @@ const requestSchemaValidate =
 
       next(error);
     }
-
+    req.body = value;
     next();
   };
 

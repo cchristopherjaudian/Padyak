@@ -1,4 +1,5 @@
 export type TUsermodel = {
+  uid: string;
   firstname: string;
   lastname: string;
   emailAddress: string;

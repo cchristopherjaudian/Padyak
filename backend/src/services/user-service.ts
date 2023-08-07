@@ -8,14 +8,16 @@ class UserService extends UserRepository {
 
   public async createUser(payload: TUsermodel): Promise<Record<string, any>> {
     try {
-      const hasAccount = await this.findUserByEmail(payload.emailAddress);
+      const hasAccount = (await this.findUserByEmail(
+        payload.emailAddress
+      )) as TUsermodel;
       if (!hasAccount) {
-        const newUser = await this.create(payload);
-        const token = await this._jwt.sign({ id: newUser.id });
+        const newUser = (await this.create(payload)) as TUsermodel;
+        const token = await this._jwt.sign({ id: newUser.uid });
         return { auth: true, newData: true, token };
       }
 
-      const token = await this._jwt.sign({ id: hasAccount.id });
+      const token = await this._jwt.sign({ id: hasAccount.uid });
       return {
         auth: true,
         newData: false,

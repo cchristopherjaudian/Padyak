@@ -22,7 +22,7 @@ class UserRepository {
     try {
       const user = await this._db
         .collection("users")
-        .where("email", "==", email)
+        .where("emailAddress", "==", email)
         .get();
 
       return user.docs[0]?.data() || null;
