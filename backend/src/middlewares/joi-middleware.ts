@@ -1,8 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import type { Schema, ValidationError } from "joi";
 import httpStatus from "http-status";
-import ResponseCodes from "../../commons/response-codes";
-import { BadRequestError } from "../custom-errors/class-errors";
+import ResponseCodes from "../commons/response-codes";
 
 type TJoiError = {
   status: number;

@@ -19,7 +19,6 @@ class UserRepository {
   }
 
   protected async findUserByEmail(email: string) {
-    console.log("email", email);
     try {
       const user = await this._db
         .collection("users")

@@ -9,17 +9,30 @@ const responseObject = new ResponseObject();
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const newUser = await userInstance.createUser(req.body);
+    const authenticated = await userInstance.createUser(req.body);
 
     responseObject.createResponse(
       res,
       httpStatus.OK,
       ResponseCodes.DATA_CREATED,
-      newUser
+      authenticated
     );
   } catch (error) {
     next(error);
   }
 };
 
-export default { createUser };
+const testUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_CREATED,
+      { test: "1234" }
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { createUser, testUser };

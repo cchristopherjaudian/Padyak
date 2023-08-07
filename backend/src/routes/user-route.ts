@@ -1,6 +1,6 @@
 import express from "express";
-import userControllers from "../controllers/user-controller";
-import requestSchemaValidate from "../lib/middlewares/joi-middleware";
+import { userController } from "../controllers";
+import requestSchemaValidate from "../middlewares/joi-middleware";
 import { createUserSchema } from "../lib/joi-schemas/cyclist-schema";
 
 const router = express.Router();
@@ -8,7 +8,7 @@ const router = express.Router();
 router.post(
   "/",
   [requestSchemaValidate(createUserSchema)],
-  userControllers.createUser
+  userController.createUser
 );
 
 export default router;

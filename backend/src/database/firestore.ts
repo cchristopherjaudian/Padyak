@@ -40,6 +40,19 @@ class Firestore implements IFirestore {
       throw error;
     }
   }
+
+  public async findById(id: string) {
+    try {
+      const { docs } = await this.getDb()
+        .collection(this._colName)
+        .where("uid", "==", id)
+        .get();
+
+      return docs.length > 0 ? docs[0].data() : null;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default Firestore;

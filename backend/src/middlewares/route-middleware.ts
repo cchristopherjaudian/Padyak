@@ -1,7 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import httpStatus from "http-status";
-import ResponseCodes from "../../commons/response-codes";
-import { NotFoundError } from "../custom-errors/class-errors";
+import ResponseCodes from "../commons/response-codes";
+import { NotFoundError } from "../lib/custom-errors/class-errors";
 
 type TResponseError = {
   statusCode?: string;
@@ -25,7 +25,6 @@ class RouteMiddleware {
     res: Response,
     next: NextFunction
   ) => {
-    console.log("xxxxxxxxxxxxxxxxxx", "test");
     const status = error.status || httpStatus.INTERNAL_SERVER_ERROR;
     const statusCode = error.statusCode || ResponseCodes.INTERNAL_SERVER_ERROR;
     res.status(status).json({

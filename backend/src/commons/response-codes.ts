@@ -8,6 +8,7 @@ class ResponseCodes {
   static DATA_DELETED = "DATA_DELETED";
   static BAD_REQUEST = "BAD_REQUEST";
   static RESOURCE_CONFLICT = "RESOURCE_CONFLICT";
+  static UNAUTHORIZE = "UNAUTHORIZE";
 }
 
 export default ResponseCodes;
