@@ -1,5 +1,5 @@
 import Firstore from "../database/firestore";
-import { TUsermodel } from "../database/models/user";
+import { IUserModel } from "../database/models/user";
 
 const instance = Firstore.getInstance();
 
@@ -7,12 +7,12 @@ class UserRepository {
   private _colName = "users";
   private _db = instance.getDb();
 
-  protected async create(payload: TUsermodel) {
+  protected async create(payload: IUserModel): Promise<IUserModel> {
     try {
-      const newData = await instance
+      const newUser = await instance
         .setCollectionName(this._colName)
-        .create(payload);
-      return newData;
+        .create<IUserModel>(payload);
+      return newUser as IUserModel;
     } catch (error) {
       throw error;
     }

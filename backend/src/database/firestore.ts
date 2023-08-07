@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase-admin/app";
 import * as firestoreDb from "firebase-admin/firestore";
+import { v4 } from "uuid";
 
 export interface IFirestore {
   getDb: () => firestoreDb.Firestore;
@@ -8,6 +9,8 @@ export interface IFirestore {
 export type TDocRef = firestoreDb.DocumentReference;
 export type TDocSnapshot = firestoreDb.DocumentSnapshot;
 export type TDocData = firestoreDb.DocumentData;
+export type TDocumentData =
+  FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>;
 
 class Firestore implements IFirestore {
   private static _instance: Firestore;
@@ -32,10 +35,14 @@ class Firestore implements IFirestore {
     return this;
   }
 
-  public async create(payload: { [key: string]: unknown }) {
+  public async create<T>(payload: Record<string, any>) {
     try {
-      const newData = await this.getDb().collection(this._colName).add(payload);
-      return (await newData.get()).data()!;
+      await this.getDb()
+        .collection(this._colName)
+        .doc(payload.uid)
+        .set(payload);
+
+      return payload;
     } catch (error) {
       throw error;
     }

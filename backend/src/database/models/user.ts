@@ -1,5 +1,6 @@
-export type TUsermodel = {
-  uid: string;
+import { IBaseModel } from "./model";
+
+export interface IUserModel extends IBaseModel {
   firstname: string;
   lastname: string;
   emailAddress: string;
@@ -9,4 +10,4 @@ export type TUsermodel = {
   height: string;
   weight: string;
   isAdmin: boolean;
-};
+}

@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import TokenService from "../services/token-service";
 import { AuthenticationError } from "../lib/custom-errors/class-errors";
-import { TUsermodel } from "../database/models/user";
+import { IUserModel } from "../database/models/user";
 import Firestore from "../database/firestore";
 
 export interface IRequestWithUser extends Request {
-  user: TUsermodel;
+  user: IUserModel;
 }
 
 class TokenMiddleware {
@@ -29,7 +29,7 @@ class TokenMiddleware {
 
       if (!user) throw new AuthenticationError();
 
-      req.user = user as TUsermodel;
+      req.user = user as IUserModel;
 
       next();
     } catch (error) {
