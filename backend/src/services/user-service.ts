@@ -1,6 +1,5 @@
-import { TDocData, TDocSnapshot } from "../database/firestore";
 import { TUsermodel } from "../database/models/user";
-import JsonWebToken from "../lib/jwt";
+import JsonWebToken from "./token-service";
 import UserRepository from "../repositories/user-repository";
 
 class UserService extends UserRepository {

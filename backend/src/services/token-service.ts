@@ -4,9 +4,8 @@ type TVerifiedToken = {
   id: string;
 };
 
-class JsonWebToken {
-  private _tokenSecret: string;
-
+class TokenService {
+  private _tokenSecret;
   constructor() {
     this._tokenSecret = String(process.env.TOKEN_SECRET);
   }
@@ -36,4 +35,4 @@ class JsonWebToken {
   }
 }
 
-export default JsonWebToken;
+export default TokenService;
