@@ -6,7 +6,11 @@
         android:title="@string/menu_home"
         android:contentDescription="@string/menu_home"
         android:icon="@drawable/baseline_home_24"/>
-
+    <item
+        android:id="@+id/menu_feed"
+        android:title="@string/newsfeed"
+        android:contentDescription="@string/newsfeed"
+        android:icon="@drawable/baseline_newspaper_24"/>
     <item
         android:id="@+id/menu_dashboard"
         android:title="@string/menu_dashboard"

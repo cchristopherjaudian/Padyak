@@ -1,6 +1,7 @@
 package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.ScrollView;
 
 import com.padyak.R;
 import com.padyak.adapter.adapterCoverPhoto;
+import com.padyak.adapter.adapterNewsfeed;
 import com.padyak.adapter.adapterYouMayKnow;
 
 import java.util.ArrayList;
@@ -25,16 +27,21 @@ import me.ibrahimsn.lib.SmoothBottomBar;
 public class frmMain extends AppCompatActivity {
 
     SmoothBottomBar bottomBar;
-    ScrollView frame_home,frame_profile;
-    RecyclerView rvCoverPhoto,rvYouKnow;
-    LinearLayoutManager llmCoverPhoto, llYouMayKnow;
+    ScrollView frame_home, frame_profile;
+    ConstraintLayout frame_newsfeed;
+    RecyclerView rvCoverPhoto, rvYouKnow, rvNewsfeed;
+    LinearLayoutManager llmCoverPhoto, llYouMayKnow, llNewsfeed;
     List<Integer> imageList;
-    List<String> _name,_id;
+    List<String> _name, _id;
+    List<String> _nfname, _nfstart, _nfend, _nfdistance, _nftimestart, _nftimeend;
     List<Integer> _mutual;
     com.padyak.adapter.adapterYouMayKnow adapterYouMayKnow;
     com.padyak.adapter.adapterCoverPhoto adapterCoverPhoto;
+    com.padyak.adapter.adapterNewsfeed adapterNewsfeed;
 
-    RelativeLayout rlEvents,rlAlert,rlHospital,rlRepair,rlPolice,rlRiding;
+
+    RelativeLayout rlEvents, rlAlert, rlHospital, rlRepair, rlPolice, rlRiding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,17 +50,22 @@ public class frmMain extends AppCompatActivity {
         bottomBar = findViewById(R.id.bottomBar);
         frame_home = findViewById(R.id.frame_home);
         frame_profile = findViewById(R.id.frame_profile);
+        frame_newsfeed = findViewById(R.id.frame_newsfeed);
 
         rvCoverPhoto = findViewById(R.id.rvCoverPhoto);
         rvYouKnow = findViewById(R.id.rvYouKnow);
+        rvNewsfeed = findViewById(R.id.rvNewsfeed);
 
         llmCoverPhoto = new LinearLayoutManager(this);
         llYouMayKnow = new LinearLayoutManager(this);
+        llNewsfeed = new LinearLayoutManager(this);
         llmCoverPhoto.setOrientation(RecyclerView.HORIZONTAL);
         llYouMayKnow.setOrientation(RecyclerView.HORIZONTAL);
+        llNewsfeed.setOrientation(RecyclerView.VERTICAL);
 
         rvCoverPhoto.setLayoutManager(llmCoverPhoto);
         rvYouKnow.setLayoutManager(llYouMayKnow);
+        rvNewsfeed.setLayoutManager(llNewsfeed);
 
         rlEvents = findViewById(R.id.rlEvents);
         rlAlert = findViewById(R.id.rlAlert);
@@ -68,12 +80,18 @@ public class frmMain extends AppCompatActivity {
         bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public boolean onItemSelect(int i) {
-                if(i == 0){
+                if (i == 0) {
                     frame_home.setVisibility(View.GONE);
                     frame_profile.setVisibility(View.VISIBLE);
-                } else{
+                    frame_newsfeed.setVisibility(View.GONE);
+                } else if (i == 1) {
+                    frame_home.setVisibility(View.GONE);
+                    frame_profile.setVisibility(View.GONE);
+                    frame_newsfeed.setVisibility(View.VISIBLE);
+                } else {
                     frame_home.setVisibility(View.VISIBLE);
                     frame_profile.setVisibility(View.GONE);
+                    frame_newsfeed.setVisibility(View.GONE);
                 }
                 return false;
             }
@@ -98,7 +116,7 @@ public class frmMain extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(frmMain.this, frmFindLocation.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("find","Hospital");
+                bundle.putString("find", "Hospital");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -108,7 +126,7 @@ public class frmMain extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(frmMain.this, frmFindLocation.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("find","Repair Shop");
+                bundle.putString("find", "Repair Shop");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -118,15 +136,17 @@ public class frmMain extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(frmMain.this, frmFindLocation.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("find","Police Station");
+                bundle.putString("find", "Police Station");
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
         loadYouMayKnow();
         loadCoverPhoto();
+        loadNewsfeed();
     }
-    public void loadCoverPhoto(){
+
+    public void loadCoverPhoto() {
         imageList = new ArrayList<>();
         adapterCoverPhoto = new adapterCoverPhoto(imageList);
 
@@ -136,11 +156,32 @@ public class frmMain extends AppCompatActivity {
 
         rvCoverPhoto.setAdapter(adapterCoverPhoto);
     }
-    public void loadYouMayKnow(){
+
+    public void loadNewsfeed() {
+        _nfname = new ArrayList<>();
+        _nfstart = new ArrayList<>();
+        _nfend = new ArrayList<>();
+        _nfdistance = new ArrayList<>();
+        _nftimestart = new ArrayList<>();
+        _nftimeend = new ArrayList<>();
+        _nfname.add("1");
+        _nfname.add("1");
+        _nfname.add("1");
+        _nfname.add("1");
+        _nfname.add("1");
+        _nfname.add("1");
+        _nfname.add("1");
+
+
+        adapterNewsfeed = new adapterNewsfeed(_nfname, _nfstart, _nfend, _nfdistance, _nftimestart, _nftimeend);
+        rvNewsfeed.setAdapter(adapterNewsfeed);
+    }
+
+    public void loadYouMayKnow() {
         _name = new ArrayList<>();
         _id = new ArrayList<>();
-        _mutual= new ArrayList<>();
-        adapterYouMayKnow = new adapterYouMayKnow(_name,_id,_mutual);
+        _mutual = new ArrayList<>();
+        adapterYouMayKnow = new adapterYouMayKnow(_name, _id, _mutual);
 
         _name.add("Gorgonio Magalpoc");
         _id.add("Gorgonio Magalpoc");
@@ -156,6 +197,7 @@ public class frmMain extends AppCompatActivity {
 
         rvYouKnow.setAdapter(adapterYouMayKnow);
     }
+
     @Override
     public void onBackPressed() {
 

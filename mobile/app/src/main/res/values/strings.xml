@@ -3,4 +3,5 @@
     <string name="app_name_caps">PADYAK</string>
     <string name="menu_dashboard">Menu</string>
     <string name="menu_home">Home</string>
+    <string name="newsfeed">Newsfeed</string>
 </resources>
