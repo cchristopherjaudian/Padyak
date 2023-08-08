@@ -1,5 +1,6 @@
 package com.padyak.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
+import com.padyak.activity.frmMemberAlertInfo;
 
 import java.util.List;
 
@@ -44,6 +46,11 @@ public class adapterAdminAlert extends RecyclerView.Adapter<adapterAdminAlert.vi
             super(itemView);
             txRowName = itemView.findViewById(R.id.txRowName);
             txRowMessage = itemView.findViewById(R.id.txRowMessage);
+
+            itemView.setOnClickListener(v->{
+                Intent intent = new Intent(itemView.getContext(), frmMemberAlertInfo.class);
+                itemView.getContext().startActivity(intent);
+            });
         }
     }
 }

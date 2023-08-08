@@ -13,7 +13,7 @@
     <dimen name="subheader_size">14dp</dimen>
     <dimen name="level_size">16dp</dimen>
     <dimen name="level_description_size">14dp</dimen>
-    <dimen name="button_size">35dp</dimen>
+    <dimen name="button_size">42dp</dimen>
     <dimen name="nearest_card_size">12dp</dimen>
     <dimen name="event_month_size">130dp</dimen>
     <dimen name="event_month_label_size">18dp</dimen>
