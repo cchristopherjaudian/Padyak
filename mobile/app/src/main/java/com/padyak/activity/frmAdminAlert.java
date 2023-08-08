@@ -1,10 +1,13 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+
+import com.padyak.R;
+import com.padyak.adapter.adapterAdminAlert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +16,7 @@ public class frmAdminAlert extends AppCompatActivity {
     RecyclerView rvAlertList;
     LinearLayoutManager linearLayoutManager;
     List<String> _name, _message;
-    adapterAdminAlert adapterAdminAlert;
+    com.padyak.adapter.adapterAdminAlert adapterAdminAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.padyak.R;
+import com.padyak.adapter.adapterAlertGroup;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,7 @@ public class frmAlertGroup extends AppCompatActivity {
     RecyclerView rvAlertGroup;
     Button btnSendGroup;
     LinearLayoutManager linearLayoutManager;
-    adapterAlertGroup adapterAlertGroup;
+    com.padyak.adapter.adapterAlertGroup adapterAlertGroup;
     List<String> _name, _contact;
     List<Boolean> _isselected;
 

@@ -1,14 +1,16 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class frmLogin extends AppCompatActivity {
+import com.padyak.R;
+
+public class frmRegister extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frm_login);
+        setContentView(R.layout.activity_frm_register);
     }
 }

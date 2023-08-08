@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_color"
-    tools:context=".frmEventCrud">
+    tools:context=".activity.frmEventCrud">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"

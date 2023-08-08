@@ -20,91 +20,91 @@
         android:theme="@style/Theme.Padyak"
         tools:targetApi="31">
         <activity
-            android:name=".frmStartTrack"
+            android:name=".activity.frmStartTrack"
             android:exported="false" />
         <activity
-            android:name=".AdminMainActivity"
+            android:name=".activity.AdminMainActivity"
             android:exported="false" />
         <activity
-            android:name=".frmAlertGroup"
+            android:name=".activity.frmAlertGroup"
             android:exported="false" />
         <activity
-            android:name=".frmTrackEvent"
+            android:name=".activity.frmTrackEvent"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmAlertInfo"
+            android:name=".activity.frmAlertInfo"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmAdminAlert"
+            android:name=".activity.frmAdminAlert"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmEventCrud"
+            android:name=".activity.frmEventCrud"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmEventManagement"
+            android:name=".activity.frmEventManagement"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmRoute"
+            android:name=".activity.frmRoute"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmFindLocation"
+            android:name=".activity.frmFindLocation"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmAlertSend"
+            android:name=".activity.frmAlertSend"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmEventParticipants"
+            android:name=".activity.frmEventParticipants"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmEventRegister"
+            android:name=".activity.frmEventRegister"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmEventInfo"
+            android:name=".activity.frmEventInfo"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmEventCalendar"
+            android:name=".activity.frmEventCalendar"
             android:configChanges="screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmMain"
+            android:name=".activity.frmMain"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmRegister"
+            android:name=".activity.frmRegister"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmLogin"
+            android:name=".activity.frmLogin"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".frmSplash"
+            android:name=".activity.frmSplash"
             android:configChanges="screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait">

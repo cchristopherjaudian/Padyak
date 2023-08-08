@@ -1,14 +1,16 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class frmRegister extends AppCompatActivity {
+import com.padyak.R;
+
+public class frmStartTrack extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frm_register);
+        setContentView(R.layout.activity_frm_start_track);
     }
 }

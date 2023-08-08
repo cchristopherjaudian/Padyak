@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_color"
-    tools:context=".frmFindLocation">
+    tools:context=".activity.frmFindLocation">
     <TextView
         android:id="@+id/txFindTitle"
         android:layout_width="wrap_content"

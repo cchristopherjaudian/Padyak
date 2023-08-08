@@ -1,10 +1,13 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ProgressBar;
+
+import com.padyak.R;
+import com.padyak.utility.LoggedUser;
 
 public class frmSplash extends AppCompatActivity {
     ProgressBar spinner;

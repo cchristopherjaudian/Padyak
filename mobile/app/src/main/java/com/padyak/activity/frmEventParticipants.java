@@ -1,4 +1,4 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,10 +8,12 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.google.android.material.tabs.TabLayout;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
+import com.padyak.R;
+import com.padyak.adapter.adapterParticipant;
+import com.padyak.utility.CustomViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class frmEventParticipants extends AppCompatActivity {
 
     RecyclerView rvEventInfoParticipants;
     LinearLayoutManager linearLayoutManager;
-    adapterParticipant adapterParticipant;
+    com.padyak.adapter.adapterParticipant adapterParticipant;
 
     Button btnEventCancel;
     int tempPos = 0;

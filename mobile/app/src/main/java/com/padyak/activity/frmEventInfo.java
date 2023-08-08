@@ -1,4 +1,4 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,22 +6,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-public class frmEventRegister extends AppCompatActivity {
+import com.padyak.R;
+
+public class frmEventInfo extends AppCompatActivity {
+
     Button btnEventRegister, btnEventCancel;
+    public static frmEventInfo frmEventInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_frm_event_register);
-
+        setContentView(R.layout.activity_frm_event_info);
+        frmEventInfo = this;
         btnEventRegister = findViewById(R.id.btnEventRegister);
         btnEventCancel = findViewById(R.id.btnEventCancel);
 
         btnEventCancel.setOnClickListener(v -> finish());
-        btnEventRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(frmEventRegister.this, frmEventParticipants.class);
+
+        btnEventRegister.setOnClickListener((e)->{
+            Intent intent = new Intent(frmEventInfo.this, frmEventRegister.class);
             startActivity(intent);
-            frmEventInfo.frmEventInfo.finish();
             finish();
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

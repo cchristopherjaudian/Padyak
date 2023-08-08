@@ -1,4 +1,4 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.padyak.R;
+import com.padyak.adapter.adapterEventManagement;
 
 import java.time.Month;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ public class frmEventManagement extends AppCompatActivity {
     int month;
     LinearLayoutManager linearLayoutManager;
     RecyclerView rvEventMonth;
-    adapterEventManagement adapterEventManagement;
+    com.padyak.adapter.adapterEventManagement adapterEventManagement;
     List<Integer> tempList;
 
     @Override

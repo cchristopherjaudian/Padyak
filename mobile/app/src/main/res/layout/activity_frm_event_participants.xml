@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_bg"
-    tools:context=".frmEventParticipants">
+    tools:context=".activity.frmEventParticipants">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -81,7 +81,7 @@
             app:stl_underlineColor="#FFF"
             app:stl_underlineThickness="1dp" />
 
-        <com.padyak.CustomViewPager
+        <com.padyak.utility.CustomViewPager
             android:id="@+id/customviewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

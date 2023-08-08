@@ -7,7 +7,7 @@
     android:background="@drawable/main_bg"
     android:paddingHorizontal="10dp"
     android:paddingBottom="10dp"
-    tools:context=".AdminMainActivity">
+    tools:context=".activity.AdminMainActivity">
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"

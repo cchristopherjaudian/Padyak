@@ -1,10 +1,12 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.padyak.R;
 
 public class frmFindLocation extends AppCompatActivity {
 

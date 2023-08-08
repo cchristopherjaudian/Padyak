@@ -1,4 +1,4 @@
-package com.padyak;
+package com.padyak.utility;
 
 import android.content.Context;
 import android.util.AttributeSet;

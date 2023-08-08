@@ -1,4 +1,4 @@
-package com.padyak;
+package com.padyak.utility;
 
 public class LoggedUser {
     public static String id,name;

@@ -1,4 +1,4 @@
-package com.padyak;
+package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+
+import com.padyak.R;
+import com.padyak.adapter.adapterCoverPhoto;
+import com.padyak.adapter.adapterYouMayKnow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +31,8 @@ public class frmMain extends AppCompatActivity {
     List<Integer> imageList;
     List<String> _name,_id;
     List<Integer> _mutual;
-    adapterYouMayKnow adapterYouMayKnow;
-    adapterCoverPhoto adapterCoverPhoto;
+    com.padyak.adapter.adapterYouMayKnow adapterYouMayKnow;
+    com.padyak.adapter.adapterCoverPhoto adapterCoverPhoto;
 
     RelativeLayout rlEvents,rlAlert,rlHospital,rlRepair,rlPolice,rlRiding;
     @Override
