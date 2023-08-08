@@ -16,6 +16,7 @@ class Firestore implements IFirestore {
   private static _instance: Firestore;
   private _app;
   private _colName: string;
+  private _docId: string;
 
   private constructor() {
     this._app = initializeApp();
@@ -35,17 +36,33 @@ class Firestore implements IFirestore {
     return this;
   }
 
-  public async create<T>(payload: Record<string, any>) {
+  public setDocId(id: string) {
+    this._docId = id;
+    return this;
+  }
+
+  public async create(payload: Record<string, any>) {
     try {
       await this.getDb()
         .collection(this._colName)
-        .doc(payload.uid)
+        .doc(this._docId)
         .set(payload);
 
       return payload;
     } catch (error) {
       throw error;
     }
+  }
+
+  public async update(payload: Record<string, any>) {
+    try {
+      await this.getDb()
+        .collection(this._colName)
+        .doc(this._docId)
+        .update(payload);
+
+      return payload;
+    } catch (error) {}
   }
 
   public async findById(id: string) {
@@ -59,6 +76,12 @@ class Firestore implements IFirestore {
     } catch (error) {
       throw error;
     }
+  }
+
+  public async getAll<T>() {
+    const refs = await this.getDb().collection(this._colName).get();
+    const mappedRef = refs.docs.map((k) => k.data());
+    return mappedRef as T;
   }
 }
 

@@ -7,41 +7,38 @@ class PostRepository {
   private _colName = "posts";
   private _db = instance.getDb();
 
-  protected async createPost(payload: IPost) {
+  protected async create(payload: IPost) {
     try {
       const newData = await instance
         .setCollectionName(this._colName)
-        .create<IPost>(payload);
-      return newData;
+        .setDocId(payload.uid)
+        .create(payload);
+      return newData as IPost;
     } catch (error) {
       throw error;
     }
   }
 
-  // protected async updatePost(payload: IPost) {
-  //   try {
-  //     const newData = await this._db
-  //       .collection(this._colName)
-  //       .where("uid", "==", payload.uid);
+  protected async update(payload: IPost) {
+    try {
+      const updatedData = await instance
+        .setCollectionName(this._colName)
+        .setDocId(payload.uid)
+        .update(payload);
 
-  //     return (await newData.get()).docs[0].ref.update(payload);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+      return updatedData as IPost;
+    } catch (error) {
+      throw error;
+    }
+  }
 
-  // private async findRef(uid: string) {
-  //   try {
-  //     const newData = await this._db
-  //       .collection(this._colName)
-  //       .where("uid", "==", uid)
-  //       .get();
+  protected async findPostById(id: string) {
+    return (await instance.findById(id)) as IPost;
+  }
 
-  //     return newData.docs.length > 0 ? newData. : null;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  protected async getPostsList() {
+    return instance.getAll<IPost[]>();
+  }
 }
 
 export default PostRepository;
