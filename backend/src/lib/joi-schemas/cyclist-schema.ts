@@ -1,10 +1,12 @@
 import * as Joi from "joi";
-import { v4 } from "uuid";
+import { baseRequestSchema } from "./base-schema";
 
 const genderDictionary = ["Male", "Female", "M", "F"];
 
+delete baseRequestSchema?.modifiedAt;
+
 const createUserSchema = Joi.object({
-  uid: Joi.string().optional().default(v4()),
+  ...baseRequestSchema,
   firstname: Joi.string().required(),
   lastname: Joi.string().required(),
   emailAddress: Joi.string().email().required(),

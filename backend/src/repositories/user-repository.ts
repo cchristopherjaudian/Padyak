@@ -11,7 +11,8 @@ class UserRepository {
     try {
       const newUser = await instance
         .setCollectionName(this._colName)
-        .create<IUserModel>(payload);
+        .setDocId(payload.uid)
+        .create(payload);
       return newUser as IUserModel;
     } catch (error) {
       throw error;
