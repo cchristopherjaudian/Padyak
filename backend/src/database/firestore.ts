@@ -67,10 +67,7 @@ class Firestore implements IFirestore {
 
   public async findById(id: string) {
     try {
-      const { docs } = await this.getDb()
-        .collection(this._colName)
-        .where("uid", "==", id)
-        .get();
+      const { docs } = await this.getDb().collection(this._colName).get();
 
       return docs.length > 0 ? docs[0].data() : null;
     } catch (error) {
@@ -81,7 +78,7 @@ class Firestore implements IFirestore {
   public async getAll<T>() {
     const refs = await this.getDb().collection(this._colName).get();
     const mappedRef = refs.docs.map((k) => k.data());
-    return mappedRef as T;
+    return mappedRef as T[];
   }
 }
 

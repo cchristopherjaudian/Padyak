@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userRoutes from "./user-route";
+import postRoutes from "./posts-route";
 
 const router = Router();
 
@@ -13,6 +14,10 @@ const defaultRoutes: TRoutelist = [
   {
     path: "/user",
     controller: userRoutes,
+  },
+  {
+    path: "/posts",
+    controller: postRoutes,
   },
 ];
 

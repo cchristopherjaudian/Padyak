@@ -22,17 +22,4 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const testUser = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    responseObject.createResponse(
-      res,
-      httpStatus.OK,
-      ResponseCodes.DATA_CREATED,
-      { test: "1234" }
-    );
-  } catch (error) {
-    next(error);
-  }
-};
-
-export default { createUser, testUser };
+export default { createUser };
