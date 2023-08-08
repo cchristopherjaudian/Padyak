@@ -133,7 +133,7 @@
         <Button
             android:id="@+id/btnEventRegister"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/wide_button_size"
             android:layout_marginStart="10dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="10dp"
@@ -148,7 +148,7 @@
         <Button
             android:id="@+id/btnEventCancel"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/wide_button_size"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"

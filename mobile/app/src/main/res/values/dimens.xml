@@ -18,4 +18,5 @@
     <dimen name="event_month_size">130dp</dimen>
     <dimen name="event_month_label_size">18dp</dimen>
     <dimen name="event_month_count_size">14dp</dimen>
+    <dimen name="wide_button_size">30dp</dimen>
 </resources>
