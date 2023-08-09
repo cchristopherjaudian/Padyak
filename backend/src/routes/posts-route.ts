@@ -14,27 +14,43 @@ const tokenMiddleware = new TokenMiddleware();
 
 router.post(
   "/",
-  [tokenMiddleware.validate as any, requestSchemaValidate(createPostSchema)],
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(createPostSchema),
+  ],
   postController.createPost
 );
 
-router.get("/", [tokenMiddleware.validate as any], postController.getPosts);
+router.get(
+  "/",
+  [tokenMiddleware.endUserValidate as any],
+  postController.getPosts
+);
 
 router.patch(
   "/:postId",
-  [tokenMiddleware.validate as any, requestSchemaValidate(updatePostSchema)],
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(updatePostSchema),
+  ],
   postController.updatePost
 );
 
 router.post(
   "/likes",
-  [tokenMiddleware.validate as any, requestSchemaValidate(addLikesSchema)],
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(addLikesSchema),
+  ],
   postController.addLikes
 );
 
 router.post(
   "/comments",
-  [tokenMiddleware.validate as any, requestSchemaValidate(addCommentSchema)],
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(addCommentSchema),
+  ],
   postController.addComment
 );
 

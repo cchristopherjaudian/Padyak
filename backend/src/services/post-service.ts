@@ -1,16 +1,19 @@
 import { IComments, IPost } from "../database/models/post";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
+import PostMapper from "../lib/mappers/post-mapper";
 import PostLikesRepository from "../repositories/post-repository";
 
 const dbInstance = new PostLikesRepository();
 
 type TAddLikes = {
-  userId: string;
-  postId: string;
+  uid: string;
+  postId?: string;
+  photoUrl: string;
+  displayName: string;
 };
 
 type TAddComment = {
-  userId: string;
+  uid: string;
   postId?: string;
   comment: string;
   createdAt: string;
@@ -21,8 +24,9 @@ class Likes {
     const post = await dbInstance.findPostById(payload?.postId as string);
     if (!post) throw new NotFoundError();
 
-    if (!post.likes?.includes(payload.userId)) {
-      post.likes?.push(payload.userId);
+    if (!post.likes?.find((like) => like.uid === payload.uid)) {
+      delete payload.postId;
+      post.likes?.push(payload);
     }
 
     const updatedPost = await dbInstance.update({ ...post });
@@ -45,15 +49,18 @@ class Comments {
 class PostService {
   private _likesInstance = new Likes();
   private _commentsInstance = new Comments();
+  private _mapper = new PostMapper();
 
   public async createPost(payload: IPost) {
-    return await dbInstance.create(payload);
+    const mappedPost = this._mapper.createPost(payload);
+    return await dbInstance.create(mappedPost);
   }
 
   public async updatePost(payload: Partial<IPost>) {
     const isExist = await dbInstance.findPostById(payload?.id as string);
     if (!isExist) throw new NotFoundError("Post does not exist.");
-    return await dbInstance.update(payload as IPost);
+    const mappedPayload = this._mapper.updatePost(payload);
+    return await dbInstance.update(mappedPayload as IPost);
   }
 
   public async getPosts() {

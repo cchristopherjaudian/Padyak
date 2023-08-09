@@ -3,13 +3,19 @@ import { IBaseModel } from "./model";
 export interface IComments
   extends Pick<IBaseModel, "modifiedAt" | "createdAt"> {
   comment: string;
-  userId: string;
+  uid: string;
+}
+
+export interface ILikes {
+  photoUrl: string;
+  uid: string;
+  displayName: string;
 }
 
 export interface IPost extends IBaseModel {
-  id: string;
-  likes?: string[]; // array of users {UID}
+  likes?: ILikes[]; // array of users {UID}
   comments?: IComments[];
+  uid: string;
   post: string;
   distance: string;
   movingTime: string;

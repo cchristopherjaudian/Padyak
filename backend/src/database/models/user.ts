@@ -10,4 +10,5 @@ export interface IUserModel extends IBaseModel {
   height: string;
   weight: string;
   isAdmin: boolean;
+  photoUrl: string;
 }

@@ -2,7 +2,7 @@ import * as Joi from "joi";
 
 const genderDictionary = ["Male", "Female", "M", "F"];
 
-const createUserSchema = Joi.object({
+const createAdminSchema = Joi.object({
   firstname: Joi.string().required(),
   photoUrl: Joi.string().required(),
   lastname: Joi.string().required(),
@@ -14,7 +14,7 @@ const createUserSchema = Joi.object({
   birthday: Joi.string().required(),
   height: Joi.string().required(),
   weight: Joi.string().required(),
-  isAdmin: Joi.boolean().optional().default(false),
+  isAdmin: Joi.boolean().optional().default(true),
 });
 
-export { createUserSchema };
+export { createAdminSchema };

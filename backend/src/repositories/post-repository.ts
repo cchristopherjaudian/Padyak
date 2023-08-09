@@ -9,6 +9,7 @@ class PostLikesRepository {
 
   public async create(payload: IPost) {
     try {
+      console.log("payload post", payload);
       const newData = await instance
         .setCollectionName(this._colName)
         .setDocId(payload.id)

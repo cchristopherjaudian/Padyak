@@ -1,5 +1,5 @@
 export interface IBaseModel {
-  uid: string;
-  modifiedAt: string;
+  id: string;
+  modifiedAt?: string;
   createdAt: string;
 }

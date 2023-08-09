@@ -12,13 +12,8 @@ class TokenMiddleware {
   private _firestore = Firestore.getInstance();
   private _jwt = new TokenService();
 
-  public validate = async (
-    req: IRequestWithUser,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private async verifyToken(token: string): Promise<IUserModel> {
     try {
-      const token = req.headers["authorization"];
       if (!token) {
         throw new AuthenticationError();
       }
@@ -29,7 +24,41 @@ class TokenMiddleware {
 
       if (!user) throw new AuthenticationError();
 
-      req.user = user as IUserModel;
+      return user as IUserModel;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public endUserValidate = async (
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const token = req.headers["authorization"];
+      const authUser = await this.verifyToken(token as string);
+
+      req.user = authUser;
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public adminValidate = async (
+    req: IRequestWithUser,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const token = req.headers["authorization"];
+      const authAdmin = await this.verifyToken(token as string);
+
+      if (!authAdmin.isAdmin) throw new AuthenticationError();
+
+      req.user = authAdmin;
 
       next();
     } catch (error) {

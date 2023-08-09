@@ -5,6 +5,7 @@
   "scripts": {
     "build": "npx tsc -b",
     "lint": "eslint .",
+    "watch": "npx tsc -w",
     "serve": "npm run build && firebase emulators:start --only functions,firestore",
     "shell": "firebase functions:shell",
     "start": "npm run shell",

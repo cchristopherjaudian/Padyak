@@ -67,9 +67,9 @@ class Firestore implements IFirestore {
 
   public async findById(id: string) {
     try {
-      const { docs } = await this.getDb().collection(this._colName).get();
+      const ref = await this.getDb().collection(this._colName).doc(id).get();
 
-      return docs.length > 0 ? docs[0].data() : null;
+      return ref.data() || null;
     } catch (error) {
       throw error;
     }
