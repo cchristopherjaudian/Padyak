@@ -16,7 +16,8 @@ import android.widget.ScrollView;
 import com.padyak.R;
 import com.padyak.adapter.adapterCoverPhoto;
 import com.padyak.adapter.adapterNewsfeed;
-import com.padyak.adapter.adapterYouMayKnow;
+import com.padyak.dto.CoverPhoto;
+import com.padyak.dto.Newsfeed;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +30,10 @@ public class frmMain extends AppCompatActivity {
     SmoothBottomBar bottomBar;
     ScrollView frame_home, frame_profile;
     ConstraintLayout frame_newsfeed;
-    RecyclerView rvCoverPhoto, rvYouKnow, rvNewsfeed;
-    LinearLayoutManager llmCoverPhoto, llYouMayKnow, llNewsfeed;
-    List<Integer> imageList;
-    List<String> _name, _id;
-    List<String> _nfname, _nfstart, _nfend, _nfdistance, _nftimestart, _nftimeend;
-    List<Integer> _mutual;
-    com.padyak.adapter.adapterYouMayKnow adapterYouMayKnow;
+    RecyclerView rvCoverPhoto, rvNewsfeed;
+    LinearLayoutManager llmCoverPhoto, llNewsfeed;
+    List<Newsfeed> newsfeedList;
+    List<CoverPhoto> coverPhotoList;
     com.padyak.adapter.adapterCoverPhoto adapterCoverPhoto;
     com.padyak.adapter.adapterNewsfeed adapterNewsfeed;
 
@@ -53,18 +51,14 @@ public class frmMain extends AppCompatActivity {
         frame_newsfeed = findViewById(R.id.frame_newsfeed);
 
         rvCoverPhoto = findViewById(R.id.rvCoverPhoto);
-        rvYouKnow = findViewById(R.id.rvYouKnow);
         rvNewsfeed = findViewById(R.id.rvNewsfeed);
 
         llmCoverPhoto = new LinearLayoutManager(this);
-        llYouMayKnow = new LinearLayoutManager(this);
         llNewsfeed = new LinearLayoutManager(this);
         llmCoverPhoto.setOrientation(RecyclerView.HORIZONTAL);
-        llYouMayKnow.setOrientation(RecyclerView.HORIZONTAL);
         llNewsfeed.setOrientation(RecyclerView.VERTICAL);
 
         rvCoverPhoto.setLayoutManager(llmCoverPhoto);
-        rvYouKnow.setLayoutManager(llYouMayKnow);
         rvNewsfeed.setLayoutManager(llNewsfeed);
 
         rlEvents = findViewById(R.id.rlEvents);
@@ -141,62 +135,27 @@ public class frmMain extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        loadYouMayKnow();
         loadCoverPhoto();
         loadNewsfeed();
     }
 
     public void loadCoverPhoto() {
-        imageList = new ArrayList<>();
-        adapterCoverPhoto = new adapterCoverPhoto(imageList);
-
-        imageList.add(R.drawable.bike1);
-        imageList.add(R.drawable.bike2);
-        imageList.add(R.drawable.bike3);
-
+        coverPhotoList = new ArrayList<>();
+        adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
         rvCoverPhoto.setAdapter(adapterCoverPhoto);
     }
 
     public void loadNewsfeed() {
-        _nfname = new ArrayList<>();
-        _nfstart = new ArrayList<>();
-        _nfend = new ArrayList<>();
-        _nfdistance = new ArrayList<>();
-        _nftimestart = new ArrayList<>();
-        _nftimeend = new ArrayList<>();
-        _nfname.add("1");
-        _nfname.add("1");
-        _nfname.add("1");
-        _nfname.add("1");
-        _nfname.add("1");
-        _nfname.add("1");
-        _nfname.add("1");
+        newsfeedList = new ArrayList<>();
+        newsfeedList.add(new Newsfeed());
+        newsfeedList.add(new Newsfeed());
+        newsfeedList.add(new Newsfeed());
+        newsfeedList.add(new Newsfeed());
 
-
-        adapterNewsfeed = new adapterNewsfeed(_nfname, _nfstart, _nfend, _nfdistance, _nftimestart, _nftimeend);
+        adapterNewsfeed = new adapterNewsfeed(newsfeedList);
         rvNewsfeed.setAdapter(adapterNewsfeed);
     }
 
-    public void loadYouMayKnow() {
-        _name = new ArrayList<>();
-        _id = new ArrayList<>();
-        _mutual = new ArrayList<>();
-        adapterYouMayKnow = new adapterYouMayKnow(_name, _id, _mutual);
-
-        _name.add("Gorgonio Magalpoc");
-        _id.add("Gorgonio Magalpoc");
-        _mutual.add(5);
-
-        _name.add("Koya Elmo");
-        _id.add("Gorgonio Magalpoc");
-        _mutual.add(10);
-
-        _name.add("Logbi Patotie");
-        _id.add("Gorgonio Magalpoc");
-        _mutual.add(2);
-
-        rvYouKnow.setAdapter(adapterYouMayKnow);
-    }
 
     @Override
     public void onBackPressed() {

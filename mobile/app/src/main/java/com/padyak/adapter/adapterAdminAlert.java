@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
 import com.padyak.activity.frmMemberAlertInfo;
+import com.padyak.dto.MemberAlert;
 
 import java.util.List;
 
 public class adapterAdminAlert extends RecyclerView.Adapter<adapterAdminAlert.viewHolder>{
-    List<String> _name, _message;
+    List<MemberAlert> alerts;
 
-    public adapterAdminAlert(List<String> _name, List<String> _message) {
-        this._name = _name;
-        this._message = _message;
+    public adapterAdminAlert(List<MemberAlert> alerts) {
+        this.alerts = alerts;
     }
 
     @NonNull
@@ -32,13 +32,13 @@ public class adapterAdminAlert extends RecyclerView.Adapter<adapterAdminAlert.vi
 
     @Override
     public void onBindViewHolder(@NonNull adapterAdminAlert.viewHolder holder, int position) {
-        holder.txRowName.setText(_name.get(position));
-        holder.txRowMessage.setText(_message.get(position));
+        holder.txRowName.setText(alerts.get(position).getUserName());
+        holder.txRowMessage.setText(alerts.get(position).getAlertDescription());
     }
 
     @Override
     public int getItemCount() {
-        return _name.size();
+        return alerts.size();
     }
     public class viewHolder extends RecyclerView.ViewHolder {
         TextView txRowName,txRowMessage;

@@ -9,13 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
+import com.padyak.dto.CoverPhoto;
 
 import java.util.List;
 
 public class adapterCoverPhoto extends RecyclerView.Adapter<adapterCoverPhoto.viewHolder> {
-    List<Integer> imageList;
+    List<CoverPhoto> imageList;
 
-    public adapterCoverPhoto(List<Integer> imageList) {
+    public adapterCoverPhoto(List<CoverPhoto> imageList) {
         this.imageList = imageList;
     }
 
@@ -29,7 +30,7 @@ public class adapterCoverPhoto extends RecyclerView.Adapter<adapterCoverPhoto.vi
 
     @Override
     public void onBindViewHolder(@NonNull adapterCoverPhoto.viewHolder holder, int position) {
-        holder.img.setBackgroundResource(imageList.get(position));
+        //holder.img.setBackgroundResource(imageList.get(position));
     }
 
     @Override

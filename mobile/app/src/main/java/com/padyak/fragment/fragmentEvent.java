@@ -1,4 +1,4 @@
-package com.padyak.activity;
+package com.padyak.fragment;
 
 import android.os.Bundle;
 

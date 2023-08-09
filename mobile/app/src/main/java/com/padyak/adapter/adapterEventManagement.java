@@ -8,14 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
+import com.padyak.dto.CalendarEvent;
 
 import java.util.List;
 
 public class adapterEventManagement extends RecyclerView.Adapter<adapterEventManagement.viewHolder> {
-    List<Integer> imageList;
+    List<CalendarEvent> events;
 
-    public adapterEventManagement(List<Integer> imageList) {
-        this.imageList = imageList;
+    public adapterEventManagement(List<CalendarEvent> events) {
+        this.events = events;
     }
 
     @NonNull
@@ -33,7 +34,7 @@ public class adapterEventManagement extends RecyclerView.Adapter<adapterEventMan
 
     @Override
     public int getItemCount() {
-        return imageList.size();
+        return events.size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder {

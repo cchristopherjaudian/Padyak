@@ -1,4 +1,4 @@
-package com.padyak.model;
+package com.padyak.dto;
 
 import java.util.Objects;
 

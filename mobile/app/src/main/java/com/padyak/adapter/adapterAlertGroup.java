@@ -11,18 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
+import com.padyak.dto.GroupContact;
 
 import java.util.Collections;
 import java.util.List;
 
 public class adapterAlertGroup extends RecyclerView.Adapter<adapterAlertGroup.viewHolder>{
-    List<String> _name,_contact;
-    List<Boolean> _isselected;
+    List<GroupContact> contact;
 
-    public adapterAlertGroup(List<String> _name, List<String> _contact, List<Boolean> _isselected) {
-        this._name = _name;
-        this._contact = _contact;
-        this._isselected = _isselected;
+    public adapterAlertGroup(List<GroupContact> contact) {
+        this.contact = contact;
     }
 
     @NonNull
@@ -35,13 +33,13 @@ public class adapterAlertGroup extends RecyclerView.Adapter<adapterAlertGroup.vi
 
     @Override
     public void onBindViewHolder(@NonNull adapterAlertGroup.viewHolder holder, int position) {
-        holder.txRowName.setText(_name.get(position));
-        holder.checkBox.setChecked(_isselected.get(position));
+        holder.txRowName.setText(contact.get(position).getUserName());
+        holder.checkBox.setChecked(contact.get(position).isSelected());
     }
 
     @Override
     public int getItemCount() {
-        return _name.size();
+        return contact.size();
     }
     public class viewHolder extends RecyclerView.ViewHolder {
         ImageView img;
@@ -56,6 +54,6 @@ public class adapterAlertGroup extends RecyclerView.Adapter<adapterAlertGroup.vi
         }
     }
     public void setCheck(boolean is_checked){
-        Collections.fill(_isselected,is_checked);
+        contact.forEach((c)-> c.setSelected(is_checked));
     }
 }

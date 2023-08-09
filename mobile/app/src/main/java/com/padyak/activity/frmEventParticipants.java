@@ -13,6 +13,8 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.padyak.R;
 import com.padyak.adapter.adapterParticipant;
+import com.padyak.dto.Participants;
+import com.padyak.fragment.fragmentEvent;
 import com.padyak.utility.CustomViewPager;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class frmEventParticipants extends AppCompatActivity {
     CustomViewPager viewPager;
     SmartTabLayout viewPagerTab;
     FragmentPagerItemAdapter adapter;
+    List<Participants> participantsList;
     public static String selectedTab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class frmEventParticipants extends AppCompatActivity {
         rvEventInfoParticipants.setLayoutManager(linearLayoutManager);
         adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
-                .add("Participants",fragmentEvent.class)
+                .add("Participants", fragmentEvent.class)
                 .add("Following",fragmentEvent.class)
                 .create());
         viewPager.setAdapter(adapter);
@@ -76,16 +79,13 @@ public class frmEventParticipants extends AppCompatActivity {
     }
 
     public void loadParticipants(){
-        List<String> _name,_distance;
-        _name = new ArrayList<>();
-        _distance = new ArrayList<>();
-        _name.add("Ricardo Madlangtuta");
-        _name.add("Rastaman Yow");
-        _name.add("Gorgonio Magalpoc");
-        _distance.add("1,000km");
-        _distance.add("14,800km");
-        _distance.add("321km");
-        adapterParticipant = new adapterParticipant(_name,_distance);
+
+        participantsList = new ArrayList<>();
+        participantsList.add(new Participants());
+        participantsList.add(new Participants());
+        participantsList.add(new Participants());
+
+        adapterParticipant = new adapterParticipant(participantsList);
         rvEventInfoParticipants.setAdapter(adapterParticipant);
     }
 }

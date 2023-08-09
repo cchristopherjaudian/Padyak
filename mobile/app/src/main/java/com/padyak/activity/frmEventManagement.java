@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.padyak.R;
 import com.padyak.adapter.adapterEventManagement;
+import com.padyak.dto.CalendarEvent;
+import com.padyak.dto.MonthEvent;
 
 import java.time.Month;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class frmEventManagement extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     RecyclerView rvEventMonth;
     com.padyak.adapter.adapterEventManagement adapterEventManagement;
-    List<Integer> tempList;
+    List<CalendarEvent> calendarEvents;
     Button btnAddEvent, btnDeleteEvent;
 
     @Override
@@ -49,12 +51,12 @@ public class frmEventManagement extends AppCompatActivity {
     }
 
     public void loadEvents() {
-        tempList = new ArrayList<>();
-        tempList.add(1);
-        tempList.add(2);
-        tempList.add(3);
-        tempList.add(4);
-        adapterEventManagement = new adapterEventManagement(tempList);
+        calendarEvents = new ArrayList<>();
+        calendarEvents.add(new CalendarEvent());
+        calendarEvents.add(new CalendarEvent());
+        calendarEvents.add(new CalendarEvent());
+
+        adapterEventManagement = new adapterEventManagement(calendarEvents);
         rvEventMonth.setAdapter(adapterEventManagement);
     }
 }

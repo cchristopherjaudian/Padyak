@@ -10,15 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
+import com.padyak.dto.Participants;
 
 import java.util.List;
 
 public class adapterParticipant extends RecyclerView.Adapter<adapterParticipant.viewHolder>{
-    List<String> _name, _distance;
+    List<Participants> participants;
 
-    public adapterParticipant(List<String> _name, List<String> _distance) {
-        this._name = _name;
-        this._distance = _distance;
+    public adapterParticipant(List<Participants> participants) {
+        this.participants = participants;
     }
 
     @NonNull
@@ -32,13 +32,13 @@ public class adapterParticipant extends RecyclerView.Adapter<adapterParticipant.
     @Override
     public void onBindViewHolder(@NonNull adapterParticipant.viewHolder holder, int position) {
         holder.txRowNumber.setText(String.valueOf(position+1));
-        holder.txRowName.setText(_name.get(position));
-        holder.txRowDistance.setText(_distance.get(position));
+        holder.txRowName.setText(participants.get(position).getUserName());
+        holder.txRowDistance.setText("");
     }
 
     @Override
     public int getItemCount() {
-        return _name.size();
+        return participants.size();
     }
     public class viewHolder extends RecyclerView.ViewHolder {
         ImageView img;

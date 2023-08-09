@@ -8,20 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
+import com.padyak.dto.Newsfeed;
 
 import java.util.List;
 
 public class adapterNewsfeed extends RecyclerView.Adapter<adapterNewsfeed.viewHolder> {
 
-    List<String> _nfname,_nfstart,_nfend,_nfdistance,_nftimestart,_nftimeend;
 
-    public adapterNewsfeed(List<String> _nfname, List<String> _nfstart, List<String> _nfend, List<String> _nfdistance, List<String> _nftimestart, List<String> _nftimeend) {
-        this._nfname = _nfname;
-        this._nfstart = _nfstart;
-        this._nfend = _nfend;
-        this._nfdistance = _nfdistance;
-        this._nftimestart = _nftimestart;
-        this._nftimeend = _nftimeend;
+    List<Newsfeed> newsfeeds;
+
+    public adapterNewsfeed(List<Newsfeed> newsfeeds) {
+        this.newsfeeds = newsfeeds;
     }
 
     @NonNull
@@ -39,7 +36,7 @@ public class adapterNewsfeed extends RecyclerView.Adapter<adapterNewsfeed.viewHo
 
     @Override
     public int getItemCount() {
-        return _nfname.size();
+        return newsfeeds.size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder {

@@ -8,11 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.padyak.R;
-import com.padyak.model.AlertLevel;
+import com.padyak.dto.AlertLevel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class frmAlertInfo extends AppCompatActivity {
     ConstraintLayout cl1, cl2, cl3, cl4;

@@ -11,6 +11,7 @@ import android.widget.CompoundButton;
 
 import com.padyak.R;
 import com.padyak.adapter.adapterAlertGroup;
+import com.padyak.dto.GroupContact;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,7 @@ public class frmAlertGroup extends AppCompatActivity {
     Button btnSendGroup;
     LinearLayoutManager linearLayoutManager;
     com.padyak.adapter.adapterAlertGroup adapterAlertGroup;
-    List<String> _name, _contact;
-    List<Boolean> _isselected;
+    List<GroupContact> groupContacts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +52,15 @@ public class frmAlertGroup extends AppCompatActivity {
     }
 
     public void loadContacts() {
-        _name = new ArrayList<>();
-        _contact = new ArrayList<>();
-        _isselected = new ArrayList<>();
+        groupContacts = new ArrayList<>();
+        groupContacts.add(new GroupContact("Koya Elmo","","123",false));
+        groupContacts.add(new GroupContact("Koya Elmo","","123",false));
+        groupContacts.add(new GroupContact("Koya Elmo","","123",false));
+        groupContacts.add(new GroupContact("Koya Elmo","","123",false));
+        groupContacts.add(new GroupContact("Koya Elmo","","123",false));
+        groupContacts.add(new GroupContact("Koya Elmo","","123",false));
 
-        _name.add("Rasta Man");
-        _name.add("Elmo Porsyento");
-        _name.add("Ricardo Madlangtuta");
-
-        _contact.add("Rasta Man");
-        _contact.add("Elmo Porsyento");
-        _contact.add("Ricardo Madlangtuta");
-
-        _isselected.add(false);
-        _isselected.add(false);
-        _isselected.add(false);
-
-        adapterAlertGroup = new adapterAlertGroup(_name, _contact, _isselected);
+        adapterAlertGroup = new adapterAlertGroup(groupContacts);
         rvAlertGroup.setAdapter(adapterAlertGroup);
     }
 }

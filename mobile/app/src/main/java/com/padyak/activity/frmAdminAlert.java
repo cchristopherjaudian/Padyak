@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.padyak.R;
 import com.padyak.adapter.adapterAdminAlert;
+import com.padyak.dto.MemberAlert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 public class frmAdminAlert extends AppCompatActivity {
     RecyclerView rvAlertList;
     LinearLayoutManager linearLayoutManager;
-    List<String> _name, _message;
+    List<MemberAlert> memberAlertList;
     com.padyak.adapter.adapterAdminAlert adapterAdminAlert;
 
     @Override
@@ -29,14 +30,12 @@ public class frmAdminAlert extends AppCompatActivity {
         loadAlerts();
     }
     public void loadAlerts(){
-        _name = new ArrayList<>();
-        _message = new ArrayList<>();
-
-        _name.add("Ricardo Madlangtuta Jr.");
-        _name.add("Gorgonio Magalpoc");
-        _message.add("Awit natumba ako");
-        _message.add("Nakatapak ng taka dre");
-        adapterAdminAlert = new adapterAdminAlert(_name,_message);
+        memberAlertList = new ArrayList<>();
+        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
+        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
+        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
+        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
+        adapterAdminAlert = new adapterAdminAlert(memberAlertList);
         rvAlertList.setAdapter(adapterAdminAlert);
     }
 }
