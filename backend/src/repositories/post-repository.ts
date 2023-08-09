@@ -1,16 +1,13 @@
 import Firstore from "../database/firestore";
 import { IPost } from "../database/models/post";
 
-const instance = Firstore.getInstance();
-
 class PostLikesRepository {
   private _colName = "posts";
-  private _db = instance.getDb();
+  private _firestore = Firstore.getInstance();
 
   public async create(payload: IPost) {
     try {
-      console.log("payload post", payload);
-      const newData = await instance
+      const newData = await this._firestore
         .setCollectionName(this._colName)
         .setDocId(payload.id)
         .create(payload);
@@ -22,7 +19,7 @@ class PostLikesRepository {
 
   public async update(payload: IPost) {
     try {
-      const updatedData = await instance
+      const updatedData = await this._firestore
         .setCollectionName(this._colName)
         .setDocId(payload.id)
         .update(payload);
@@ -34,13 +31,13 @@ class PostLikesRepository {
   }
 
   public async findPostById(id: string) {
-    return (await instance
+    return (await this._firestore
       .setCollectionName(this._colName)
       .findById(id)) as IPost;
   }
 
   public async getPostsList() {
-    return instance.setCollectionName(this._colName).getAll<IPost>();
+    return this._firestore.setCollectionName(this._colName).getAll<IPost>();
   }
 }
 

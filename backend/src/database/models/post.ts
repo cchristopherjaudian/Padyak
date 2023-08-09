@@ -3,7 +3,9 @@ import { IBaseModel } from "./model";
 export interface IComments
   extends Pick<IBaseModel, "modifiedAt" | "createdAt"> {
   comment: string;
+  photoUrl: string;
   uid: string;
+  displayName: string;
 }
 
 export interface ILikes {

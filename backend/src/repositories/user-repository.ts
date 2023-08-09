@@ -1,15 +1,13 @@
 import Firstore from "../database/firestore";
 import { IUserModel } from "../database/models/user";
 
-const instance = Firstore.getInstance();
-
 class UserRepository {
   private _colName = "users";
-  private _db = instance.getDb();
+  private _firestore = Firstore.getInstance();
 
-  protected async create(payload: IUserModel): Promise<IUserModel> {
+  public async create(payload: IUserModel): Promise<IUserModel> {
     try {
-      const newUser = await instance
+      const newUser = await this._firestore
         .setCollectionName(this._colName)
         .setDocId(payload.id)
         .create(payload);
@@ -19,9 +17,10 @@ class UserRepository {
     }
   }
 
-  protected async findUserByEmail(email: string) {
+  public async findUserByEmail(email: string) {
     try {
-      const user = await this._db
+      const user = await this._firestore
+        .getDb()
         .collection("users")
         .where("emailAddress", "==", email)
         .get();

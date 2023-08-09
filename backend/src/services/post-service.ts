@@ -17,6 +17,8 @@ type TAddComment = {
   postId?: string;
   comment: string;
   createdAt: string;
+  photoUrl: string;
+  displayName: string;
 };
 
 class Likes {

@@ -87,6 +87,8 @@ const addComment = async (req: Request, res: Response, next: NextFunction) => {
     const posts = await postInstance.addComment({
       ...req.body,
       userId: request.user.id,
+      photoUrl: request.user.photoUrl,
+      displayName: `${request.user.firstname} ${request.user.lastname}`,
     });
 
     responseObject.createResponse(
