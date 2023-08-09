@@ -141,6 +141,9 @@ public class frmMain extends AppCompatActivity {
 
     public void loadCoverPhoto() {
         coverPhotoList = new ArrayList<>();
+        coverPhotoList.add(new CoverPhoto("","",R.drawable.bike1));
+        coverPhotoList.add(new CoverPhoto("","",R.drawable.bike2));
+        coverPhotoList.add(new CoverPhoto("","",R.drawable.bike3));
         adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
         rvCoverPhoto.setAdapter(adapterCoverPhoto);
     }

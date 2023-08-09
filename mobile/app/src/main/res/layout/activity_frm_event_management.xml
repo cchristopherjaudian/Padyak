@@ -51,7 +51,7 @@
             android:id="@+id/btnAddEvent"
             android:paddingHorizontal="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_size"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/rounded_affirmative_button"
@@ -64,7 +64,7 @@
         <Button
             android:id="@+id/btnDeleteEvent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_size"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/rounded_white_button"

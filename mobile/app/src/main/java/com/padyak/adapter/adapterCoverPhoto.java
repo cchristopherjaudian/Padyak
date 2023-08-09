@@ -30,7 +30,7 @@ public class adapterCoverPhoto extends RecyclerView.Adapter<adapterCoverPhoto.vi
 
     @Override
     public void onBindViewHolder(@NonNull adapterCoverPhoto.viewHolder holder, int position) {
-        //holder.img.setBackgroundResource(imageList.get(position));
+        holder.img.setBackgroundResource(imageList.get(position).getResourceId());
     }
 
     @Override

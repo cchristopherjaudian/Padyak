@@ -4,13 +4,23 @@ import java.util.Objects;
 
 public class CoverPhoto {
     private String imageId,imageURL;
+    private int resourceId;
 
-    public CoverPhoto(String imageId, String imageURL) {
+    public CoverPhoto(String imageId, String imageURL, int resourceId) {
         this.imageId = imageId;
         this.imageURL = imageURL;
+        this.resourceId = resourceId;
     }
 
     public CoverPhoto() {
+    }
+
+    public int getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(int resourceId) {
+        this.resourceId = resourceId;
     }
 
     public String getImageId() {
