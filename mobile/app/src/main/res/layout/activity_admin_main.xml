@@ -9,12 +9,12 @@
     android:paddingBottom="10dp"
     tools:context=".activity.AdminMainActivity">
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/txMainProfileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/coolvetica"
-        android:text="Hey Ricardo"
+        android:text="Hey Angelo"
         android:textColor="@color/colorHeader"
         android:textSize="@dimen/header_size"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,11 +30,11 @@
         android:textColor="@color/colorHeader"
         android:textSize="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/txMainProfileName" />
     <androidx.cardview.widget.CardView
         app:layout_constraintBottom_toBottomOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="@+id/txMainProfileName"
         android:layout_marginEnd="10dp"
         android:elevation="10dp"
         android:layout_width="60dp"

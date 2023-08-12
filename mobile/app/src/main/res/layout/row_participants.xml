@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:fontFamily="@font/coolvetica"
-        android:text="Ricardo Madlangtuta"
+        android:text="Angelo Carlos"
         android:textColor="#FFF"
         app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
         app:layout_constraintEnd_toStartOf="@+id/txRowDistance"

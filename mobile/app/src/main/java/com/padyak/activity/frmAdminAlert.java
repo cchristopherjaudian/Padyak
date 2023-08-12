@@ -31,10 +31,10 @@ public class frmAdminAlert extends AppCompatActivity {
     }
     public void loadAlerts(){
         memberAlertList = new ArrayList<>();
-        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
-        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
-        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
-        memberAlertList.add(new MemberAlert("1","1","Ricardo Madlangtuta Jr,","","Awit natumba ako",0d,0d,1));
+        memberAlertList.add(new MemberAlert("1","1","Angelo Carlos Jr,","","Awit natumba ako",0d,0d,1));
+        memberAlertList.add(new MemberAlert("1","1","Angelo Carlos Jr,","","Awit natumba ako",0d,0d,1));
+        memberAlertList.add(new MemberAlert("1","1","Angelo Carlos Jr,","","Awit natumba ako",0d,0d,1));
+        memberAlertList.add(new MemberAlert("1","1","Angelo Carlos Jr,","","Awit natumba ako",0d,0d,1));
         adapterAdminAlert = new adapterAdminAlert(memberAlertList);
         rvAlertList.setAdapter(adapterAdminAlert);
     }

@@ -32,7 +32,8 @@ public class adapterParticipant extends RecyclerView.Adapter<adapterParticipant.
     @Override
     public void onBindViewHolder(@NonNull adapterParticipant.viewHolder holder, int position) {
         holder.txRowNumber.setText(String.valueOf(position+1));
-        holder.txRowName.setText(participants.get(position).getUserName());
+        //holder.txRowName.setText(participants.get(position).getUserName());
+        holder.txRowName.setText("Angelo Carlos");
         holder.txRowDistance.setText("");
     }
 

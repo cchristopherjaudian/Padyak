@@ -33,7 +33,8 @@ public class adapterAlertGroup extends RecyclerView.Adapter<adapterAlertGroup.vi
 
     @Override
     public void onBindViewHolder(@NonNull adapterAlertGroup.viewHolder holder, int position) {
-        holder.txRowName.setText(contact.get(position).getUserName());
+        //holder.txRowName.setText(contact.get(position).getUserName());
+        holder.txRowName.setText("Angelo Carlos");
         holder.checkBox.setChecked(contact.get(position).isSelected());
     }
 

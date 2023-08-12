@@ -10,14 +10,18 @@ import androidx.recyclerview.widget.SnapHelper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.padyak.R;
 import com.padyak.adapter.adapterCoverPhoto;
 import com.padyak.adapter.adapterNewsfeed;
 import com.padyak.dto.CoverPhoto;
 import com.padyak.dto.Newsfeed;
+import com.padyak.utility.LoggedUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +40,8 @@ public class frmMain extends AppCompatActivity {
     List<CoverPhoto> coverPhotoList;
     com.padyak.adapter.adapterCoverPhoto adapterCoverPhoto;
     com.padyak.adapter.adapterNewsfeed adapterNewsfeed;
-
+    TextView txMainProfileName,txProfileName;
+    ImageView imgMainProfileDP,imgProfileDP;
 
     RelativeLayout rlEvents, rlAlert, rlHospital, rlRepair, rlPolice, rlRiding;
 
@@ -44,6 +49,12 @@ public class frmMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_main);
+
+        imgProfileDP = findViewById(R.id.imgProfileDP);
+        imgMainProfileDP = findViewById(R.id.imgMainProfileDP);
+
+        txMainProfileName = findViewById(R.id.txMainProfileName);
+        txProfileName = findViewById(R.id.txProfileName);
 
         bottomBar = findViewById(R.id.bottomBar);
         frame_home = findViewById(R.id.frame_home);
@@ -70,6 +81,17 @@ public class frmMain extends AppCompatActivity {
 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(rvCoverPhoto);
+
+
+        txMainProfileName.setText("Hey " + LoggedUser.getInstance().getFirstName());
+        txProfileName.setText(LoggedUser.getInstance().getFirstName());
+        try {
+            Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgProfileDP);
+            Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgMainProfileDP);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
 
         bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override

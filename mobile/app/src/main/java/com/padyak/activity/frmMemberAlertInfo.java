@@ -43,7 +43,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
         Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(myPos)
                 .title("Alert Area")
-                .snippet("Ricardo J. Madlangtuta"));
+                .snippet("Angelo Carlos"));
         if(marker != null) marker.showInfoWindow();
     }
 

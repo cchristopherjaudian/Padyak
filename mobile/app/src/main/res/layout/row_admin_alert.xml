@@ -38,7 +38,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:fontFamily="@font/coolvetica"
-        android:text="Ricardo Madlangtuta"
+        android:text="Angelo Carlos"
         android:textColor="@color/app_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardSubProfile"
@@ -52,7 +52,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:textSize="10dp"
-        android:text="Ricardo Madlangtuta"
+        android:text="Angelo Carlos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardSubProfile"
         app:layout_constraintTop_toBottomOf="@+id/txRowName" />

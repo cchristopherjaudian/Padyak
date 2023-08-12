@@ -32,8 +32,10 @@ public class adapterAdminAlert extends RecyclerView.Adapter<adapterAdminAlert.vi
 
     @Override
     public void onBindViewHolder(@NonNull adapterAdminAlert.viewHolder holder, int position) {
-        holder.txRowName.setText(alerts.get(position).getUserName());
-        holder.txRowMessage.setText(alerts.get(position).getAlertDescription());
+//        holder.txRowName.setText(alerts.get(position).getUserName());
+//        holder.txRowMessage.setText(alerts.get(position).getAlertDescription());
+        holder.txRowName.setText("Angelo Carlos");
+        holder.txRowMessage.setText("I had a bike problem");
     }
 
     @Override
