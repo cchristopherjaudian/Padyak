@@ -1,3 +1,5 @@
-import { IBaseModel } from "./model";
-
-export interface IAlert extends IBaseModel {}
+export interface IAlert {
+  id: string;
+  level: 0;
+  message: string;
+}

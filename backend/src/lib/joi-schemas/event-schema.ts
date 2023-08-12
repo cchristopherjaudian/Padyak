@@ -13,4 +13,24 @@ const getYearlyEventSchema = Joi.object({
   year: Joi.number().required(),
 });
 
-export { createEventSchema, getYearlyEventSchema };
+const updateEventSchema = Joi.object({
+  month: Joi.string().optional(),
+  year: Joi.string().optional(),
+  eventDate: Joi.string().optional(),
+  name: Joi.string().optional(),
+  photoUrl: Joi.string().optional(),
+  modifiedAt: Joi.string().optional().default(new Date().toISOString()),
+});
+
+const registerEventSchema = Joi.object({
+  photoUrl: Joi.string().required(),
+  paymentUrl: Joi.string().required(),
+  modifiedAt: Joi.string().optional().default(new Date().toISOString()),
+});
+
+export {
+  createEventSchema,
+  getYearlyEventSchema,
+  updateEventSchema,
+  registerEventSchema,
+};

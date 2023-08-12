@@ -5,6 +5,8 @@ import TokenMiddleware from "../middlewares/token-middleware";
 import {
   createEventSchema,
   getYearlyEventSchema,
+  registerEventSchema,
+  updateEventSchema,
 } from "../lib/joi-schemas/event-schema";
 
 const router = express.Router();
@@ -26,6 +28,30 @@ router.get(
     requestSchemaValidate(getYearlyEventSchema),
   ],
   eventController.getYearlyEvents
+);
+
+router.get(
+  "/:eventId",
+  [tokenMiddleware.adminValidate as any],
+  eventController.getEvent
+);
+
+router.patch(
+  "/:eventId",
+  [
+    tokenMiddleware.adminValidate as any,
+    requestSchemaValidate(updateEventSchema),
+  ],
+  eventController.updateEvent
+);
+
+router.patch(
+  "/cyclist/:eventId",
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(registerEventSchema),
+  ],
+  eventController.registerEvent
 );
 
 export default router;

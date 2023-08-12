@@ -33,7 +33,6 @@ class EventRepository {
 
   public async create(payload: TCreateEvent) {
     try {
-      console.log("payload", payload);
       const newUser = await this._firestore
         .setCollectionName(this._colName)
         .setDocId(payload.id)
@@ -42,6 +41,25 @@ class EventRepository {
     } catch (error) {
       throw error;
     }
+  }
+
+  public async update(payload: Partial<TCreateEvent>) {
+    try {
+      const event = await this._firestore
+        .setCollectionName(this._colName)
+        .setDocId(payload.id as string)
+        .update(payload);
+
+      return event ? (event as IEvent) : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async findEventById(id: string) {
+    return (await this._firestore
+      .setCollectionName(this._colName)
+      .findById(id)) as IEvent;
   }
 
   public async getEventsCount(year: string, uid: string) {
