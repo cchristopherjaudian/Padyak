@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/txProfileDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -32,13 +32,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txMainProfileName" />
     <androidx.cardview.widget.CardView
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintBottom_toBottomOf="@+id/txProfileDay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txMainProfileName"
         android:layout_marginEnd="10dp"
         android:elevation="10dp"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/dp_circle_size"
+        android:layout_height="@dimen/dp_circle_size"
         app:cardCornerRadius="60dp">
         <ImageView
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
         android:src="@drawable/cycling"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/txProfileDay" />
 
     <TextView
         android:id="@+id/textView12"

@@ -37,6 +37,14 @@ public class LoggedUser {
         this.height = height;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
     public boolean isIs_admin() {
         return is_admin;
     }

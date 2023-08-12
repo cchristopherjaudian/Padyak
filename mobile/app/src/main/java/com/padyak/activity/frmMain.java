@@ -20,11 +20,17 @@ import com.padyak.adapter.adapterCoverPhoto;
 import com.padyak.adapter.adapterNewsfeed;
 import com.padyak.dto.CoverPhoto;
 import com.padyak.dto.Newsfeed;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
@@ -40,7 +46,7 @@ public class frmMain extends AppCompatActivity {
     List<CoverPhoto> coverPhotoList;
     com.padyak.adapter.adapterCoverPhoto adapterCoverPhoto;
     com.padyak.adapter.adapterNewsfeed adapterNewsfeed;
-    TextView txMainProfileName,txProfileName;
+    TextView txMainProfileName,txProfileName,txProfileDay;
     ImageView imgMainProfileDP,imgProfileDP;
 
     RelativeLayout rlEvents, rlAlert, rlHospital, rlRepair, rlPolice, rlRiding;
@@ -49,7 +55,7 @@ public class frmMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_main);
-
+        txProfileDay = findViewById(R.id.txProfileDay);
         imgProfileDP = findViewById(R.id.imgProfileDP);
         imgMainProfileDP = findViewById(R.id.imgMainProfileDP);
 
@@ -83,8 +89,12 @@ public class frmMain extends AppCompatActivity {
         snapHelper.attachToRecyclerView(rvCoverPhoto);
 
 
-        txMainProfileName.setText("Hey " + LoggedUser.getInstance().getFirstName());
-        txProfileName.setText(LoggedUser.getInstance().getFirstName());
+        txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
+        txProfileName.setText(LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()));
+        Calendar calendar = Calendar.getInstance();
+        String dateToday = Helper.getInstance().dateFormat(calendar.getTime());
+        String dayToday = DayOfWeek.of( calendar.get(Calendar.DAY_OF_WEEK)-1).getDisplayName(TextStyle.FULL , Locale.US);
+        txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateToday));
         try {
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgProfileDP);
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgMainProfileDP);

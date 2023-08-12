@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.padyak.R;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.Prefs;
+import com.padyak.utility.VolleyHttp;
 
 public class frmSplash extends AppCompatActivity {
     ProgressBar spinner;
@@ -38,6 +40,7 @@ public class frmSplash extends AppCompatActivity {
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
     private static final int REQ_ONE_TAP = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class frmSplash extends AppCompatActivity {
                 .setAutoSelectEnabled(true)
                 .build();
 
-        btnGAuth.setOnClickListener(v->{
+        btnGAuth.setOnClickListener(v -> {
             oneTapClient.beginSignIn(signInRequest)
                     .addOnSuccessListener(frmSplash.this, new OnSuccessListener<BeginSignInResult>() {
                         @Override
@@ -84,18 +87,19 @@ public class frmSplash extends AppCompatActivity {
                     });
         });
         Prefs.getInstance().getUser(this);
-        if(LoggedUser.getInstance().getFirstName().equals("")){
+        if (LoggedUser.getInstance().getFirstName().equals("")) {
             spinner.setVisibility(View.INVISIBLE);
-            textView2.setVisibility(View.INVISIBLE);
+            textView2.setText("Please Sign-in with your Google Account");
             btnGAuth.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             spinner.setVisibility(View.VISIBLE);
-            textView2.setVisibility(View.VISIBLE);
+            textView2.setText("Connecting. Please wait...");
             btnGAuth.setVisibility(View.GONE);
-            intent = new Intent(frmSplash.this,frmMain.class);
+            intent = new Intent(frmSplash.this, frmMain.class);
             startActivity(intent);
         }
     }
+
     protected void onActivityResult(int requestCode, int resultCode,
                                     @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -104,16 +108,33 @@ public class frmSplash extends AppCompatActivity {
             case REQ_ONE_TAP:
                 try {
                     SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
-                    System.out.println(credential);
-                    String idToken = credential.getGoogleIdToken();
-                    Prefs.getInstance().setUser(this,"uuid",credential.getId());
-                    Prefs.getInstance().setUser(this,"imgUrl",credential.getProfilePictureUri().toString());
-                    Prefs.getInstance().setUser(this,"firstName",credential.getDisplayName());
-                    Prefs.getInstance().setUser(this,"phoneNumber",credential.getPhoneNumber());
-                    Prefs.getInstance().getUser(this);
-                    intent = new Intent(frmSplash.this,frmMain.class);
-                    startActivity(intent);
-
+                    String reqParam = "/email?emailAddress=".concat(credential.getId());
+                    VolleyHttp volleyHttp = new VolleyHttp(reqParam, null, "user", frmSplash.this);
+                    int resCode = volleyHttp.getResponseStatus();
+                    Log.d("Log_Padyak", "resCode: " + resCode);
+                    if (resCode == 200) {
+                        Prefs.getInstance().setUser(this, "uuid", credential.getId());
+                        Prefs.getInstance().setUser(this, "imgUrl", credential.getProfilePictureUri().toString());
+                        Prefs.getInstance().setUser(this, "firstName", credential.getGivenName());
+                        Prefs.getInstance().setUser(this, "lastName", credential.getFamilyName());
+                        Prefs.getInstance().setUser(this, "phoneNumber", credential.getPhoneNumber());
+                        intent = new Intent(frmSplash.this, frmMain.class);
+                        startActivity(intent);
+                        finish();
+                    } else if (resCode == 404) {
+                        Bundle b = new Bundle();
+                        b.putString("photoURL",credential.getProfilePictureUri().toString());
+                        b.putString("email", credential.getId());
+                        b.putString("firstname", credential.getGivenName());
+                        b.putString("lastname", credential.getFamilyName());
+                        b.putString("contact", credential.getPhoneNumber());
+                        intent = new Intent(frmSplash.this, frmAccount.class);
+                        intent.putExtras(b);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, "Failed to retrieve information. Please try again", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (ApiException e) {
                     Toast.makeText(frmSplash.this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
                 }

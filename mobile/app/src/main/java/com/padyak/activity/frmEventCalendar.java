@@ -14,6 +14,7 @@ import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.padyak.R;
+import com.padyak.utility.Helper;
 
 import java.text.SimpleDateFormat;
 import java.time.Month;
@@ -58,13 +59,7 @@ public class frmEventCalendar extends AppCompatActivity {
             @Override
             public void onDayClick(EventDay eventDay) {
                 Calendar clickedDayCalendar = eventDay.getCalendar();
-                Date selectedDate = clickedDayCalendar.getTime();
-                int monthNum = selectedDate.getMonth() + 1;
-                int dayNum = selectedDate.getDate();
-                int yearNum = 1900 +  selectedDate.getYear();
-
-                String finalDate = String.format("%s %02d, %d",Month.of(monthNum).toString(),dayNum,yearNum);
-
+                String finalDate = Helper.getInstance().dateFormat(clickedDayCalendar.getTime());
                 txSelectedDate.setText(finalDate);
             }
         });

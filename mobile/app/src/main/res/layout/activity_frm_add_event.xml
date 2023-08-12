@@ -42,7 +42,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardEventImage" />
 
         <TextView
-            android:id="@+id/textView35"
+            android:id="@+id/txCreateEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -55,7 +55,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
         <EditText
-            android:id="@+id/txAddEventTitle"
+            android:id="@+id/etCreateEmail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -68,7 +68,7 @@
             android:padding="7dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView35" />
+            app:layout_constraintTop_toBottomOf="@+id/txCreateEmail" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linearLayoutCompat"
@@ -81,7 +81,7 @@
             android:weightSum="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txAddEventTitle">
+            app:layout_constraintTop_toBottomOf="@+id/etCreateEmail">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"

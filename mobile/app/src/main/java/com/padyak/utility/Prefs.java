@@ -48,6 +48,7 @@ public class Prefs {
                 gEdit.putString(k,(String)v);
             }
             gEdit.apply();
+            getUser(c);
             return true;
         } catch (Exception err) {
             return false;
