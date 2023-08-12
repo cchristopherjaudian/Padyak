@@ -11,7 +11,7 @@ type TJoiError = {
 const requestSchemaValidate =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
     console.log("req.body", req.body);
-    const event = Object.keys.length === 0 ? req.body : req.query;
+    const event = Object.keys(req.body).length === 0 ? req.query : req.body;
     const { error, value } = schema.validate(event, { abortEarly: false });
 
     if (error) {

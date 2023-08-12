@@ -12,4 +12,4 @@ export type TRequestHandler = (
   response: Response
 ) => void | Promise<void>;
 
-export default functions.region("asia-northeast1");
+export default functions.region("asia-east1");

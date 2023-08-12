@@ -22,4 +22,23 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { createUser };
+const getUserByEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await userInstance.getUserByEmail(req.body.emailAddress);
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_RETRIEVED,
+      user
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { createUser, getUserByEmail };

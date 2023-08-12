@@ -17,4 +17,8 @@ const createUserSchema = Joi.object({
   isAdmin: Joi.boolean().optional().default(false),
 });
 
-export { createUserSchema };
+const getUserByEmailSchma = Joi.object({
+  emailAddress: Joi.string().email().required(),
+});
+
+export { createUserSchema, getUserByEmailSchma };

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "padyak-2023"
-  }
+    "default": "padyak-2023",
+    "personal": "padyak-playground"
+  },
+  "targets": {},
+  "etags": {}
 }

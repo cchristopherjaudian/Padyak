@@ -2,3 +2,5 @@ node_modules/
 
 # build files
 dist/
+
+test.ts

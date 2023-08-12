@@ -8,9 +8,12 @@ module.exports = {
   },
   extends: ["eslint:recommended", "google"],
   rules: {
+    "no-invalid-this": "off",
+    "indent": "off",
+    "linebreak-style": 0,
     "no-restricted-globals": ["error", "name", "length"],
     "prefer-arrow-callback": "error",
-    quotes: ["error", "single,double", { allowTemplateLiterals: true }],
+    "quotes": ["error", "double", {allowTemplateLiterals: true}],
   },
   overrides: [
     {
@@ -22,4 +25,5 @@ module.exports = {
     },
   ],
   globals: {},
+  ignorePatterns: ["dist", "node_modules"],
 };

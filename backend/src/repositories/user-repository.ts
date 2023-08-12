@@ -25,7 +25,7 @@ class UserRepository {
         .where("emailAddress", "==", email)
         .get();
 
-      return user.docs[0]?.data() || null;
+      return (user.docs[0]?.data() as IUserModel) || null;
     } catch (error) {
       throw error;
     }
