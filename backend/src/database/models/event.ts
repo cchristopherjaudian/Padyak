@@ -4,6 +4,7 @@ import { IUserModel } from "./user";
 export interface IRegisteredUser extends Pick<IUserModel, "photoUrl"> {
   displayName: string;
   uid: string;
+  paymentUrl: string;
 }
 
 export interface IEvent extends IBaseModel {

@@ -3,6 +3,7 @@ import userRoutes from "./user-route";
 import postRoutes from "./posts-route";
 import eventRoutes from "./event-route";
 import adminRoutes from "./admin-route";
+import alertRoute from "./alert-route";
 
 const router = Router();
 
@@ -28,6 +29,10 @@ const defaultRoutes: TRoutelist = [
   {
     path: "/admins",
     controller: adminRoutes,
+  },
+  {
+    path: "/alerts",
+    controller: alertRoute,
   },
 ];
 
