@@ -77,10 +77,8 @@ public class frmAccount extends AppCompatActivity {
                     frmAccount.this, datePickerListener,
                     mYear, mMonth, mDay);
             DatePicker datePicker = datePickerDialog.getDatePicker();
-            c.add(Calendar.MONTH, +1);
             long oneMonthAhead = c.getTimeInMillis();
             datePicker.setMaxDate(oneMonthAhead);
-            datePicker.setMinDate(System.currentTimeMillis() - 1000);
             datePickerDialog.show();
         });
 

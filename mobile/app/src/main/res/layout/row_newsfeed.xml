@@ -36,17 +36,64 @@
         <TextView
             android:id="@+id/txRowName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="10dp"
             android:fontFamily="@font/coolvetica"
+            android:gravity="center_vertical"
             android:text="Angelo Carlos"
             android:textColor="@color/app_color"
             app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgComments"
             app:layout_constraintStart_toEndOf="@+id/cardSubProfile"
             app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />
 
+        <TextView
+
+            android:id="@+id/txLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-black"
+            android:text="125"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />
+
+        <ImageView
+            android:id="@+id/imgLikes"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="5dp"
+
+            android:src="@drawable/baseline_thumb_up_24"
+            app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
+            app:layout_constraintEnd_toStartOf="@+id/txLikes"
+            app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />
+
+        <TextView
+
+            android:id="@+id/txComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-black"
+            android:text="125"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
+            app:layout_constraintEnd_toStartOf="@+id/imgLikes"
+            app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />
+
+        <ImageView
+            android:id="@+id/imgComments"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/baseline_mode_comment_24"
+            app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
+            app:layout_constraintEnd_toStartOf="@+id/txComments"
+            app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />
         <ImageView
             android:id="@+id/imageView11"
             android:layout_width="wrap_content"
@@ -58,6 +105,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardSubProfile" />
 
         <TextView
+            android:id="@+id/textView45"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"

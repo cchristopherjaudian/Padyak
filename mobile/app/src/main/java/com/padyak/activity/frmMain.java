@@ -24,8 +24,9 @@ import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -91,10 +92,10 @@ public class frmMain extends AppCompatActivity {
 
         txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
         txProfileName.setText(LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()));
-        Calendar calendar = Calendar.getInstance();
-        String dateToday = Helper.getInstance().dateFormat(calendar.getTime());
-        String dayToday = DayOfWeek.of( calendar.get(Calendar.DAY_OF_WEEK)-1).getDisplayName(TextStyle.FULL , Locale.US);
-        txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateToday));
+        LocalDate dateNow = LocalDate.now();
+        String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL , Locale.US);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+        txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
         try {
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgProfileDP);
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgMainProfileDP);

@@ -41,6 +41,7 @@
         android:layout_height="@dimen/dp_circle_size"
         app:cardCornerRadius="60dp">
         <ImageView
+            android:id="@+id/imgAdminProfile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"

@@ -56,38 +56,47 @@ public class VolleyHttp {
             protected String doInBackground(String... strings) {
                 try {
 
-                    Log.d("Log_Padyak", "params: " + params);
-
-                    params.forEach((k,v)->{
-                        try {
-                            data = data.concat("&").concat(URLEncoder.encode(k, "UTF-8").concat( "=").concat(URLEncoder.encode((String) v, "UTF-8")));
-                        } catch (UnsupportedEncodingException e) {
-
-                        }
-                    });
-                    data = data.substring(1);
                     connURL = new URL(endpoint);
-
-                    Log.d("Log_Padyak", "connURL: " + connURL.toString());
-                    Log.d("Log_Padyak", "data: " + data);
-
                     conn = (HttpURLConnection) connURL.openConnection();
-                    conn.setDoOutput(true);
+                    if(params != null){
+                        conn.setRequestMethod("POST");
+                        conn.setDoOutput(true);
+                    } else{
+                        conn.setRequestMethod("GET");
+                    }
+
+
                     conn.setReadTimeout(15000);
                     conn.setConnectTimeout(15000);
-                    conn.setRequestMethod((params == null) ? "GET" : "POST");
-                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                    wr.write(data);
-                    wr.flush();
+
+
+                    if(params != null){
+
+                        params.forEach((k,v)->{
+                            try {
+                                data = data.concat("&").concat(URLEncoder.encode(k, "UTF-8").concat( "=").concat(URLEncoder.encode((String) v, "UTF-8")));
+                            } catch (UnsupportedEncodingException e) {
+
+                            }
+                        });
+                        data = data.substring(1);
+
+                        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                        wr.write(data);
+                        wr.flush();
+                    }
 
                     int responseCode=conn.getResponseCode();
-                    Log.d("Log_Padyak", "Response Code: " + responseCode);
+                    Log.d("Log_Padyak", "connURL: " + connURL.toString());
+                    Log.d("Log_Padyak", "data: " + data);
+                    Log.d("Log_Padyak", "Response Code Volley: " + responseCode);
+                    Log.d("Log_Padyak", "Request Type Volley: " + conn.getRequestMethod());
                     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     String content = "", line;
                     while ((line = rd.readLine()) != null) {
                         content += line + "\n";
                     }
-                    Log.d("Log_Padyak", "content: " + content);
+                    Log.d("Log_Padyak", "content volley: " + content);
                     return content;
                 } catch (Exception e) {
                     Log.d("Log_Padyak", "exception: " + e.getMessage());
