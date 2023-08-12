@@ -1,6 +1,6 @@
 import { IUserModel } from "../database/models/user";
 import JsonWebToken from "./token-service";
-import UserRepository from "../repositories/user-repository";
+import UserRepository, { TUpdateUser } from "../repositories/user-repository";
 import UserMapper from "../lib/mappers/user-mapper";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
 
@@ -56,6 +56,15 @@ class UserService {
         throw new NotFoundError("User does not exists.");
       }
       return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async updateUser(payload: TUpdateUser) {
+    try {
+      const updatedUser = await this._firestore.update(payload);
+      return updatedUser;
     } catch (error) {
       throw error;
     }

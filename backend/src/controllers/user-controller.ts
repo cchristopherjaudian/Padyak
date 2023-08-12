@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { UserService } from "../services/user-service";
 import ResponseObject from "../lib/response-object";
 import ResponseCodes from "../commons/response-codes";
+import { IRequestWithUser } from "../middlewares/token-middleware";
 
 const userInstance = new UserService();
 const responseObject = new ResponseObject();
@@ -41,4 +42,23 @@ const getUserByEmail = async (
   }
 };
 
-export default { createUser, getUserByEmail };
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+  const request = req as IRequestWithUser;
+  try {
+    const user = await userInstance.updateUser({
+      ...req.body,
+      id: request.user.id,
+    });
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_RETRIEVED,
+      user!
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { createUser, getUserByEmail, updateUser };
