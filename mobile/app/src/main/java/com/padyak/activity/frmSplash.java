@@ -80,6 +80,7 @@ public class frmSplash extends AppCompatActivity {
                                         result.getPendingIntent().getIntentSender(), REQ_ONE_TAP,
                                         null, 0, 0, 0);
                             } catch (IntentSender.SendIntentException e) {
+                                System.out.println(e.getMessage());
                                 Toast.makeText(frmSplash.this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -93,7 +94,8 @@ public class frmSplash extends AppCompatActivity {
                     });
         });
         Prefs.getInstance().getUser(this);
-        if (LoggedUser.getInstance().getFirstName().equals("")) {
+        Log.d("Log_Padyak", "SP LoggedUser: " + LoggedUser.getInstance().toString());
+        if (LoggedUser.getInstance().getEmail().equals("")) {
             spinner.setVisibility(View.INVISIBLE);
             textView2.setText("Please Sign-in with your Google Account");
             btnGAuth.setVisibility(View.VISIBLE);
@@ -101,65 +103,7 @@ public class frmSplash extends AppCompatActivity {
             spinner.setVisibility(View.VISIBLE);
             textView2.setText("Connecting. Please wait...");
             btnGAuth.setVisibility(View.GONE);
-
-            String reqParam = "/email?emailAddress=".concat(LoggedUser.getInstance().getEmail());
-            VolleyHttp volleyHttp = new VolleyHttp(reqParam, null, "user", frmSplash.this);
-            String response = volleyHttp.getResponseBody();
-            Log.d("Log_Padyak", "response: " + response);
-            JSONObject reader = null;
-            try {
-                reader = new JSONObject(response);
-                int responseStatus = reader.getInt("status");
-                if (responseStatus == 200) {
-                    JSONObject userObject = reader.getJSONObject("data");
-                    Prefs.getInstance().setUser(frmSplash.this,"firstName",userObject.getString("firstname"));
-                    Prefs.getInstance().setUser(frmSplash.this,"lastName",userObject.getString("lastname"));
-                    Prefs.getInstance().setUser(frmSplash.this,"imgUrl",userObject.getString("photoUrl"));
-                    Prefs.getInstance().setUser(frmSplash.this,"is_admin",userObject.getBoolean("isAdmin"));
-                    Prefs.getInstance().setUser(frmSplash.this,"birthDate",userObject.getString("birthday"));
-                    Prefs.getInstance().setUser(frmSplash.this,"weight",userObject.getString("weight"));
-                    Prefs.getInstance().setUser(frmSplash.this,"height",userObject.getString("height"));
-                    Prefs.getInstance().setUser(frmSplash.this,"phoneNumber",userObject.getString("contactNumber"));
-                    Prefs.getInstance().setUser(frmSplash.this,"uuid",userObject.getString("id"));
-                    Prefs.getInstance().setUser(frmSplash.this,"gender",userObject.getString("gender"));
-
-                    Map<String, Object> tokenMap = new HashMap<>();
-                    tokenMap.put("firstname",userObject.getString("firstname"));
-                    tokenMap.put("lastname",userObject.getString("lastname"));
-                    tokenMap.put("photoUrl",userObject.getString("photoUrl"));
-                    tokenMap.put("birthday",userObject.getString("birthday"));
-                    tokenMap.put("weight",userObject.getString("weight"));
-                    tokenMap.put("height",userObject.getString("height"));
-                    tokenMap.put("contactNumber",userObject.getString("contactNumber"));
-                    tokenMap.put("gender",userObject.getString("gender"));
-                    tokenMap.put("emailAddress",userObject.getString("emailAddress"));
-
-                    VolleyHttp tokenHttp = new VolleyHttp("", tokenMap, "user", frmSplash.this);
-                    String responseToken = tokenHttp.getResponseBody();
-                    Log.d("Log_Padyak", "responseToken: " + responseToken);
-                    reader = new JSONObject(responseToken);
-                    JSONObject dataObject = reader.getJSONObject("data");
-                    String refToken = dataObject.getString("token");
-                    LoggedUser.getInstance().setRefreshToken(refToken);
-                    Log.d("Log_Padyak", "userObject: " + userObject);
-                    Log.d("Log_Padyak", "isAdmin: " + userObject.getBoolean("isAdmin"));
-                    if(userObject.getBoolean("isAdmin") == false){
-                        intent = new Intent(frmSplash.this, frmMain.class);
-                    } else{
-                        intent = new Intent(frmSplash.this, AdminMainActivity.class);
-                    }
-                    startActivity(intent);
-                } else{
-                    throw new Exception("");
-                }
-            } catch (Exception e) {
-                Log.d("Log_Padyak", "onCreate: " + e.getMessage());
-                Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
-                spinner.setVisibility(View.INVISIBLE);
-                textView2.setText("Please Sign-in with your Google Account");
-                btnGAuth.setVisibility(View.VISIBLE);
-            }
-
+            validateLogin(LoggedUser.getInstance().getEmail());
         }
     }
 
@@ -174,23 +118,15 @@ public class frmSplash extends AppCompatActivity {
                     String reqParam = "/email?emailAddress=".concat(credential.getId());
                     VolleyHttp volleyHttp = new VolleyHttp(reqParam, null, "user", frmSplash.this);
                     int resCode = volleyHttp.getResponseStatus();
-                    Log.d("Log_Padyak", "resCode: " + resCode);
                     if (resCode == 200) {
-                        Prefs.getInstance().setUser(this, "uuid", credential.getId());
-                        Prefs.getInstance().setUser(this, "imgUrl", credential.getProfilePictureUri().toString());
-                        Prefs.getInstance().setUser(this, "firstName", credential.getGivenName());
-                        Prefs.getInstance().setUser(this, "lastName", credential.getFamilyName());
-                        Prefs.getInstance().setUser(this, "phoneNumber", credential.getPhoneNumber());
-                        intent = new Intent(frmSplash.this, frmMain.class);
-                        startActivity(intent);
-                        finish();
+                        validateLogin(credential.getId());
                     } else if (resCode == 404) {
                         Bundle b = new Bundle();
-                        b.putString("photoURL",credential.getProfilePictureUri().toString());
-                        b.putString("email", credential.getId());
-                        b.putString("firstname", credential.getGivenName());
-                        b.putString("lastname", credential.getFamilyName());
-                        b.putString("contact", credential.getPhoneNumber());
+                        b.putString(Prefs.IMG_KEY,credential.getProfilePictureUri().toString());
+                        b.putString(Prefs.EMAIL_KEY, credential.getId());
+                        b.putString(Prefs.FN_KEY, credential.getGivenName());
+                        b.putString(Prefs.LN_KEY, credential.getFamilyName());
+                        b.putString(Prefs.PHONE_KEY, credential.getPhoneNumber());
                         intent = new Intent(frmSplash.this, frmAccount.class);
                         intent.putExtras(b);
                         startActivity(intent);
@@ -204,6 +140,63 @@ public class frmSplash extends AppCompatActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void validateLogin(String emailAdd){
+        String reqParam = "/email?emailAddress=".concat(emailAdd);
+        VolleyHttp volleyHttp = new VolleyHttp(reqParam, null, "user", frmSplash.this);
+        String response = volleyHttp.getResponseBody();
+        JSONObject reader = null;
+        try {
+            reader = new JSONObject(response);
+            int responseStatus = reader.getInt("status");
+            if (responseStatus == 200) {
+                JSONObject userObject = reader.getJSONObject("data");
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.FN_KEY,userObject.getString(Prefs.FN_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.LN_KEY,userObject.getString(Prefs.LN_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.IMG_KEY,userObject.getString(Prefs.IMG_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.ADMIN_KEY,userObject.getBoolean(Prefs.ADMIN_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.BDAY_KEY,userObject.getString(Prefs.BDAY_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.WEIGHT_KEY,userObject.getString(Prefs.WEIGHT_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.HEIGHT_KEY,userObject.getString(Prefs.HEIGHT_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.PHONE_KEY,userObject.getString(Prefs.PHONE_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.ID_KEY,userObject.getString(Prefs.ID_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.GENDER_KEY,userObject.getString(Prefs.GENDER_KEY));
+
+                Map<String, Object> tokenMap = new HashMap<>();
+                tokenMap.put(Prefs.FN_KEY,userObject.getString(Prefs.FN_KEY));
+                tokenMap.put(Prefs.LN_KEY,userObject.getString(Prefs.LN_KEY));
+                tokenMap.put(Prefs.IMG_KEY,userObject.getString(Prefs.IMG_KEY));
+                tokenMap.put(Prefs.BDAY_KEY,userObject.getString(Prefs.BDAY_KEY));
+                tokenMap.put(Prefs.WEIGHT_KEY,userObject.getString(Prefs.WEIGHT_KEY));
+                tokenMap.put(Prefs.HEIGHT_KEY,userObject.getString(Prefs.HEIGHT_KEY));
+                tokenMap.put(Prefs.PHONE_KEY,userObject.getString(Prefs.PHONE_KEY));
+                tokenMap.put(Prefs.GENDER_KEY,userObject.getString(Prefs.GENDER_KEY));
+                tokenMap.put(Prefs.EMAIL_KEY,userObject.getString(Prefs.EMAIL_KEY));
+
+                VolleyHttp tokenHttp = new VolleyHttp("", tokenMap, "user", frmSplash.this);
+                String responseToken = tokenHttp.getResponseBody();
+                reader = new JSONObject(responseToken);
+                JSONObject dataObject = reader.getJSONObject("data");
+                String refToken = dataObject.getString("token");
+                LoggedUser.getInstance().setRefreshToken(refToken);
+                if(userObject.getBoolean("isAdmin") == false){
+                    intent = new Intent(frmSplash.this, frmMain.class);
+                } else{
+                    intent = new Intent(frmSplash.this, AdminMainActivity.class);
+                }
+                startActivity(intent);
+                finish();
+            } else{
+                throw new Exception("");
+            }
+        } catch (Exception e) {
+            Log.d("Log_Padyak", "onCreate: " + e.getMessage());
+            Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
+            spinner.setVisibility(View.INVISIBLE);
+            textView2.setText("Please Sign-in with your Google Account");
+            btnGAuth.setVisibility(View.VISIBLE);
         }
     }
 }

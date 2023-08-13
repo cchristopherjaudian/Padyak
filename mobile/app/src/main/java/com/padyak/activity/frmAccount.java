@@ -55,11 +55,11 @@ public class frmAccount extends AppCompatActivity {
         aaGender = new ArrayAdapter<String>(frmAccount.this, R.layout.sp_format, gender);
         aaGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etCreateGender.setAdapter(aaGender);
-        photoURL = getIntent().getStringExtra("photoURL");
-        etCreateEmail.setText(getIntent().getStringExtra("email"));
-        etCreateFirstName.setText(getIntent().getStringExtra("firstname"));
-        etCreateLastName.setText(getIntent().getStringExtra("lastname"));
-        etCreateContact.setText(getIntent().getStringExtra("contact"));
+        photoURL = getIntent().getStringExtra(Prefs.IMG_KEY);
+        etCreateEmail.setText(getIntent().getStringExtra(Prefs.EMAIL_KEY));
+        etCreateFirstName.setText(getIntent().getStringExtra(Prefs.FN_KEY));
+        etCreateLastName.setText(getIntent().getStringExtra(Prefs.LN_KEY));
+        etCreateContact.setText(getIntent().getStringExtra(Prefs.PHONE_KEY));
 
         etCreateBirthdate.setInputType(InputType.TYPE_NULL);
         etCreateBirthdate.setOnClickListener(v->{
@@ -84,16 +84,17 @@ public class frmAccount extends AppCompatActivity {
 
         btnCancelAccount.setOnClickListener(v-> finish());
         btnUpdateAccount.setOnClickListener(v->{
+
             Map<String, Object> params = new HashMap<>();
-            params.put("firstname",etCreateFirstName.getText().toString().trim());
-            params.put("lastname",etCreateLastName.getText().toString().trim());
-            params.put("contactNumber",etCreateContact.getText().toString().trim());
-            params.put("emailAddress",etCreateEmail.getText().toString().trim());
-            params.put("gender",etCreateGender.getSelectedItem().toString());
-            params.put("birthday",etCreateBirthdate.getText().toString().trim());
-            params.put("height",etCreateHeight.getText().toString().trim());
-            params.put("weight",etCreateWeight.getText().toString().trim());
-            params.put("photoUrl",photoURL);
+            params.put(Prefs.FN_KEY,etCreateFirstName.getText().toString().trim());
+            params.put(Prefs.LN_KEY,etCreateLastName.getText().toString().trim());
+            params.put(Prefs.PHONE_KEY,etCreateContact.getText().toString().trim());
+            params.put(Prefs.EMAIL_KEY,etCreateEmail.getText().toString().trim());
+            params.put(Prefs.GENDER_KEY,etCreateGender.getSelectedItem().toString());
+            params.put(Prefs.BDAY_KEY,etCreateBirthdate.getText().toString().trim());
+            params.put(Prefs.HEIGHT_KEY,etCreateHeight.getText().toString().trim());
+            params.put(Prefs.WEIGHT_KEY,etCreateWeight.getText().toString().trim());
+            params.put(Prefs.IMG_KEY,photoURL);
 
             VolleyHttp volleyHttp = new VolleyHttp("", params, "user", frmAccount.this);
             String json = volleyHttp.getResponseBody();
@@ -108,16 +109,16 @@ public class frmAccount extends AppCompatActivity {
 
                     LoggedUser.getInstance().setRefreshToken(dataObject.getString("token"));
 
-                    Prefs.getInstance().setUser(frmAccount.this,"is_admin",userObject.getBoolean("isAdmin"));
-                    Prefs.getInstance().setUser(frmAccount.this,"imgUrl",photoURL);
-                    Prefs.getInstance().setUser(frmAccount.this,"firstName",etCreateFirstName.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,"lastName",etCreateLastName.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,"email",etCreateEmail.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,"gender",etCreateGender.getSelectedItem().toString());
-                    Prefs.getInstance().setUser(frmAccount.this,"birthdate",etCreateBirthdate.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,"phoneNumber",etCreateContact.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,"weight",etCreateWeight.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,"height",etCreateHeight.getText().toString().trim());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.ADMIN_KEY,userObject.getBoolean(Prefs.ADMIN_KEY));
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.IMG_KEY,photoURL);
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.FN_KEY,etCreateFirstName.getText().toString().trim());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.LN_KEY,etCreateLastName.getText().toString().trim());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.EMAIL_KEY,etCreateEmail.getText().toString().trim());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.GENDER_KEY,etCreateGender.getSelectedItem().toString());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.BDAY_KEY,etCreateBirthdate.getText().toString().trim());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.PHONE_KEY,etCreateContact.getText().toString().trim());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.WEIGHT_KEY,etCreateWeight.getText().toString().trim());
+                    Prefs.getInstance().setUser(frmAccount.this,Prefs.HEIGHT_KEY,etCreateHeight.getText().toString().trim());
 
                     Intent intent;
                     if(userObject.getBoolean("isAdmin")){

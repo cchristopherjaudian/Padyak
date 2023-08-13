@@ -1,5 +1,7 @@
 package com.padyak.utility;
 
+import java.util.Objects;
+
 public class LoggedUser {
     private boolean is_admin;
     private String uuid;
@@ -131,5 +133,36 @@ public class LoggedUser {
 
     public void setHeight(String height) {
         this.height = height;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoggedUser that = (LoggedUser) o;
+        return is_admin == that.is_admin && Objects.equals(uuid, that.uuid) && Objects.equals(imgUrl, that.imgUrl) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(gender, that.gender) && Objects.equals(birthDate, that.birthDate) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(weight, that.weight) && Objects.equals(height, that.height) && Objects.equals(refreshToken, that.refreshToken);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(is_admin, uuid, imgUrl, firstName, lastName, email, gender, birthDate, phoneNumber, weight, height, refreshToken);
+    }
+
+    @Override
+    public String toString() {
+        return "LoggedUser{" +
+                "is_admin=" + is_admin +
+                ", uuid='" + uuid + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", weight='" + weight + '\'' +
+                ", height='" + height + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                '}';
     }
 }

@@ -57,6 +57,7 @@ public class VolleyHttp {
                 try {
 
                     connURL = new URL(endpoint);
+                    Log.d("Log_Padyak", "Volley URL: " + connURL);
                     conn = (HttpURLConnection) connURL.openConnection();
                     if(params != null){
                         conn.setRequestMethod("POST");
@@ -71,12 +72,12 @@ public class VolleyHttp {
 
 
                     if(params != null){
-
+                        Log.d("Log_Padyak", "Volley Payload: " + params);
                         params.forEach((k,v)->{
                             try {
                                 data = data.concat("&").concat(URLEncoder.encode(k, "UTF-8").concat( "=").concat(URLEncoder.encode((String) v, "UTF-8")));
                             } catch (UnsupportedEncodingException e) {
-
+                                Log.d("Log_Padyak",e.getMessage());
                             }
                         });
                         data = data.substring(1);
@@ -87,8 +88,7 @@ public class VolleyHttp {
                     }
 
                     int responseCode=conn.getResponseCode();
-                    Log.d("Log_Padyak", "connURL: " + connURL.toString());
-                    Log.d("Log_Padyak", "data: " + data);
+
                     Log.d("Log_Padyak", "Response Code Volley: " + responseCode);
                     Log.d("Log_Padyak", "Request Type Volley: " + conn.getRequestMethod());
                     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -124,12 +124,13 @@ public class VolleyHttp {
             protected Integer doInBackground(String... strings) {
                 try {
                     connURL = new URL(endpoint);
+                    Log.d("Log_Padyak", "doInBackground: " + connURL);
                     conn = (HttpURLConnection) connURL.openConnection();
                     conn.setReadTimeout(15000);
                     conn.setConnectTimeout(15000);
-                    conn.setRequestMethod((params == null) ? "GET" : "POST");
                     return conn.getResponseCode();
                 } catch (Exception e) {
+                    Log.d("Log_Padyak", "doInBackground: " + e.getMessage());
                     return 500;
                 }
 
