@@ -146,7 +146,7 @@ public class frmSplash extends AppCompatActivity {
     private void validateLogin(String emailAdd){
         String reqParam = "/email?emailAddress=".concat(emailAdd);
         VolleyHttp volleyHttp = new VolleyHttp(reqParam, null, "user", frmSplash.this);
-        String response = volleyHttp.getResponseBody();
+        String response = volleyHttp.getResponseBody(false);
         JSONObject reader = null;
         try {
             reader = new JSONObject(response);
@@ -176,11 +176,12 @@ public class frmSplash extends AppCompatActivity {
                 tokenMap.put(Prefs.EMAIL_KEY,userObject.getString(Prefs.EMAIL_KEY));
 
                 VolleyHttp tokenHttp = new VolleyHttp("", tokenMap, "user", frmSplash.this);
-                String responseToken = tokenHttp.getResponseBody();
+                String responseToken = tokenHttp.getResponseBody(false);
                 reader = new JSONObject(responseToken);
                 JSONObject dataObject = reader.getJSONObject("data");
                 String refToken = dataObject.getString("token");
                 LoggedUser.getInstance().setRefreshToken(refToken);
+                Log.d("Log_Padyak", "validateLogin: " + LoggedUser.getInstance().getRefreshToken());
                 if(userObject.getBoolean("isAdmin") == false){
                     intent = new Intent(frmSplash.this, frmMain.class);
                 } else{

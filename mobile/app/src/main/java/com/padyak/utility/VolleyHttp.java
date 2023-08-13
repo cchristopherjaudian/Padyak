@@ -49,7 +49,7 @@ public class VolleyHttp {
         }
     }
     @SuppressLint("StaticFieldLeak")
-    public String getResponseBody(){
+    public String getResponseBody(boolean auth){
         syncBodyTask = new AsyncTask<String, Void, String>() {
             String data = "";
             @Override
@@ -57,8 +57,11 @@ public class VolleyHttp {
                 try {
 
                     connURL = new URL(endpoint);
+
+
                     Log.d("Log_Padyak", "Volley URL: " + connURL);
                     conn = (HttpURLConnection) connURL.openConnection();
+                    if(auth) conn.setRequestProperty("Authorization",LoggedUser.getInstance().getRefreshToken());
                     if(params != null){
                         conn.setRequestMethod("POST");
                         conn.setDoOutput(true);
@@ -75,7 +78,7 @@ public class VolleyHttp {
                         Log.d("Log_Padyak", "Volley Payload: " + params);
                         params.forEach((k,v)->{
                             try {
-                                data = data.concat("&").concat(URLEncoder.encode(k, "UTF-8").concat( "=").concat(URLEncoder.encode((String) v, "UTF-8")));
+                                data = data.concat("&").concat(URLEncoder.encode(k, "UTF-8").concat( "=").concat(URLEncoder.encode(String.valueOf(v), "UTF-8")));
                             } catch (UnsupportedEncodingException e) {
                                 Log.d("Log_Padyak",e.getMessage());
                             }

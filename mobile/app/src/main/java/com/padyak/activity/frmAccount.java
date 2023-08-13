@@ -97,7 +97,7 @@ public class frmAccount extends AppCompatActivity {
             params.put(Prefs.IMG_KEY,photoURL);
 
             VolleyHttp volleyHttp = new VolleyHttp("", params, "user", frmAccount.this);
-            String json = volleyHttp.getResponseBody();
+            String json = volleyHttp.getResponseBody(false);
 
             try {
 

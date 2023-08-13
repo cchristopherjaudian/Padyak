@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "44865196330",
+    "project_id": "padyak-playground",
+    "storage_bucket": "padyak-playground.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44865196330:android:bf2101a80b79dfd5210e53",
+        "android_client_info": {
+          "package_name": "com.padyak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "44865196330-tqf83u9a8e9ksn3t10r15h6hddprqnhb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyxX9boY9XHlwjo1YQ458rEsWA6ra3-YA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "44865196330-tqf83u9a8e9ksn3t10r15h6hddprqnhb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

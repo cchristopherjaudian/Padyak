@@ -51,7 +51,7 @@ public class frmMain extends AppCompatActivity {
     ImageView imgMainProfileDP,imgProfileDP;
 
     RelativeLayout rlEvents, rlAlert, rlHospital, rlRepair, rlPolice, rlRiding;
-
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +96,7 @@ public class frmMain extends AppCompatActivity {
         String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL , Locale.US);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
         txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
+
         try {
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgProfileDP);
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgMainProfileDP);
@@ -104,69 +105,56 @@ public class frmMain extends AppCompatActivity {
         }
 
 
-        bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public boolean onItemSelect(int i) {
-                if (i == 0) {
-                    frame_home.setVisibility(View.GONE);
-                    frame_profile.setVisibility(View.VISIBLE);
-                    frame_newsfeed.setVisibility(View.GONE);
-                } else if (i == 1) {
-                    frame_home.setVisibility(View.GONE);
-                    frame_profile.setVisibility(View.GONE);
-                    frame_newsfeed.setVisibility(View.VISIBLE);
-                } else {
-                    frame_home.setVisibility(View.VISIBLE);
-                    frame_profile.setVisibility(View.GONE);
-                    frame_newsfeed.setVisibility(View.GONE);
-                }
-                return false;
+        bottomBar.setOnItemSelectedListener((OnItemSelectedListener) i -> {
+            if (i == 0) {
+                frame_home.setVisibility(View.GONE);
+                frame_profile.setVisibility(View.VISIBLE);
+                frame_newsfeed.setVisibility(View.GONE);
+            } else if (i == 1) {
+                frame_home.setVisibility(View.GONE);
+                frame_profile.setVisibility(View.GONE);
+                frame_newsfeed.setVisibility(View.VISIBLE);
+            } else {
+                frame_home.setVisibility(View.VISIBLE);
+                frame_profile.setVisibility(View.GONE);
+                frame_newsfeed.setVisibility(View.GONE);
             }
+            return false;
         });
-        rlEvents.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(frmMain.this, frmEventCalendar.class);
-                startActivity(intent);
-            }
+        rlEvents.setOnClickListener(v -> {
+            intent = new Intent(frmMain.this, frmEventCalendar.class);
+            startActivity(intent);
         });
-        rlAlert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(frmMain.this, frmAlertInfo.class);
-                startActivity(intent);
-            }
+        rlAlert.setOnClickListener(v -> {
+            intent = new Intent(frmMain.this, frmAlertInfo.class);
+            startActivity(intent);
         });
 
-        rlHospital.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(frmMain.this, frmFindLocation.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("find", "Hospital");
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        rlHospital.setOnClickListener(v -> {
+            intent = new Intent(frmMain.this, frmFindLocation.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("find", "Hospital");
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
-        rlRepair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(frmMain.this, frmFindLocation.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("find", "Repair Shop");
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        rlRepair.setOnClickListener(v -> {
+            intent = new Intent(frmMain.this, frmFindLocation.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("find", "Repair Shop");
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
-        rlPolice.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(frmMain.this, frmFindLocation.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("find", "Police Station");
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        rlPolice.setOnClickListener(v -> {
+            intent = new Intent(frmMain.this, frmFindLocation.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("find", "Police Station");
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
+
+        rlRiding.setOnClickListener(v->{
+            intent = new Intent(frmMain.this, frmRide.class);
+            startActivity(intent);
         });
         loadCoverPhoto();
         loadNewsfeed();
