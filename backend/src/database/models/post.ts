@@ -21,5 +21,12 @@ export interface IPost extends IBaseModel {
   post: string;
   distance: string;
   movingTime: string;
-  location: string;
+  fromLocation: string;
+  toLocation: string;
+  caption: string;
+  photoUrl: string;
+  fromLong: number;
+  toLong: number;
+  fromLat: number;
+  toLat: number;
 }

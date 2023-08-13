@@ -12,7 +12,4 @@ export type TRequestHandler = (
   response: Response
 ) => void | Promise<void>;
 
-export default functions.region("asia-east1").runWith({
-  minInstances: 1,
-  memory: "512MB",
-});
+export default functions.region("asia-east1");
