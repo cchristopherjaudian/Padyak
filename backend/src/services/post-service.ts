@@ -10,10 +10,11 @@ type TAddLikes = {
   uid: string;
   photoUrl: string;
   displayName: string;
-  liked: number;
+  id: string;
 };
 
 type TAddComment = {
+  id: string;
   uid: string;
   postId?: string;
   comment: string;
@@ -28,12 +29,10 @@ class Likes {
     if (!post) throw new NotFoundError();
 
     const hasLiked = post.likes?.find((like) => like.uid === payload.uid);
-    if (!hasLiked && !payload.liked) {
+    if (!hasLiked) {
       delete payload.postId;
       post.likes?.push(payload);
-    }
-
-    if (payload.liked) {
+    } else {
       const removedLike = post.likes?.filter(
         (like) => like.uid !== payload.uid
       );
@@ -68,6 +67,7 @@ class PostService {
   }
 
   public async updatePost(payload: Partial<IPost>) {
+    console.log("update post ", payload);
     const isExist = await dbInstance.findPostById(payload?.id as string);
     if (!isExist) throw new NotFoundError("Post does not exist.");
     const mappedPayload = this._mapper.updatePost(payload);
@@ -79,11 +79,13 @@ class PostService {
   }
 
   public async addLikes(payload: TAddLikes) {
-    return await this._likesInstance.addLikes(payload);
+    const likes = this._mapper.addLikes(payload);
+    return await this._likesInstance.addLikes(likes);
   }
 
   public async addComment(payload: TAddComment) {
-    return await this._commentsInstance.addComment(payload);
+    const comments = this._mapper.addComments(payload);
+    return await this._commentsInstance.addComment(comments);
   }
 }
 

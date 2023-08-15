@@ -10,7 +10,7 @@ export type TCreateEvent = {
   name: string;
   photoUrl: string;
   registeredUser?: IRegisteredUser[];
-  author: IUserModel;
+  author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname">;
 };
 
 const arrayOfMonths = [

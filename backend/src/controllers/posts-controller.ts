@@ -10,10 +10,16 @@ const responseObject = new ResponseObject();
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
   const request = req as IRequestWithUser;
+  const { photoUrl, firstname, lastname, id } = request.user;
   try {
     const newPost = await postInstance.createPost({
       ...req.body,
-      uid: request.user.id,
+      author: {
+        id,
+        photoUrl,
+        firstname,
+        lastname,
+      },
     });
 
     responseObject.createResponse(

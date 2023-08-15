@@ -11,10 +11,15 @@ const eventRegister = new EventRegistration(eventInstance);
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   const request = req as IRequestWithUser;
+  const { photoUrl, firstname, lastname } = request.user;
   try {
     const newEvent = await eventInstance.createEvent({
       ...req.body,
-      author: request.user,
+      author: {
+        photoUrl,
+        firstname,
+        lastname,
+      },
     });
 
     responseObject.createResponse(
@@ -68,12 +73,16 @@ const getEvent = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
   const request = req as IRequestWithUser;
+  const { photoUrl, firstname, lastname } = request.user;
   try {
     const event = await eventInstance.update({
       id: req.params.eventId,
-      uid: request.user.id,
-      displayName: `${request.user.firstname} ${request.user.lastname}`,
       ...req.body,
+      author: {
+        photoUrl,
+        firstname,
+        lastname,
+      },
     });
 
     responseObject.createResponse(
