@@ -9,7 +9,7 @@ class UserAlertsMapper {
   ) {
     return {
       id: uudiv4(),
-      createdAt: date.getIsoDate(new Date().toDateString()),
+      createdAt: date.getIsoDate(new Date()),
       modifiedAt: "",
       ...payload,
     };

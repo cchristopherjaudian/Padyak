@@ -11,8 +11,8 @@ class DateUtils {
     return DateUtils._instance;
   }
 
-  public getIsoDate(date: string) {
-    return moment.tz(date, this._defaultTz).format();
+  public getIsoDate(date: Date) {
+    return moment(date).tz(this._defaultTz).format();
   }
 }
 

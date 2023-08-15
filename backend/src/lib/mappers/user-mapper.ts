@@ -19,7 +19,7 @@ class UserMapper {
   createUser(payload: TCreateUserMapper) {
     return {
       id: uuidv4(),
-      createdAt: date.getIsoDate(new Date().toDateString()),
+      createdAt: date.getIsoDate(new Date()),
       ...payload,
     };
   }

@@ -39,7 +39,7 @@ class PostMapper {
   createPost(payload: TCreateUpdateMapper) {
     return {
       id: uudiv4(),
-      createdAt: date.getIsoDate(new Date().toDateString()),
+      createdAt: date.getIsoDate(new Date()),
       modifiedAt: "",
       ...payload,
     };
@@ -47,7 +47,7 @@ class PostMapper {
 
   updatePost(payload: Partial<TCreateUpdateMapper>) {
     return {
-      modifiedAt: date.getIsoDate(new Date().toDateString()),
+      modifiedAt: date.getIsoDate(new Date()),
       ...payload,
     };
   }

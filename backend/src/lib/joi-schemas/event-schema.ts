@@ -22,17 +22,13 @@ const updateEventSchema = Joi.object({
   eventDate: Joi.string().optional(),
   name: Joi.string().optional(),
   photoUrl: Joi.string().optional(),
-  modifiedAt: Joi.string()
-    .optional()
-    .default(date.getIsoDate(new Date().toDateString())),
+  modifiedAt: Joi.string().optional().default(date.getIsoDate(new Date())),
 });
 
 const registerEventSchema = Joi.object({
   photoUrl: Joi.string().required(),
   paymentUrl: Joi.string().required(),
-  modifiedAt: Joi.string()
-    .optional()
-    .default(date.getIsoDate(new Date().toDateString())),
+  modifiedAt: Joi.string().optional().default(date.getIsoDate(new Date())),
 });
 
 export {
