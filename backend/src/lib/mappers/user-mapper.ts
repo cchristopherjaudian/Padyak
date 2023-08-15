@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
+import DateUtils from "../date";
+
 type TCreateUserMapper = {
   firstname: string;
   lastname: string;
@@ -12,11 +14,12 @@ type TCreateUserMapper = {
   isAdmin: boolean;
 };
 
+const date = DateUtils.getInstance();
 class UserMapper {
   createUser(payload: TCreateUserMapper) {
     return {
       id: uuidv4(),
-      createdAt: new Date().toISOString(),
+      createdAt: date.getIsoDate(new Date()),
       ...payload,
     };
   }

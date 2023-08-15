@@ -18,7 +18,7 @@ class Logger {
     return Logger._instance;
   }
 
-  public get write() {
+  public write() {
     const logger = winston.createLogger({
       level: "info",
       levels: {

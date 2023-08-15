@@ -1,4 +1,7 @@
 import * as Joi from "joi";
+import DateUtils from "../date";
+
+const date = DateUtils.getInstance();
 
 const createEventSchema = Joi.object({
   month: Joi.string().required(),
@@ -19,13 +22,13 @@ const updateEventSchema = Joi.object({
   eventDate: Joi.string().optional(),
   name: Joi.string().optional(),
   photoUrl: Joi.string().optional(),
-  modifiedAt: Joi.string().optional().default(new Date().toISOString()),
+  modifiedAt: Joi.string().optional().default(date.getIsoDate(new Date())),
 });
 
 const registerEventSchema = Joi.object({
   photoUrl: Joi.string().required(),
   paymentUrl: Joi.string().required(),
-  modifiedAt: Joi.string().optional().default(new Date().toISOString()),
+  modifiedAt: Joi.string().optional().default(date.getIsoDate(new Date())),
 });
 
 export {

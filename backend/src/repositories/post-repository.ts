@@ -37,7 +37,13 @@ class PostLikesRepository {
   }
 
   public async getPostsList() {
-    return this._firestore.setCollectionName(this._colName).getAll<IPost>();
+    const postsRef = await this._firestore
+      .getDb()
+      .collection(this._colName)
+      .orderBy("createdAt", "desc")
+      .get();
+    const mappedRef = postsRef.docs.map((k) => k.data());
+    return mappedRef as IPost[];
   }
 }
 

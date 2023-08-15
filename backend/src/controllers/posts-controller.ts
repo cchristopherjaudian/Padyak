@@ -4,19 +4,22 @@ import ResponseObject from "../lib/response-object";
 import ResponseCodes from "../commons/response-codes";
 import PostService from "../services/post-service";
 import { IRequestWithUser } from "../middlewares/token-middleware";
-import Logger from "../commons/logger";
 
 const postInstance = new PostService();
 const responseObject = new ResponseObject();
-const logger = Logger.getInstance();
 
 const createPost = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {createPost} controller...");
   const request = req as IRequestWithUser;
+  const { photoUrl, firstname, lastname, id } = request.user;
   try {
     const newPost = await postInstance.createPost({
       ...req.body,
-      uid: request.user.id,
+      author: {
+        id,
+        photoUrl,
+        firstname,
+        lastname,
+      },
     });
 
     responseObject.createResponse(
@@ -26,13 +29,11 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
       newPost
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {getPosts} controller...");
   try {
     const posts = await postInstance.getPosts();
 
@@ -43,13 +44,11 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
       posts
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
 
 const updatePost = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {updatePost} controller...");
   try {
     const posts = await postInstance.updatePost({
       ...req.body,
@@ -63,13 +62,11 @@ const updatePost = async (req: Request, res: Response, next: NextFunction) => {
       posts
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
 
 const addLikes = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {addLikes} controller...");
   const request = req as IRequestWithUser;
   try {
     const posts = await postInstance.addLikes({
@@ -86,13 +83,11 @@ const addLikes = async (req: Request, res: Response, next: NextFunction) => {
       posts
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
 
 const addComment = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {addComment} controller...");
   const request = req as IRequestWithUser;
   try {
     const posts = await postInstance.addComment({
@@ -109,7 +104,6 @@ const addComment = async (req: Request, res: Response, next: NextFunction) => {
       posts
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
