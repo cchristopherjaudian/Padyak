@@ -1,4 +1,5 @@
 import { IBaseModel } from "./model";
+import { IUserModel } from "./user";
 
 export interface IComments
   extends Pick<IBaseModel, "modifiedAt" | "createdAt"> {
@@ -17,7 +18,7 @@ export interface ILikes {
 export interface IPost extends IBaseModel {
   likes?: ILikes[]; // array of users {UID}
   comments?: IComments[];
-  uid: string;
+  author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname">;
   post: string;
   distance: string;
   movingTime: string;

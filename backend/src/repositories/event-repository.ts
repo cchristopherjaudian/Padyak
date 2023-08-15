@@ -1,15 +1,16 @@
 import Firestore from "../database/firestore";
 import { IEvent, IRegisteredUser } from "../database/models/event";
+import { IUserModel } from "../database/models/user";
 
 export type TCreateEvent = {
   id: string;
   month: string;
   year: string;
   eventDate: string;
-  uid: string;
   name: string;
   photoUrl: string;
   registeredUser?: IRegisteredUser[];
+  author: IUserModel;
 };
 
 const arrayOfMonths = [

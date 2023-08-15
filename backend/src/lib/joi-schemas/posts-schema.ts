@@ -32,6 +32,9 @@ const updatePostSchema = Joi.object({
 
 const addLikesSchema = Joi.object({
   postId: Joi.string().required(),
+  liked: Joi.number()
+    .valid(...[1, 0])
+    .required(),
 });
 
 const addCommentSchema = Joi.object({

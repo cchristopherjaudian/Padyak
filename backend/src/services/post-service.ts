@@ -6,10 +6,11 @@ import PostLikesRepository from "../repositories/post-repository";
 const dbInstance = new PostLikesRepository();
 
 type TAddLikes = {
-  uid: string;
   postId?: string;
+  uid: string;
   photoUrl: string;
   displayName: string;
+  liked: number;
 };
 
 type TAddComment = {
@@ -26,9 +27,17 @@ class Likes {
     const post = await dbInstance.findPostById(payload?.postId as string);
     if (!post) throw new NotFoundError();
 
-    if (!post.likes?.find((like) => like.uid === payload.uid)) {
+    const hasLiked = post.likes?.find((like) => like.uid === payload.uid);
+    if (!hasLiked && !payload.liked) {
       delete payload.postId;
       post.likes?.push(payload);
+    }
+
+    if (payload.liked) {
+      const removedLike = post.likes?.filter(
+        (like) => like.uid !== payload.uid
+      );
+      post.likes = removedLike;
     }
 
     const updatedPost = await dbInstance.update({ ...post });

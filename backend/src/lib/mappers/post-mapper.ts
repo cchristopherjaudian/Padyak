@@ -1,10 +1,11 @@
 import { v4 as uudiv4 } from "uuid";
+import { IUserModel } from "../../database/models/user";
 
 type TCreateUpdateMapper = {
   post: string;
   distance: string;
+  author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname">;
   movingTime: string;
-  uid: string;
   fromLocation: string;
   toLocation: string;
   caption: string;

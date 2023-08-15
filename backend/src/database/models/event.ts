@@ -11,8 +11,8 @@ export interface IEvent extends IBaseModel {
   month: string;
   year: string;
   eventDate: string;
-  uid: string;
   name: string;
   photoUrl: string;
   registeredUser?: IRegisteredUser[];
+  author: IUserModel;
 }

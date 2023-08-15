@@ -4,20 +4,17 @@ import ResponseObject from "../lib/response-object";
 import ResponseCodes from "../commons/response-codes";
 import { EventRegistration, EventService } from "../services/event-service";
 import { IRequestWithUser } from "../middlewares/token-middleware";
-import Logger from "../commons/logger";
 
 const eventInstance = new EventService();
 const responseObject = new ResponseObject();
 const eventRegister = new EventRegistration(eventInstance);
-const logger = Logger.getInstance();
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {createEvent} controller...");
   const request = req as IRequestWithUser;
   try {
     const newEvent = await eventInstance.createEvent({
       ...req.body,
-      uid: request.user.id,
+      author: request.user,
     });
 
     responseObject.createResponse(
@@ -27,7 +24,6 @@ const createEvent = async (req: Request, res: Response, next: NextFunction) => {
       newEvent
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
@@ -37,7 +33,6 @@ const getYearlyEvents = async (
   res: Response,
   next: NextFunction
 ) => {
-  logger.write.debug("Initializing {getYearlyEvents} controller...");
   const request = req as IRequestWithUser;
   try {
     const events = await eventInstance.getYearlyEvents(
@@ -52,13 +47,11 @@ const getYearlyEvents = async (
       events
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
 
 const getEvent = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {getEvent} controller...");
   try {
     const event = await eventInstance.getEvent(req.params.eventId);
 
@@ -69,13 +62,11 @@ const getEvent = async (req: Request, res: Response, next: NextFunction) => {
       event
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
 
 const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
-  logger.write.debug("Initializing {registerEvent} controller...");
   const request = req as IRequestWithUser;
   try {
     const event = await eventInstance.update({
@@ -92,7 +83,6 @@ const updateEvent = async (req: Request, res: Response, next: NextFunction) => {
       event
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
@@ -102,7 +92,6 @@ const registerEvent = async (
   res: Response,
   next: NextFunction
 ) => {
-  logger.write.debug("Initializing {registerEvent} controller...");
   try {
     const event = await eventRegister.registerCyclist({
       eventId: req.params.eventId,
@@ -116,7 +105,6 @@ const registerEvent = async (
       event
     );
   } catch (error) {
-    logger.write.error(error);
     next(error);
   }
 };
