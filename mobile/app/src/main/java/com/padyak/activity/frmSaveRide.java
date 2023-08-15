@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -90,8 +91,23 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
         txTimer.setText(Helper.getInstance().formatDuration(rideDuration));
         txDistanceValue.setText(String.format("%.3f",rideDistance));
 
-        btnRideCancel.setOnClickListener(v->finish());
+        btnRideCancel.setOnClickListener(v->{
+            frmRide.instance.finish();
+            finish();
+        });
         btnRideRegister.setOnClickListener(v->{
+            String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + startPosLat + "," + startPosLong + "&key=" + getString(R.string.maps_publicapi);
+            String toLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + endPosLat + "," + endPosLong + "&key=" + getString(R.string.maps_publicapi);
+
+            VolleyHttp fromVolley = new VolleyHttp(fromLocationURL,null,"MAP",frmSaveRide.this);
+            VolleyHttp toVolley = new VolleyHttp(toLocationURL,null,"MAP",frmSaveRide.this);
+
+            String fromAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
+            String toAddress = Helper.getInstance().generateAddress(toVolley.getResponseBody(false));
+
+            Log.d("Log_Padyak", "onCreate jsonFrom: " + fromAddress);
+            Log.d("Log_Padyak", "onCreate jsonTo: " + toAddress);
+
             String ref = "rides/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString()  + ".bmp";
             FirebaseApp.initializeApp(this);
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -113,35 +129,41 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Log.d("Log_Padyak", "onSuccess Name: " + taskSnapshot.getMetadata().getName());
                     Log.d("Log_Padyak", "onSuccess Path: " + taskSnapshot.getMetadata().getPath());
-                    Map<String, Object> payload = new HashMap<>();
-                    payload.put("post",etRideTitle.getText().toString());
-                    payload.put("distance",String.format("%.3f",rideDistance));
-                    payload.put("movingTime",Helper.getInstance().formatDuration(rideDuration));
-                    payload.put("toLocation","Ez");
-                    payload.put("fromLocation","GG");
-                    payload.put("caption",etRideCaption.getText().toString());
-                    payload.put("photoUrl",taskSnapshot.getMetadata().getPath());
-                    payload.put("fromLong",startPosLong);
-                    payload.put("toLong",endPosLong);
-                    payload.put("fromLat",startPosLat);
-                    payload.put("toLat",endPosLat);
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Map<String, Object> payload = new HashMap<>();
+                            payload.put("post",etRideTitle.getText().toString());
+                            payload.put("distance",String.format("%.3f",rideDistance));
+                            payload.put("movingTime",Helper.getInstance().formatDuration(rideDuration));
+                            payload.put("toLocation",toAddress);
+                            payload.put("fromLocation",fromAddress);
+                            payload.put("caption",etRideCaption.getText().toString());
+                            payload.put("photoUrl",uri.toString());
+                            payload.put("fromLong",startPosLong);
+                            payload.put("toLong",endPosLong);
+                            payload.put("fromLat",startPosLat);
+                            payload.put("toLat",endPosLat);
 
-                    VolleyHttp volleyHttp = new VolleyHttp("",payload,"post",frmSaveRide.this);
-                    String response = volleyHttp.getResponseBody(true);
+                            VolleyHttp volleyHttp = new VolleyHttp("",payload,"post",frmSaveRide.this);
+                            String response = volleyHttp.getResponseBody(true);
 
-                    try {
-                        JSONObject reader =  new JSONObject(response);
-                        int responseStatus = reader.getInt("status");
-                        if(responseStatus == 200){
-                            Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_SHORT).show();
-                            frmRide.instance.finish();
-                            finish();
-                        } else{
-                            Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+                            try {
+                                JSONObject reader =  new JSONObject(response);
+                                int responseStatus = reader.getInt("status");
+                                if(responseStatus == 200){
+                                    Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_SHORT).show();
+                                    frmRide.instance.finish();
+                                    finish();
+                                } else{
+                                    Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
+                    });
+
                 }
             });
         });

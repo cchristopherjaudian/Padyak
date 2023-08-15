@@ -6,4 +6,6 @@
     <string name="newsfeed">Newsfeed</string>
     <string name="androidauth">496166936591-83ogfmola3aukstjpk6rlb88esm4b7s3.apps.googleusercontent.com</string>
     <string name="webauth">496166936591-t7lgal3j2jdod591s5plbhhvo5a1igf0.apps.googleusercontent.com</string>
+    <string name="maps_apikey">AIzaSyAWRZkD_D03VUCknoy4fb-u7HfpRSBt4f4</string>
+    <string name="maps_publicapi">AIzaSyDNx_R7nrCrpYwEOnfp2pIzeI_3jjV0PYo</string>
 </resources>

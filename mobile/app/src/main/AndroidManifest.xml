@@ -44,7 +44,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAWRZkD_D03VUCknoy4fb-u7HfpRSBt4f4" />
+            android:value="@string/maps_apikey" />
 
         <activity
             android:name=".activity.frmMemberAlertInfo"

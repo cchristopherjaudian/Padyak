@@ -53,7 +53,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     TextView txTimer,txDistance;
     LocationManager mLocationManager;
     ImageButton btnPlayRide;
-    Button btnMove;
+
     GoogleMap gMap;
     Marker marker;
     double startPosLat, startPosLong;
@@ -71,7 +71,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, frmRide.this);
         setContentView(R.layout.activity_frm_ride);
         instance = this;
-        btnMove = findViewById(R.id.btnMove);
+
         btnPlayRide = findViewById(R.id.btnPlayRide);
         txTimer = findViewById(R.id.txTimer);
         txDistance = findViewById(R.id.txDistance);
@@ -79,47 +79,6 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.mapRides);
         mapFragment.getMapAsync(this);
-
-        btnMove.setOnClickListener(v->{
-
-            if(marker == null ){
-                marker = gMap.addMarker(new MarkerOptions()
-                        .position(previousLocation)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.bicycle)));
-            }
-
-            if(marker != null){
-
-                previousLocation = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-                Log.d("Log_Padyak", "Prev Lat: " + previousLocation.latitude);
-
-
-                ValueAnimator animation = ValueAnimator.ofFloat(0f, 100f);
-                final float[] previousStep = {0f};
-                double deltaLatitude = marker.getPosition().latitude + 0.0004 - marker.getPosition().latitude;
-                double deltaLongitude = 0;
-                animation.setDuration(500);
-                animation.addUpdateListener(animation1 -> {
-                    float deltaStep = (Float) animation1.getAnimatedValue() - previousStep[0];
-                    previousStep[0] = (Float) animation1.getAnimatedValue();
-                    marker.setPosition(new LatLng(marker.getPosition().latitude + deltaLatitude * deltaStep * 1 / 100, marker.getPosition().longitude + deltaStep * deltaLongitude * 1 / 100));
-                });
-                animation.start();
-                tempCounter++;
-
-                if(tempCounter >=5){
-                    tempCounter = 0;
-                    LatLng myPos = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, gMap.getCameraPosition().zoom));
-                }
-
-                newLocation = new LatLng(marker.getPosition().latitude+ deltaLatitude,marker.getPosition().longitude + deltaLongitude);
-                Log.d("Log_Padyak", "New Lat: " + newLocation.latitude);
-                rideDistance += helper.calculateDistance(previousLocation,newLocation);
-                Log.d("Log_Padyak", "Distance: " + rideDistance);
-                txDistance.setText(String.format("%.3f",rideDistance));
-            }
-        });
 
         btnPlayRide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,12 +132,11 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
         } else{
 
-
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-            LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY)
-                    .setIntervalMillis(3000)
-                    .setMinUpdateIntervalMillis(3000)
+            LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
+                    .setIntervalMillis(2000)
+                    .setMinUpdateIntervalMillis(1000)
+                    .setMaxUpdateDelayMillis(3000)
                     .build();
 
             locationCallback = new LocationCallback() {
@@ -208,7 +166,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                 final float[] previousStep = {0f};
                                 double deltaLatitude = newLocation.latitude - previousLocation.latitude;
                                 double deltaLongitude = newLocation.longitude - previousLocation.longitude;
-                                animation.setDuration(500);
+                                animation.setDuration(2000);
                                 animation.addUpdateListener(animation1 -> {
                                     float deltaStep = (Float) animation1.getAnimatedValue() - previousStep[0];
                                     previousStep[0] = (Float) animation1.getAnimatedValue();
@@ -216,7 +174,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                 });
                                 animation.start();
                                 tempCounter++;
-                                if(tempCounter >=7){
+                                if(tempCounter >=10){
                                     tempCounter = 0;
                                     gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, gMap.getCameraPosition().zoom));
                                 }

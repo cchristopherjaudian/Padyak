@@ -46,6 +46,8 @@ public class VolleyHttp {
             endpoint = Constants.eventURL.concat(url);
         } else if (getType().equals("POST")) {
             endpoint = Constants.postURL.concat(url);
+        } else if(getType().equals("MAP")){
+            endpoint = url;
         }
     }
     @SuppressLint("StaticFieldLeak")

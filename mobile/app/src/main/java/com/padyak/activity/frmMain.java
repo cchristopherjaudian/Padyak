@@ -9,20 +9,30 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.padyak.R;
 import com.padyak.adapter.adapterCoverPhoto;
 import com.padyak.adapter.adapterNewsfeed;
+import com.padyak.dto.Comment;
 import com.padyak.dto.CoverPhoto;
+import com.padyak.dto.Like;
 import com.padyak.dto.Newsfeed;
+import com.padyak.dto.PostAuthor;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
+import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -49,13 +59,15 @@ public class frmMain extends AppCompatActivity {
     com.padyak.adapter.adapterNewsfeed adapterNewsfeed;
     TextView txMainProfileName,txProfileName,txProfileDay;
     ImageView imgMainProfileDP,imgProfileDP;
-
     RelativeLayout rlEvents, rlAlert, rlHospital, rlRepair, rlPolice, rlRiding;
     Intent intent;
+
+    public static frmMain frmMain;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_main);
+        frmMain = this;
         txProfileDay = findViewById(R.id.txProfileDay);
         imgProfileDP = findViewById(R.id.imgProfileDP);
         imgMainProfileDP = findViewById(R.id.imgMainProfileDP);
@@ -107,10 +119,15 @@ public class frmMain extends AppCompatActivity {
 
         bottomBar.setOnItemSelectedListener((OnItemSelectedListener) i -> {
             if (i == 0) {
+                loadCoverPhoto();
                 frame_home.setVisibility(View.GONE);
                 frame_profile.setVisibility(View.VISIBLE);
                 frame_newsfeed.setVisibility(View.GONE);
             } else if (i == 1) {
+                new Thread(()->{
+                    runOnUiThread(this::loadNewsfeed);
+                }).start();
+
                 frame_home.setVisibility(View.GONE);
                 frame_profile.setVisibility(View.GONE);
                 frame_newsfeed.setVisibility(View.VISIBLE);
@@ -157,9 +174,11 @@ public class frmMain extends AppCompatActivity {
             startActivity(intent);
         });
         loadCoverPhoto();
-        loadNewsfeed();
-    }
 
+    }
+    public void notifyNewsfeed(){
+        adapterNewsfeed.notifyDataSetChanged();
+    }
     public void loadCoverPhoto() {
         coverPhotoList = new ArrayList<>();
         coverPhotoList.add(new CoverPhoto("","",R.drawable.bike1));
@@ -170,14 +189,84 @@ public class frmMain extends AppCompatActivity {
     }
 
     public void loadNewsfeed() {
-        newsfeedList = new ArrayList<>();
-        newsfeedList.add(new Newsfeed());
-        newsfeedList.add(new Newsfeed());
-        newsfeedList.add(new Newsfeed());
-        newsfeedList.add(new Newsfeed());
+        try {
+            VolleyHttp volleyHttp = new VolleyHttp("",null,"post",frmMain.this);
+            String json = volleyHttp.getResponseBody(true);
+            JSONObject reader = new JSONObject(json);
+            int responseStatus = reader.getInt("status");
+            if(responseStatus == 200){
+                newsfeedList = new ArrayList<>();
 
-        adapterNewsfeed = new adapterNewsfeed(newsfeedList);
-        rvNewsfeed.setAdapter(adapterNewsfeed);
+                JSONArray postArray = reader.optJSONArray("data");
+                for(int i=0; i < postArray.length(); i++){
+                    try {
+                        List<Comment> commentList = new ArrayList<>();
+                        List<Like> likeList = new ArrayList<>();
+                        JSONObject postObject = postArray.getJSONObject(i);
+                        if(!postObject.has("id")) throw new Exception("");
+                        JSONObject authorObject = postArray.getJSONObject(i).getJSONObject("author");
+                        Newsfeed newsfeed = new Newsfeed();
+                        PostAuthor postAuthor = new PostAuthor();
+                        postAuthor.setFirstname(authorObject.getString("firstname"));
+                        postAuthor.setLastname(authorObject.getString("lastname"));
+                        postAuthor.setFirstname(authorObject.getString("firstname"));
+                        postAuthor.setPhotoUrl(authorObject.getString("photoUrl"));
+
+                        newsfeed.setPostAuthor(postAuthor);
+                        newsfeed.setCaption(postObject.getString("caption"));
+                        newsfeed.setCreatedAt(postObject.getString("createdAt"));
+                        newsfeed.setDistance(postObject.getString("distance").concat("km"));
+                        newsfeed.setFromLat(postObject.getString("fromLat"));
+                        newsfeed.setFromLocation(postObject.getString("fromLocation"));
+                        newsfeed.setFromLong(postObject.getString("fromLong"));
+                        newsfeed.setMovingTime(postObject.getString("movingTime"));
+                        newsfeed.setPhotoUrl(postObject.getString("photoUrl"));
+                        newsfeed.setPost(postObject.getString("post"));
+                        newsfeed.setToLat(postObject.getString("toLat"));
+                        newsfeed.setToLocation(postObject.getString("toLocation"));
+                        newsfeed.setToLong(postObject.getString("toLong"));
+                        newsfeed.setId(postObject.getString("id"));
+
+                        JSONArray commentArray = postObject.optJSONArray("comments");
+                        JSONArray likeArray = postObject.optJSONArray("likes");
+
+                        for(int j = 0; j < commentArray.length(); j++){
+
+                            JSONObject commentObject = commentArray.getJSONObject(j);
+                            Comment c = new Comment();
+                            c.setComment(commentObject.getString("comment"));
+                            c.setDisplayName(commentObject.getString("displayName"));
+                            c.setUserId(commentObject.getString("userId"));
+                            c.setPhotoUrl(commentObject.getString("photoUrl"));
+                            commentList.add(c);
+                        }
+                        for(int j = 0; j < likeArray.length(); j++){
+                            JSONObject likeObject = likeArray.getJSONObject(j);
+                            Like l = new Like();
+                            l.setDisplayName(likeObject.getString("displayName"));
+                            l.setUserId(likeObject.getString("userId"));
+                            l.setPhotoUrl(likeObject.getString("photoUrl"));
+                            likeList.add(l);
+                        }
+                        newsfeed.setLikeList(likeList);
+                        newsfeed.setCommentList(commentList);
+
+                        newsfeedList.add(newsfeed);
+                    } catch (Exception jsonErr){
+                        Log.d("Log_Padyak", "loadNewsfeed: " + jsonErr.getMessage());
+                    }
+                }
+                adapterNewsfeed = new adapterNewsfeed(newsfeedList,getSupportFragmentManager());
+                rvNewsfeed.setAdapter(adapterNewsfeed);
+            } else{
+                Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            Log.d("Log_Padyak", "loadNewsfeed: " + e.getMessage());
+            Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
 

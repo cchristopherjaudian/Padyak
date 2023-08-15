@@ -1,95 +1,161 @@
 package com.padyak.dto;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Newsfeed {
-    private String newsId,userId,userName,userImage,userSource,userDestination,userStart,userEnd,userDistance;
-
-    public Newsfeed(String newsId, String userId, String userName, String userImage, String userSource, String userDestination, String userStart, String userEnd, String userDistance) {
-        this.newsId = newsId;
-        this.userId = userId;
-        this.userName = userName;
-        this.userImage = userImage;
-        this.userSource = userSource;
-        this.userDestination = userDestination;
-        this.userStart = userStart;
-        this.userEnd = userEnd;
-        this.userDistance = userDistance;
-    }
+    private String id,distance,toLong,toLat,toLocation,fromLong,fromLat,fromLocation,movingTime,caption,photoUrl,post,createdAt;
+    private List<Comment> commentList;
+    private List<Like> likeList;
+    private PostAuthor postAuthor;
 
     public Newsfeed() {
     }
 
-    public String getNewsId() {
-        return newsId;
+    public Newsfeed(String id, String distance, String toLong, String toLat, String toLocation, String fromLong, String fromLat, String fromLocation, String movingTime, String caption, String photoUrl, String post, String createdAt, List<Comment> commentList, List<Like> likeList, PostAuthor postAuthor) {
+        this.id = id;
+        this.distance = distance;
+        this.toLong = toLong;
+        this.toLat = toLat;
+        this.toLocation = toLocation;
+        this.fromLong = fromLong;
+        this.fromLat = fromLat;
+        this.fromLocation = fromLocation;
+        this.movingTime = movingTime;
+        this.caption = caption;
+        this.photoUrl = photoUrl;
+        this.post = post;
+        this.createdAt = createdAt;
+        this.commentList = commentList;
+        this.likeList = likeList;
+        this.postAuthor = postAuthor;
     }
 
-    public void setNewsId(String newsId) {
-        this.newsId = newsId;
+    public List<Like> getLikeList() {
+        return likeList;
     }
 
-    public String getUserId() {
-        return userId;
+    public void setLikeList(List<Like> likeList) {
+        this.likeList = likeList;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String getId() {
+        return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getDistance() {
+        return distance;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 
-    public String getUserImage() {
-        return userImage;
+    public String getToLong() {
+        return toLong;
     }
 
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
+    public void setToLong(String toLong) {
+        this.toLong = toLong;
     }
 
-    public String getUserSource() {
-        return userSource;
+    public String getToLat() {
+        return toLat;
     }
 
-    public void setUserSource(String userSource) {
-        this.userSource = userSource;
+    public void setToLat(String toLat) {
+        this.toLat = toLat;
     }
 
-    public String getUserDestination() {
-        return userDestination;
+    public String getToLocation() {
+        return toLocation;
     }
 
-    public void setUserDestination(String userDestination) {
-        this.userDestination = userDestination;
+    public void setToLocation(String toLocation) {
+        this.toLocation = toLocation;
     }
 
-    public String getUserStart() {
-        return userStart;
+    public String getFromLong() {
+        return fromLong;
     }
 
-    public void setUserStart(String userStart) {
-        this.userStart = userStart;
+    public void setFromLong(String fromLong) {
+        this.fromLong = fromLong;
     }
 
-    public String getUserEnd() {
-        return userEnd;
+    public String getFromLat() {
+        return fromLat;
     }
 
-    public void setUserEnd(String userEnd) {
-        this.userEnd = userEnd;
+    public void setFromLat(String fromLat) {
+        this.fromLat = fromLat;
     }
 
-    public String getUserDistance() {
-        return userDistance;
+    public String getFromLocation() {
+        return fromLocation;
     }
 
-    public void setUserDistance(String userDistance) {
-        this.userDistance = userDistance;
+    public void setFromLocation(String fromLocation) {
+        this.fromLocation = fromLocation;
+    }
+
+    public String getMovingTime() {
+        return movingTime;
+    }
+
+    public void setMovingTime(String movingTime) {
+        this.movingTime = movingTime;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+    public PostAuthor getPostAuthor() {
+        return postAuthor;
+    }
+
+    public void setPostAuthor(PostAuthor postAuthor) {
+        this.postAuthor = postAuthor;
     }
 
     @Override
@@ -97,26 +163,33 @@ public class Newsfeed {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Newsfeed newsfeed = (Newsfeed) o;
-        return Objects.equals(newsId, newsfeed.newsId) && Objects.equals(userId, newsfeed.userId) && Objects.equals(userName, newsfeed.userName) && Objects.equals(userImage, newsfeed.userImage) && Objects.equals(userSource, newsfeed.userSource) && Objects.equals(userDestination, newsfeed.userDestination) && Objects.equals(userStart, newsfeed.userStart) && Objects.equals(userEnd, newsfeed.userEnd) && Objects.equals(userDistance, newsfeed.userDistance);
+        return Objects.equals(id, newsfeed.id) && Objects.equals(distance, newsfeed.distance) && Objects.equals(toLong, newsfeed.toLong) && Objects.equals(toLat, newsfeed.toLat) && Objects.equals(toLocation, newsfeed.toLocation) && Objects.equals(fromLong, newsfeed.fromLong) && Objects.equals(fromLat, newsfeed.fromLat) && Objects.equals(fromLocation, newsfeed.fromLocation) && Objects.equals(movingTime, newsfeed.movingTime) && Objects.equals(caption, newsfeed.caption) && Objects.equals(photoUrl, newsfeed.photoUrl) && Objects.equals(post, newsfeed.post) && Objects.equals(createdAt, newsfeed.createdAt) && Objects.equals(commentList, newsfeed.commentList) && Objects.equals(likeList, newsfeed.likeList) && Objects.equals(postAuthor, newsfeed.postAuthor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(newsId, userId, userName, userImage, userSource, userDestination, userStart, userEnd, userDistance);
+        return Objects.hash(id, distance, toLong, toLat, toLocation, fromLong, fromLat, fromLocation, movingTime, caption, photoUrl, post, createdAt, commentList, likeList, postAuthor);
     }
 
     @Override
     public String toString() {
         return "Newsfeed{" +
-                "newsId='" + newsId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userImage='" + userImage + '\'' +
-                ", userSource='" + userSource + '\'' +
-                ", userDestination='" + userDestination + '\'' +
-                ", userStart='" + userStart + '\'' +
-                ", userEnd='" + userEnd + '\'' +
-                ", userDistance='" + userDistance + '\'' +
+                "id='" + id + '\'' +
+                ", distance='" + distance + '\'' +
+                ", toLong='" + toLong + '\'' +
+                ", toLat='" + toLat + '\'' +
+                ", toLocation='" + toLocation + '\'' +
+                ", fromLong='" + fromLong + '\'' +
+                ", fromLat='" + fromLat + '\'' +
+                ", fromLocation='" + fromLocation + '\'' +
+                ", movingTime='" + movingTime + '\'' +
+                ", caption='" + caption + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", post='" + post + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", commentList=" + commentList +
+                ", likeList=" + likeList +
+                ", postAuthor=" + postAuthor +
                 '}';
     }
 }

@@ -3,31 +3,15 @@ package com.padyak.dto;
 import java.util.Objects;
 
 public class Like {
-    private String userName,userImage,userId;
-
-    public Like(String userName, String userImage, String userId) {
-        this.userName = userName;
-        this.userImage = userImage;
-        this.userId = userId;
-    }
+    private String userId, displayName, photoUrl;
 
     public Like() {
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
+    public Like(String userId, String displayName, String photoUrl) {
+        this.userId = userId;
+        this.displayName = displayName;
+        this.photoUrl = photoUrl;
     }
 
     public String getUserId() {
@@ -38,25 +22,41 @@ public class Like {
         this.userId = userId;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Like like = (Like) o;
-        return Objects.equals(userName, like.userName) && Objects.equals(userImage, like.userImage) && Objects.equals(userId, like.userId);
+        return Objects.equals(userId, like.userId) && Objects.equals(displayName, like.displayName) && Objects.equals(photoUrl, like.photoUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, userImage, userId);
+        return Objects.hash(userId, displayName, photoUrl);
     }
 
     @Override
     public String toString() {
         return "Like{" +
-                "userName='" + userName + '\'' +
-                ", userImage='" + userImage + '\'' +
-                ", userId='" + userId + '\'' +
+                "userId='" + userId + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
                 '}';
     }
 }

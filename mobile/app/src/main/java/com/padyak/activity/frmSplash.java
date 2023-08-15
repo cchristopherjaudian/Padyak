@@ -163,6 +163,7 @@ public class frmSplash extends AppCompatActivity {
                 Prefs.getInstance().setUser(frmSplash.this,Prefs.PHONE_KEY,userObject.getString(Prefs.PHONE_KEY));
                 Prefs.getInstance().setUser(frmSplash.this,Prefs.ID_KEY,userObject.getString(Prefs.ID_KEY));
                 Prefs.getInstance().setUser(frmSplash.this,Prefs.GENDER_KEY,userObject.getString(Prefs.GENDER_KEY));
+                Prefs.getInstance().setUser(frmSplash.this,Prefs.EMAIL_KEY,emailAdd);
 
                 Map<String, Object> tokenMap = new HashMap<>();
                 tokenMap.put(Prefs.FN_KEY,userObject.getString(Prefs.FN_KEY));

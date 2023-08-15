@@ -2,6 +2,9 @@ package com.padyak.utility;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,6 +43,21 @@ public class Helper {
         } catch(Exception e){
             e.printStackTrace();
             return 0d;
+        }
+    }
+    public String generateAddress(String json){
+        try {
+            String foundAddress = "";
+            JSONObject reader = new JSONObject(json);
+            JSONArray mapArray = reader.optJSONArray("results");
+            for(int i=0; i < mapArray.length(); i++){
+                JSONObject addressObject = mapArray.getJSONObject(i);
+                foundAddress = addressObject.getString("formatted_address");
+                break;
+            }
+            return foundAddress;
+        } catch (Exception err){
+            return "";
         }
     }
     public String formatDuration(int seconds){

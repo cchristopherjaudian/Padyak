@@ -4,70 +4,72 @@ import java.util.Objects;
 
 public class Comment {
 
-    private String id, userName,userComment, userImage;
+    private String userId, displayName,comment, photoUrl;
 
-    public Comment(String id, String userName, String userComment, String userImage) {
-        this.id = id;
-        this.userName = userName;
-        this.userComment = userComment;
-        this.userImage = userImage;
-    }
+
 
     public Comment() {
     }
 
-    public String getId() {
-        return id;
+    public Comment(String userId, String displayName, String comment, String photoUrl) {
+        this.userId = userId;
+        this.displayName = displayName;
+        this.comment = comment;
+        this.photoUrl = photoUrl;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public String getUserComment() {
-        return userComment;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public void setUserComment(String userComment) {
-        this.userComment = userComment;
+    public String getComment() {
+        return comment;
     }
 
-    public String getUserImage() {
-        return userImage;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id) && Objects.equals(userName, comment.userName) && Objects.equals(userComment, comment.userComment) && Objects.equals(userImage, comment.userImage);
+        Comment comment1 = (Comment) o;
+        return Objects.equals(userId, comment1.userId) && Objects.equals(displayName, comment1.displayName) && Objects.equals(comment, comment1.comment) && Objects.equals(photoUrl, comment1.photoUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, userComment, userImage);
+        return Objects.hash(userId, displayName, comment, photoUrl);
     }
 
     @Override
     public String toString() {
         return "Comment{" +
-                "id='" + id + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userComment='" + userComment + '\'' +
-                ", userImage='" + userImage + '\'' +
+                "userId='" + userId + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", comment='" + comment + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
                 '}';
     }
 }
