@@ -4,6 +4,7 @@ import ResponseObject from "../lib/response-object";
 import ResponseCodes from "../commons/response-codes";
 import PostService from "../services/post-service";
 import { IRequestWithUser } from "../middlewares/token-middleware";
+import { TPostsQuery } from "../repositories/post-repository";
 
 const postInstance = new PostService();
 const responseObject = new ResponseObject();
@@ -35,7 +36,7 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const posts = await postInstance.getPosts();
+    const posts = await postInstance.getPosts(req.query as TPostsQuery);
 
     responseObject.createResponse(
       res,

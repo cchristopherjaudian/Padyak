@@ -1,5 +1,11 @@
+import * as firestoreDb from "firebase-admin/firestore";
+
 import Firstore from "../database/firestore";
 import { IPost } from "../database/models/post";
+
+export type TPostsQuery = {
+  id?: string;
+};
 
 class PostLikesRepository {
   private _colName = "posts";
@@ -36,13 +42,20 @@ class PostLikesRepository {
       .findById(id)) as IPost;
   }
 
-  public async getPostsList() {
-    const postsRef = await this._firestore
-      .getDb()
-      .collection(this._colName)
-      .orderBy("createdAt", "desc")
-      .get();
-    const mappedRef = postsRef.docs.map((k) => k.data());
+  public async getPostsList(query: TPostsQuery) {
+    let postsRef = await this._firestore.getDb().collection(this._colName);
+
+    if (query?.id) {
+      postsRef = postsRef.where(
+        "id",
+        "==",
+        query.id
+      ) as firestoreDb.CollectionReference;
+    }
+
+    const mappedRef = (
+      await postsRef.orderBy("createdAt", "desc").get()
+    ).docs.map((k) => k.data());
     return mappedRef as IPost[];
   }
 }

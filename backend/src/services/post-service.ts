@@ -1,7 +1,9 @@
 import { IComments, IPost } from "../database/models/post";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
 import PostMapper from "../lib/mappers/post-mapper";
-import PostLikesRepository from "../repositories/post-repository";
+import PostLikesRepository, {
+  TPostsQuery,
+} from "../repositories/post-repository";
 
 const dbInstance = new PostLikesRepository();
 
@@ -82,8 +84,8 @@ class PostService {
     return await dbInstance.update(mappedPayload as IPost);
   }
 
-  public async getPosts() {
-    return await dbInstance.getPostsList();
+  public async getPosts(query: TPostsQuery) {
+    return await dbInstance.getPostsList(query);
   }
 
   public async addLikes(payload: TAddLikes) {
