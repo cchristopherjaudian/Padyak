@@ -71,7 +71,7 @@ const addLikes = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const posts = await postInstance.addLikes({
       ...req.body,
-      userId: request.user.id,
+      uid: request.user.id,
       displayName: `${request.user.firstname} ${request.user.lastname}`,
       photoUrl: request.user.photoUrl,
     });
