@@ -62,6 +62,7 @@ class PostMapper {
     return {
       ...payload,
       id: uudiv4(),
+      createdAt: date.getIsoDate(new Date()),
     };
   }
 }

@@ -1,7 +1,9 @@
 import { IComments, IPost } from "../database/models/post";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
 import PostMapper from "../lib/mappers/post-mapper";
-import PostLikesRepository from "../repositories/post-repository";
+import PostLikesRepository, {
+  TPostsQuery,
+} from "../repositories/post-repository";
 
 const dbInstance = new PostLikesRepository();
 
@@ -25,34 +27,42 @@ type TAddComment = {
 
 class Likes {
   public async addLikes(payload: TAddLikes) {
-    const post = await dbInstance.findPostById(payload?.postId as string);
-    if (!post) throw new NotFoundError();
+    try {
+      const post = await dbInstance.findPostById(payload?.postId as string);
+      if (!post) throw new NotFoundError();
 
-    const hasLiked = post.likes?.find((like) => like.uid === payload.uid);
-    if (!hasLiked) {
-      delete payload.postId;
-      post.likes?.push(payload);
-    } else {
-      const removedLike = post.likes?.filter(
-        (like) => like.uid !== payload.uid
-      );
-      post.likes = removedLike;
+      const hasLiked = post.likes?.find((like) => like.uid === payload.uid);
+      if (!hasLiked) {
+        delete payload.postId;
+        post.likes?.push(payload);
+      } else {
+        const removedLike = post.likes?.filter(
+          (like) => like.uid !== payload.uid
+        );
+        post.likes = removedLike;
+      }
+
+      const updatedPost = await dbInstance.update({ ...post });
+      return updatedPost;
+    } catch (error) {
+      throw error;
     }
-
-    const updatedPost = await dbInstance.update({ ...post });
-    return updatedPost;
   }
 }
 
 class Comments {
   public async addComment(payload: TAddComment) {
-    const post = await dbInstance.findPostById(payload?.postId as string);
-    if (!post) throw new NotFoundError();
+    try {
+      const post = await dbInstance.findPostById(payload?.postId as string);
+      if (!post) throw new NotFoundError();
 
-    delete payload.postId;
-    post.comments?.push(payload as IComments);
-    const updatedPost = await dbInstance.update({ ...post });
-    return updatedPost;
+      delete payload.postId;
+      post.comments?.push(payload as IComments);
+      await dbInstance.update({ ...post });
+      return payload;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
@@ -74,8 +84,8 @@ class PostService {
     return await dbInstance.update(mappedPayload as IPost);
   }
 
-  public async getPosts() {
-    return await dbInstance.getPostsList();
+  public async getPosts(query: TPostsQuery) {
+    return await dbInstance.getPostsList(query);
   }
 
   public async addLikes(payload: TAddLikes) {
