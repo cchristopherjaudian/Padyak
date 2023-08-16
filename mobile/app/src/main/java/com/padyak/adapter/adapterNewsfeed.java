@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,8 +53,9 @@ public class adapterNewsfeed extends RecyclerView.Adapter<adapterNewsfeed.viewHo
     @Override
     public void onBindViewHolder(@NonNull adapterNewsfeed.viewHolder holder, int position) {
         Newsfeed n = newsfeeds.get(position);
-        if (n.getPhotoUrl().equals("")) {
+        if (n.getPhotoUrl().trim().equals("n/a")) {
             holder.imgNewsfeed.setVisibility(View.GONE);
+            holder.clNewsfeedMain.setPadding(0,0,0,15);
         } else {
             Picasso.get().load(n.getPhotoUrl()).into(holder.imgNewsfeed);
         }
@@ -62,7 +65,7 @@ public class adapterNewsfeed extends RecyclerView.Adapter<adapterNewsfeed.viewHo
         holder.txRideDestination.setText(n.getToLocation());
         holder.textView40.setText(n.getMovingTime());
         holder.txRideDistance.setText(n.getDistance());
-        holder.txPostTime.setText(n.getCreatedAt());
+        holder.txPostTime.setText(n.getCreatedAt().replace("+08:00","").replace("T"," "));
 
         holder.txLikes.setText(String.valueOf(n.getLikeList().size()));
         holder.txComments.setText(String.valueOf(n.getCommentList().size()));
@@ -93,9 +96,10 @@ public class adapterNewsfeed extends RecyclerView.Adapter<adapterNewsfeed.viewHo
         ImageView imgNewsfeed, imgParticipant, imgComments, imgLikes;
         TextView textView45, txRideDestination, textView40, txRideDistance, txPostTime, txComments, txLikes;
         TextView txRowName;
-
+        ConstraintLayout clNewsfeedMain;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
+            clNewsfeedMain= itemView.findViewById(R.id.clNewsfeedMain);
             imgNewsfeed = itemView.findViewById(R.id.imgNewsfeed);
             imgParticipant = itemView.findViewById(R.id.imgParticipant);
             imgComments = itemView.findViewById(R.id.imgComments);

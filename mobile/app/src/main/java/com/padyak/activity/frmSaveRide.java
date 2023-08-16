@@ -52,17 +52,19 @@ import java.util.Random;
 
 public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializedCallback, OnMapReadyCallback {
     private static final int REQUEST_IMAGE_CAPTURE = 814;
-    TextView txTimer,txDistanceValue;
-    EditText etRideTitle,etRideCaption;
-    Button btnBrowseImage,btnRideRegister,btnRideCancel;
+    TextView txTimer, txDistanceValue;
+    EditText etRideTitle, etRideCaption;
+    Button btnBrowseImage, btnRideRegister, btnRideCancel;
     ImageView imgPreview;
-    Double startPosLat,startPosLong,endPosLat,endPosLong;
+    Double startPosLat, startPosLong, endPosLat, endPosLong;
     int rideDuration;
     Double rideDistance;
     boolean is_Capture = true;
     Bitmap bitmapRide;
-
-
+    byte[] data;
+    FirebaseStorage storage;
+    StorageReference storageRef, rideRef;
+    UploadTask uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +75,8 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
                 getSupportFragmentManager().findFragmentById(R.id.mapRides);
         mapFragment.getMapAsync(this);
 
-        rideDuration = getIntent().getIntExtra("rideDuration",0);
-        rideDistance = getIntent().getDoubleExtra("rideDistance",0d);
+        rideDuration = getIntent().getIntExtra("rideDuration", 0);
+        rideDistance = getIntent().getDoubleExtra("rideDistance", 0d);
 
         txTimer = findViewById(R.id.txTimer);
         txDistanceValue = findViewById(R.id.txDistanceValue);
@@ -89,90 +91,52 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
         imgPreview = findViewById(R.id.imgPreview);
 
         txTimer.setText(Helper.getInstance().formatDuration(rideDuration));
-        txDistanceValue.setText(String.format("%.3f",rideDistance));
+        txDistanceValue.setText(String.format("%.3f", rideDistance));
 
-        btnRideCancel.setOnClickListener(v->{
+        btnRideCancel.setOnClickListener(v -> {
             frmRide.instance.finish();
             finish();
         });
-        btnRideRegister.setOnClickListener(v->{
-            String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + startPosLat + "," + startPosLong + "&key=" + getString(R.string.maps_publicapi);
-            String toLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + endPosLat + "," + endPosLong + "&key=" + getString(R.string.maps_publicapi);
+        btnRideRegister.setOnClickListener(v -> {
+            if (bitmapRide != null) {
+                String ref = "rides/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".bmp";
+                FirebaseApp.initializeApp(this);
+                storage = FirebaseStorage.getInstance();
+                storageRef = storage.getReference();
+                rideRef = storageRef.child(ref);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmapRide.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                data = baos.toByteArray();
 
-            VolleyHttp fromVolley = new VolleyHttp(fromLocationURL,null,"MAP",frmSaveRide.this);
-            VolleyHttp toVolley = new VolleyHttp(toLocationURL,null,"MAP",frmSaveRide.this);
-
-            String fromAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
-            String toAddress = Helper.getInstance().generateAddress(toVolley.getResponseBody(false));
-
-            Log.d("Log_Padyak", "onCreate jsonFrom: " + fromAddress);
-            Log.d("Log_Padyak", "onCreate jsonTo: " + toAddress);
-
-            String ref = "rides/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString()  + ".bmp";
-            FirebaseApp.initializeApp(this);
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            StorageReference rideRef = storageRef.child(ref);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmapRide.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-
-            UploadTask uploadTask = rideRef.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(frmSaveRide.this, "Failed to upload image. Please try again", Toast.LENGTH_SHORT).show();
-                    Log.d("Log_Padyak", "onFailure: " + exception.getMessage());
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.d("Log_Padyak", "onSuccess Name: " + taskSnapshot.getMetadata().getName());
-                    Log.d("Log_Padyak", "onSuccess Path: " + taskSnapshot.getMetadata().getPath());
-                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Map<String, Object> payload = new HashMap<>();
-                            payload.put("post",etRideTitle.getText().toString());
-                            payload.put("distance",String.format("%.3f",rideDistance));
-                            payload.put("movingTime",Helper.getInstance().formatDuration(rideDuration));
-                            payload.put("toLocation",toAddress);
-                            payload.put("fromLocation",fromAddress);
-                            payload.put("caption",etRideCaption.getText().toString());
-                            payload.put("photoUrl",uri.toString());
-                            payload.put("fromLong",startPosLong);
-                            payload.put("toLong",endPosLong);
-                            payload.put("fromLat",startPosLat);
-                            payload.put("toLat",endPosLat);
-
-                            VolleyHttp volleyHttp = new VolleyHttp("",payload,"post",frmSaveRide.this);
-                            String response = volleyHttp.getResponseBody(true);
-
-                            try {
-                                JSONObject reader =  new JSONObject(response);
-                                int responseStatus = reader.getInt("status");
-                                if(responseStatus == 200){
-                                    Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_SHORT).show();
-                                    frmRide.instance.finish();
-                                    finish();
-                                } else{
-                                    Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
+                uploadTask = rideRef.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(frmSaveRide.this, "Failed to upload image. Please try again", Toast.LENGTH_SHORT).show();
+                        Log.d("Log_Padyak", "onFailure: " + exception.getMessage());
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                saveRide(uri.toString());
                             }
-                        }
-                    });
+                        });
 
-                }
-            });
+                    }
+                });
+            } else {
+                saveRide("n/a");
+            }
         });
-        btnBrowseImage.setOnClickListener(v->{
-            if(is_Capture){
+        btnBrowseImage.setOnClickListener(v -> {
+            if (is_Capture) {
                 is_Capture = false;
-                btnBrowseImage.setText("Remove Image");
+
                 startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), REQUEST_IMAGE_CAPTURE);
-            } else{
+            } else {
                 is_Capture = true;
                 btnBrowseImage.setText("Capture Image");
                 imgPreview.setImageBitmap(null);
@@ -183,13 +147,60 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
         });
     }
 
+    private void saveRide(String imgURL) {
+        try {
+            String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + startPosLat + "," + startPosLong + "&key=" + getString(R.string.maps_publicapi);
+            String toLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + endPosLat + "," + endPosLong + "&key=" + getString(R.string.maps_publicapi);
+
+            VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmSaveRide.this);
+            VolleyHttp toVolley = new VolleyHttp(toLocationURL, null, "MAP", frmSaveRide.this);
+
+            String fromAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
+            String toAddress = Helper.getInstance().generateAddress(toVolley.getResponseBody(false));
+
+            Log.d("Log_Padyak", "onCreate jsonFrom: " + fromAddress);
+            Log.d("Log_Padyak", "onCreate jsonTo: " + toAddress);
+
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("post", etRideTitle.getText().toString());
+            payload.put("distance", String.format("%.3f km", rideDistance));
+            payload.put("movingTime", Helper.getInstance().formatDuration(rideDuration));
+            payload.put("toLocation", toAddress);
+            payload.put("fromLocation", fromAddress);
+            payload.put("caption", etRideCaption.getText().toString());
+            payload.put("photoUrl", imgURL);
+            payload.put("fromLong", startPosLong);
+            payload.put("toLong", endPosLong);
+            payload.put("fromLat", startPosLat);
+            payload.put("toLat", endPosLat);
+
+            VolleyHttp volleyHttp = new VolleyHttp("", payload, "post", frmSaveRide.this);
+            String response = volleyHttp.getResponseBody(true);
+
+
+            JSONObject reader = new JSONObject(response);
+            int responseStatus = reader.getInt("status");
+            if (responseStatus == 200) {
+                Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_SHORT).show();
+                frmRide.instance.finish();
+                finish();
+            } else {
+                Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            Log.d("Log_Padyak", "saveRide JSONException: " + e.getMessage());
+        } catch (Exception ee){
+            Log.d("Log_Padyak", "saveRide Exception: " + ee.getMessage());
+        }
+    }
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        startPosLat = getIntent().getDoubleExtra("startPosLat",0.0);
-        startPosLong = getIntent().getDoubleExtra("startPosLong",0.0);
+        startPosLat = getIntent().getDoubleExtra("startPosLat", 0.0);
+        startPosLong = getIntent().getDoubleExtra("startPosLong", 0.0);
 
-        endPosLat = getIntent().getDoubleExtra("endPosLat",0.0);
-        endPosLong = getIntent().getDoubleExtra("endPosLong",0.0);
+        endPosLat = getIntent().getDoubleExtra("endPosLat", 0.0);
+        endPosLong = getIntent().getDoubleExtra("endPosLong", 0.0);
 
         LatLng startPos = new LatLng(startPosLat, startPosLong);
         LatLng endPos = new LatLng(endPosLat, endPosLong);
@@ -217,6 +228,7 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
                         bitmapRide = bitmap;
                         imgPreview.setImageBitmap(bitmap);
                         imgPreview.getLayoutParams().height = 700;
+                        btnBrowseImage.setText("Remove Image");
                     }
                     break;
                 case RESULT_CANCELED:

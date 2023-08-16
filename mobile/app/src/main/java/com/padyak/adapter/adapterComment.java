@@ -40,6 +40,7 @@ public class adapterComment extends RecyclerView.Adapter<adapterComment.viewHold
 
     @Override
     public void onBindViewHolder(@NonNull adapterComment.viewHolder holder, int position) {
+        holder.txBottomCommentDate.setText(commentList.get(position).getCreatedAt().replace("+08:00","").replace("T"," "));
         holder.txBottomCommentName.setText(commentList.get(position).getDisplayName());
         holder.txBottomCommentCaption.setText(commentList.get(position).getComment());
         Picasso.get().load(commentList.get(position).getPhotoUrl()).into(holder.imgBottomComment);
@@ -52,7 +53,7 @@ public class adapterComment extends RecyclerView.Adapter<adapterComment.viewHold
 
     public class viewHolder extends RecyclerView.ViewHolder {
         ImageView  imgBottomComment;
-        TextView txBottomCommentName,  txBottomCommentCaption;
+        TextView txBottomCommentName,  txBottomCommentCaption,txBottomCommentDate;
 
         public viewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,7 +61,7 @@ public class adapterComment extends RecyclerView.Adapter<adapterComment.viewHold
 
             txBottomCommentName = itemView.findViewById(R.id.txBottomCommentName);
             txBottomCommentCaption = itemView.findViewById(R.id.txBottomCommentCaption);
-
+            txBottomCommentDate = itemView.findViewById(R.id.txBottomCommentDate);
         }
 
     }

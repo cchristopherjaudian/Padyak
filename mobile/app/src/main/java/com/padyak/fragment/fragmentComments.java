@@ -93,8 +93,11 @@ public class fragmentComments extends BottomSheetDialogFragment {
                 JSONObject responseJSON = new JSONObject(response);
                 int responseCode = responseJSON.getInt("status");
                 if(responseCode != 200) throw new JSONException("");
+                JSONObject dataJSON = responseJSON.getJSONObject("data");
                 etAddComment.setText("");
                 Comment comment = new Comment();
+                comment.setCreatedAt(dataJSON.getString("createdAt"));
+                comment.setId(dataJSON.getString("id"));
                 comment.setComment(newComment);
                 comment.setPhotoUrl(LoggedUser.getInstance().getImgUrl());
                 comment.setUserId(LoggedUser.loggedUser.getUuid());
