@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
 import com.padyak.dto.CoverPhoto;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,7 +31,12 @@ public class adapterCoverPhoto extends RecyclerView.Adapter<adapterCoverPhoto.vi
 
     @Override
     public void onBindViewHolder(@NonNull adapterCoverPhoto.viewHolder holder, int position) {
-        holder.img.setBackgroundResource(imageList.get(position).getResourceId());
+        if(imageList.get(position).getImageURL().trim().equals("n/a")){
+            holder.img.setBackgroundResource(R.drawable.bike1);
+        } else{
+            Picasso.get().load(imageList.get(position).getImageURL().trim()).into(holder.img);
+        }
+
     }
 
     @Override

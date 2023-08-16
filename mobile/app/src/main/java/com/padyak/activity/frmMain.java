@@ -57,7 +57,7 @@ public class frmMain extends AppCompatActivity {
     List<CoverPhoto> coverPhotoList;
     com.padyak.adapter.adapterCoverPhoto adapterCoverPhoto;
     com.padyak.adapter.adapterNewsfeed adapterNewsfeed;
-    TextView txMainProfileName,txProfileName,txProfileDay;
+    TextView txMainProfileName,txProfileName,txProfileDay,textView6,txLastSeen,txProfileDistance,txProfileTime,textView5,textView9;
     ImageView imgMainProfileDP,imgProfileDP;
     RelativeLayout rlEvents, rlAlert, rlHospital, rlRepair, rlPolice, rlRiding;
     Intent intent;
@@ -74,6 +74,13 @@ public class frmMain extends AppCompatActivity {
 
         txMainProfileName = findViewById(R.id.txMainProfileName);
         txProfileName = findViewById(R.id.txProfileName);
+
+        textView6 = findViewById(R.id.textView6);
+        txLastSeen = findViewById(R.id.txLastSeen);
+        txProfileDistance = findViewById(R.id.txProfileDistance);
+        txProfileTime = findViewById(R.id.txProfileTime);
+        textView5 = findViewById(R.id.textView5);
+        textView9 = findViewById(R.id.textView9);
 
         bottomBar = findViewById(R.id.bottomBar);
         frame_home = findViewById(R.id.frame_home);
@@ -180,12 +187,50 @@ public class frmMain extends AppCompatActivity {
         adapterNewsfeed.notifyDataSetChanged();
     }
     public void loadCoverPhoto() {
-        coverPhotoList = new ArrayList<>();
-        coverPhotoList.add(new CoverPhoto("","",R.drawable.bike1));
-        coverPhotoList.add(new CoverPhoto("","",R.drawable.bike2));
-        coverPhotoList.add(new CoverPhoto("","",R.drawable.bike3));
-        adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
-        rvCoverPhoto.setAdapter(adapterCoverPhoto);
+        new Thread(()->{
+            //.concat(LoggedUser.getInstance().getUuid())
+            VolleyHttp volleyHttp = new VolleyHttp("?id=30df104d-3635-424b-a927-3a45c5a648d7",null,"post", frmMain);
+            String response = volleyHttp.getResponseBody(true);
+
+            runOnUiThread(()->{
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    int responseCode = jsonResponse.getInt("status");
+                    if(responseCode != 200) throw new Exception("Response Code " + responseCode);
+                    JSONArray postArray = jsonResponse.optJSONArray("data");
+                    if(postArray.length() > 0){
+                        JSONObject postObject = postArray.getJSONObject(0);
+                        JSONArray commentArray = postObject.optJSONArray("comments");
+                        JSONArray likeArray = postObject.optJSONArray("likes");
+
+                        textView6.setText(postObject.getString("post"));
+                        txProfileDistance.setText(postObject.getString("distance"));
+                        txProfileTime.setText(postObject.getString("movingTime"));
+
+                        textView9.setText(String.valueOf(commentArray.length()));
+                        textView5.setText(String.valueOf(likeArray.length()));
+                        txLastSeen.setText(postObject.getString("createdAt")
+                                .replace("+08:00"," | ")
+                                .replace("T"," ")
+                                .concat(postObject.getString("toLocation")));
+
+                        String postImgUrl = postObject.getString("photoUrl");
+                        coverPhotoList = new ArrayList<>();
+                        coverPhotoList.add(new CoverPhoto(postImgUrl));
+                        adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
+                        rvCoverPhoto.setAdapter(adapterCoverPhoto);
+                    }
+                } catch (JSONException e) {
+                    Log.d("Log_Padyak", "loadCoverPhoto JSONException: " + e.getMessage());
+                } catch (Exception ee) {
+                    Log.d("Log_Padyak", "loadCoverPhoto Exception: " + ee.getMessage());
+                }
+
+            });
+        }).start();
+
+
+
     }
 
     public void loadNewsfeed() {
@@ -215,7 +260,7 @@ public class frmMain extends AppCompatActivity {
                         newsfeed.setPostAuthor(postAuthor);
                         newsfeed.setCaption(postObject.getString("caption"));
                         newsfeed.setCreatedAt(postObject.getString("createdAt"));
-                        newsfeed.setDistance(postObject.getString("distance").concat("km"));
+                        newsfeed.setDistance(postObject.getString("distance"));
                         newsfeed.setFromLat(postObject.getString("fromLat"));
                         newsfeed.setFromLocation(postObject.getString("fromLocation"));
                         newsfeed.setFromLong(postObject.getString("fromLong"));
@@ -231,20 +276,21 @@ public class frmMain extends AppCompatActivity {
                         JSONArray likeArray = postObject.optJSONArray("likes");
 
                         for(int j = 0; j < commentArray.length(); j++){
-
                             JSONObject commentObject = commentArray.getJSONObject(j);
                             Comment c = new Comment();
                             c.setComment(commentObject.getString("comment"));
                             c.setDisplayName(commentObject.getString("displayName"));
                             c.setUserId(commentObject.getString("userId"));
                             c.setPhotoUrl(commentObject.getString("photoUrl"));
+                            c.setId(commentObject.getString("id"));
+                            c.setCreatedAt(commentObject.getString("createdAt"));
                             commentList.add(c);
                         }
                         for(int j = 0; j < likeArray.length(); j++){
                             JSONObject likeObject = likeArray.getJSONObject(j);
                             Like l = new Like();
                             l.setDisplayName(likeObject.getString("displayName"));
-                            l.setUserId(likeObject.getString("userId"));
+                            l.setUserId(likeObject.getString("uid"));
                             l.setPhotoUrl(likeObject.getString("photoUrl"));
                             likeList.add(l);
                         }

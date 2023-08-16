@@ -94,14 +94,18 @@ public class VolleyHttp {
 
                     int responseCode=conn.getResponseCode();
 
-                    Log.d("Log_Padyak", "Response Code Volley: " + responseCode);
-                    Log.d("Log_Padyak", "Request Type Volley: " + conn.getRequestMethod());
+
                     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     String content = "", line;
                     while ((line = rd.readLine()) != null) {
                         content += line + "\n";
                     }
-                    Log.d("Log_Padyak", "content volley: " + content);
+                    if(!getType().equals("MAP")){
+                        Log.d("Log_Padyak", "Response Code Volley: " + responseCode);
+                        Log.d("Log_Padyak", "Request Type Volley: " + conn.getRequestMethod());
+                        Log.d("Log_Padyak", "content volley: " + content);
+                    }
+
                     return content;
                 } catch (Exception e) {
                     Log.d("Log_Padyak", "exception: " + e.getMessage());
