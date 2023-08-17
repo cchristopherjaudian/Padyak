@@ -19,6 +19,11 @@ const getYearlyEventSchema = Joi.object({
   year: Joi.string().required(),
 });
 
+const getEventsSchema = Joi.object({
+  year: Joi.string().required(),
+  month: Joi.string().required(),
+});
+
 const updateEventSchema = Joi.object({
   month: Joi.string().optional(),
   year: Joi.string().optional(),
@@ -39,4 +44,5 @@ export {
   getYearlyEventSchema,
   updateEventSchema,
   registerEventSchema,
+  getEventsSchema,
 };

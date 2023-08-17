@@ -15,6 +15,11 @@ export type TCreateEvent = {
   author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname" | "id">;
 };
 
+export type TEventListQuery = {
+  year: string;
+  month: string;
+};
+
 const arrayOfMonths = [
   "January",
   "February",
@@ -84,6 +89,23 @@ class EventRepository {
     });
 
     return events;
+  }
+
+  public async getEventList(query: TEventListQuery) {
+    try {
+      const eventRef = await this._firestore
+        .getDb()
+        .collection(this._colName)
+        .where("year", "==", query.year)
+        .where("month", "==", query.month)
+        .orderBy("createdAt", "desc")
+        .get();
+
+      const mappedRef = eventRef.docs.map((k) => k.data());
+      return mappedRef as IEvent[];
+    } catch (error) {
+      throw error;
+    }
   }
 }
 
