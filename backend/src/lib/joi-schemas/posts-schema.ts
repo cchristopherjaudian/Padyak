@@ -39,4 +39,16 @@ const addCommentSchema = Joi.object({
   comment: Joi.string().required(),
 });
 
-export { createPostSchema, updatePostSchema, addLikesSchema, addCommentSchema };
+const getPostsSchema = Joi.object({
+  id: Joi.string().optional(),
+  uid: Joi.string().optional(),
+  limit: Joi.number().optional().default(20),
+});
+
+export {
+  createPostSchema,
+  updatePostSchema,
+  addLikesSchema,
+  addCommentSchema,
+  getPostsSchema,
+};

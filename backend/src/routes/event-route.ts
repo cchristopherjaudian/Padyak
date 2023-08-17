@@ -4,6 +4,7 @@ import requestSchemaValidate from "../middlewares/joi-middleware";
 import TokenMiddleware from "../middlewares/token-middleware";
 import {
   createEventSchema,
+  getEventsSchema,
   getYearlyEventSchema,
   registerEventSchema,
   updateEventSchema,
@@ -28,6 +29,15 @@ router.get(
     requestSchemaValidate(getYearlyEventSchema),
   ],
   eventController.getYearlyEvents
+);
+
+router.get(
+  "/",
+  [
+    tokenMiddleware.adminValidate as any,
+    requestSchemaValidate(getEventsSchema),
+  ],
+  eventController.getEvents
 );
 
 router.get(

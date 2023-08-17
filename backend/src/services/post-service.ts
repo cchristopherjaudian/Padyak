@@ -77,7 +77,6 @@ class PostService {
   }
 
   public async updatePost(payload: Partial<IPost>) {
-    console.log("update post ", payload);
     const isExist = await dbInstance.findPostById(payload?.id as string);
     if (!isExist) throw new NotFoundError("Post does not exist.");
     const mappedPayload = this._mapper.updatePost(payload);

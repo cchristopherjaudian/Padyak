@@ -3,6 +3,7 @@ import { NotFoundError } from "../lib/custom-errors/class-errors";
 import EventMapper from "../lib/mappers/event-mapper";
 import EventRepository, {
   TCreateEvent,
+  TEventListQuery,
 } from "../repositories/event-repository";
 
 interface IEventService {
@@ -80,6 +81,14 @@ class EventService implements IEventService {
       const event = await this._repository.findEventById(id);
       if (!event) throw new NotFoundError("Event not found.");
       return event as IEvent;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getEvents(query: TEventListQuery) {
+    try {
+      return await this._repository.getEventList(query);
     } catch (error) {
       throw error;
     }

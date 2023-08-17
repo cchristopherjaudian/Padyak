@@ -4,6 +4,7 @@ import ResponseObject from "../lib/response-object";
 import ResponseCodes from "../commons/response-codes";
 import { EventRegistration, EventService } from "../services/event-service";
 import { IRequestWithUser } from "../middlewares/token-middleware";
+import { TEventListQuery } from "../repositories/event-repository";
 
 const eventInstance = new EventService();
 const responseObject = new ResponseObject();
@@ -11,11 +12,12 @@ const eventRegister = new EventRegistration(eventInstance);
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   const request = req as IRequestWithUser;
-  const { photoUrl, firstname, lastname } = request.user;
+  const { photoUrl, firstname, lastname, id } = request.user;
   try {
     const newEvent = await eventInstance.createEvent({
       ...req.body,
       author: {
+        id,
         photoUrl,
         firstname,
         lastname,
@@ -50,6 +52,21 @@ const getYearlyEvents = async (
       httpStatus.OK,
       ResponseCodes.LIST_RETRIEVED,
       events
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getEvents = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const event = await eventInstance.getEvents(req.query as TEventListQuery);
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_RETRIEVED,
+      event
     );
   } catch (error) {
     next(error);
@@ -122,6 +139,7 @@ export default {
   createEvent,
   getYearlyEvents,
   getEvent,
+  getEvents,
   updateEvent,
   registerEvent,
 };

@@ -8,12 +8,21 @@ const createEventSchema = Joi.object({
   year: Joi.string().required(),
   eventDate: Joi.string().required(),
   name: Joi.string().required(),
+  eventDescription: Joi.string().required(),
   photoUrl: Joi.string().required(),
+  startTime: Joi.string().required(),
+  endTime: Joi.string().required(),
+  award: Joi.string().required(),
   registeredUser: Joi.array().optional().default([]),
 });
 
 const getYearlyEventSchema = Joi.object({
-  year: Joi.number().required(),
+  year: Joi.string().required(),
+});
+
+const getEventsSchema = Joi.object({
+  year: Joi.string().required(),
+  month: Joi.string().required(),
 });
 
 const updateEventSchema = Joi.object({
@@ -36,4 +45,5 @@ export {
   getYearlyEventSchema,
   updateEventSchema,
   registerEventSchema,
+  getEventsSchema,
 };
