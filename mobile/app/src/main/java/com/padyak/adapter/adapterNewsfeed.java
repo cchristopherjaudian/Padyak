@@ -19,6 +19,7 @@ import com.padyak.dto.Comment;
 import com.padyak.dto.Like;
 import com.padyak.dto.Newsfeed;
 import com.padyak.fragment.fragmentComments;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
@@ -129,7 +130,7 @@ public class adapterNewsfeed extends RecyclerView.Adapter<adapterNewsfeed.viewHo
         }
 
         private void showComments() {
-            Log.d("Log_Padyak", "showComments: ");
+            Log.d(Helper.getInstance().log_code, "showComments: ");
             fragmentComments comments = new fragmentComments(newsfeeds.get(getAdapterPosition()).getCommentList(), newsfeeds.get(getAdapterPosition()).getId(),newsfeeds.get(getAdapterPosition()).getLikeList(), fragmentManager);
             comments.show(fragmentManager, "BottomComment");
         }
@@ -166,7 +167,7 @@ public class adapterNewsfeed extends RecyclerView.Adapter<adapterNewsfeed.viewHo
 
                 notifyDataSetChanged();
             } catch (JSONException e) {
-                Log.d("Log_Padyak", "viewHolder: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "viewHolder: " + e.getMessage());
             }
 
         }

@@ -28,6 +28,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.padyak.R;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.Prefs;
 import com.padyak.utility.VolleyHttp;
@@ -35,6 +36,7 @@ import com.padyak.utility.VolleyHttp;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,7 +96,7 @@ public class frmSplash extends AppCompatActivity {
                     });
         });
         Prefs.getInstance().getUser(this);
-        Log.d("Log_Padyak", "SP LoggedUser: " + LoggedUser.getInstance().toString());
+        Log.d(Helper.getInstance().log_code, "SP LoggedUser: " + LoggedUser.getInstance().toString());
         if (LoggedUser.getInstance().getEmail().equals("")) {
             spinner.setVisibility(View.INVISIBLE);
             textView2.setText("Please Sign-in with your Google Account");
@@ -176,14 +178,16 @@ public class frmSplash extends AppCompatActivity {
                 tokenMap.put(Prefs.GENDER_KEY,userObject.getString(Prefs.GENDER_KEY));
                 tokenMap.put(Prefs.EMAIL_KEY,userObject.getString(Prefs.EMAIL_KEY));
 
-                VolleyHttp tokenHttp = new VolleyHttp("", tokenMap, "user", frmSplash.this);
+                String requestPath = (userObject.getBoolean(Prefs.ADMIN_KEY) == true) ? "admin" : "user";
+
+                VolleyHttp tokenHttp = new VolleyHttp("", tokenMap, requestPath, frmSplash.this);
                 String responseToken = tokenHttp.getResponseBody(false);
                 reader = new JSONObject(responseToken);
                 JSONObject dataObject = reader.getJSONObject("data");
                 String refToken = dataObject.getString("token");
                 LoggedUser.getInstance().setRefreshToken(refToken);
-                Log.d("Log_Padyak", "validateLogin: " + LoggedUser.getInstance().getRefreshToken());
-                if(userObject.getBoolean("isAdmin") == false){
+                Log.d(Helper.getInstance().log_code, "validateLogin: " + LoggedUser.getInstance().getRefreshToken());
+                if(userObject.getBoolean(Prefs.ADMIN_KEY) == false){
                     intent = new Intent(frmSplash.this, frmMain.class);
                 } else{
                     intent = new Intent(frmSplash.this, AdminMainActivity.class);
@@ -194,7 +198,7 @@ public class frmSplash extends AppCompatActivity {
                 throw new Exception("");
             }
         } catch (Exception e) {
-            Log.d("Log_Padyak", "onCreate: " + e.getMessage());
+            Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
             Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
             spinner.setVisibility(View.INVISIBLE);
             textView2.setText("Please Sign-in with your Google Account");

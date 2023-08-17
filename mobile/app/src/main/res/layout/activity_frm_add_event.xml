@@ -21,8 +21,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <ImageView
-                android:scaleType="center"
-                android:src="@drawable/testevent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/search"
                 android:id="@+id/imgAddEvent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -55,7 +55,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
         <EditText
-            android:id="@+id/etCreateEmail"
+            android:id="@+id/txAddEventTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -81,7 +81,7 @@
             android:weightSum="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etCreateEmail">
+            app:layout_constraintTop_toBottomOf="@+id/txAddEventTitle">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -193,7 +193,6 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat" />
 
         <EditText
-
             android:id="@+id/txAddEventDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -202,22 +201,50 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/et_rounded"
             android:fontFamily="@font/coolvetica"
-            android:inputType="textMultiLine"
-            android:lines="5"
-            android:maxLines="10"
-            android:padding="5dp"
-            android:textSize="14dp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="7dp"
             android:gravity="start"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView36" />
 
+        <TextView
+            android:id="@+id/textView49"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="Award"
+            android:textColor="#000"
+            android:textSize="@dimen/subheader_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txAddEventDescription" />
+
+        <EditText
+            android:id="@+id/txAddEventAward"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/et_rounded"
+            android:fontFamily="@font/coolvetica"
+            android:gravity="start"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="7dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView49" />
+
         <Button
             android:id="@+id/btnEventRegister"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_size"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/rounded_affirmative_button"
             android:fontFamily="@font/coolvetica"
@@ -225,12 +252,12 @@
             android:textColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txAddEventDescription" />
+            app:layout_constraintTop_toBottomOf="@+id/txAddEventAward" />
 
         <Button
             android:id="@+id/btnEventCancel"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_size"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"

@@ -194,7 +194,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                 double _long = location.getLongitude();
                                 startPosLat = _lat;
                                 startPosLong = _long;
-                                Log.d("Log_Padyak", "getLocation: " + _lat  + " " + _long);
+                                Log.d(Helper.getInstance().log_code, "getLocation: " + _lat  + " " + _long);
                                 LatLng myPos = new LatLng(_lat, _long);
                                 previousLocation = myPos;
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 16.0f));

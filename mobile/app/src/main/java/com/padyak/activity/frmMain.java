@@ -189,7 +189,7 @@ public class frmMain extends AppCompatActivity {
     public void loadCoverPhoto() {
         new Thread(()->{
             //.concat(LoggedUser.getInstance().getUuid())
-            VolleyHttp volleyHttp = new VolleyHttp("?id=30df104d-3635-424b-a927-3a45c5a648d7",null,"post", frmMain);
+            VolleyHttp volleyHttp = new VolleyHttp("?uid=".concat(LoggedUser.getInstance().getUuid()).concat("&limit=1"),null,"post", frmMain);
             String response = volleyHttp.getResponseBody(true);
 
             runOnUiThread(()->{
@@ -221,9 +221,9 @@ public class frmMain extends AppCompatActivity {
                         rvCoverPhoto.setAdapter(adapterCoverPhoto);
                     }
                 } catch (JSONException e) {
-                    Log.d("Log_Padyak", "loadCoverPhoto JSONException: " + e.getMessage());
+                    Log.d(Helper.getInstance().log_code, "loadCoverPhoto JSONException: " + e.getMessage());
                 } catch (Exception ee) {
-                    Log.d("Log_Padyak", "loadCoverPhoto Exception: " + ee.getMessage());
+                    Log.d(Helper.getInstance().log_code, "loadCoverPhoto Exception: " + ee.getMessage());
                 }
 
             });
@@ -235,7 +235,7 @@ public class frmMain extends AppCompatActivity {
 
     public void loadNewsfeed() {
         try {
-            VolleyHttp volleyHttp = new VolleyHttp("",null,"post",frmMain.this);
+            VolleyHttp volleyHttp = new VolleyHttp("?limit=20",null,"post",frmMain.this);
             String json = volleyHttp.getResponseBody(true);
             JSONObject reader = new JSONObject(json);
             int responseStatus = reader.getInt("status");
@@ -299,7 +299,7 @@ public class frmMain extends AppCompatActivity {
 
                         newsfeedList.add(newsfeed);
                     } catch (Exception jsonErr){
-                        Log.d("Log_Padyak", "loadNewsfeed: " + jsonErr.getMessage());
+                        Log.d(Helper.getInstance().log_code, "loadNewsfeed: " + jsonErr.getMessage());
                     }
                 }
                 adapterNewsfeed = new adapterNewsfeed(newsfeedList,getSupportFragmentManager());
@@ -308,7 +308,7 @@ public class frmMain extends AppCompatActivity {
                 Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            Log.d("Log_Padyak", "loadNewsfeed: " + e.getMessage());
+            Log.d(Helper.getInstance().log_code, "loadNewsfeed: " + e.getMessage());
             Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show();
         }
 

@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class Helper {
     static Helper helper;
-
+    final public String log_code = "Log_Padyak";
     public Helper() {
     }
 
@@ -25,6 +25,23 @@ public class Helper {
         int dayNum = date.getDate();
         int yearNum = 1900 +  date.getYear();
         return String.format("%s %02d, %d", Month.of(monthNum).toString(),dayNum,yearNum);
+    }
+    public String toTitleCase(String input) {
+        StringBuilder titleCase = new StringBuilder();
+        boolean nextTitleCase = true;
+
+        for (char c : input.toLowerCase().toCharArray()) {
+            if (Character.isSpaceChar(c)) {
+                nextTitleCase = true;
+            } else if (nextTitleCase) {
+                c = Character.toTitleCase(c);
+                nextTitleCase = false;
+            }
+
+            titleCase.append(c);
+        }
+
+        return titleCase.toString();
     }
 
     public double calculateDistance(LatLng startPos, LatLng endPos){

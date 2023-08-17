@@ -14,13 +14,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.padyak.R;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.Prefs;
 import com.padyak.utility.VolleyHttp;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,7 +42,7 @@ public class frmAccount extends AppCompatActivity {
         btnUpdateAccount = findViewById(R.id.btnUpdateAccount);
         btnCancelAccount = findViewById(R.id.btnCancelAccount);
 
-        etCreateEmail = findViewById(R.id.etCreateEmail);
+        etCreateEmail = findViewById(R.id.txAddEventTitle);
         etCreateFirstName = findViewById(R.id.etCreateFirstName);
         etCreateLastName = findViewById(R.id.etCreateLastName);
         etCreateContact = findViewById(R.id.etCreateContact);
@@ -133,7 +132,7 @@ public class frmAccount extends AppCompatActivity {
                 }
 
             } catch (JSONException e) {
-                Log.d("Log_Padyak", "onCreate: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
                 Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
             }
 

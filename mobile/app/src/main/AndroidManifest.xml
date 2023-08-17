@@ -25,7 +25,7 @@
             android:name=".activity.frmSaveRide"
             android:configChanges="screenSize|screenLayout"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.frmRide"
             android:configChanges="screenSize|screenLayout"
@@ -54,8 +54,10 @@
         <activity
             android:name=".activity.frmAddEvent"
             android:configChanges="screenSize|screenLayout"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="true"
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".activity.frmStartTrack"
             android:configChanges="screenSize|screenLayout"
@@ -153,7 +155,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

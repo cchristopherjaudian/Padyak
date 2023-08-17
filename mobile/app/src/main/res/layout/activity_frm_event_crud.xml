@@ -9,8 +9,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/dp_circle_size"
+        android:layout_height="@dimen/dp_circle_size"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:elevation="10dp"
@@ -95,6 +95,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txJanuary"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -143,6 +144,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txMarch"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -150,7 +152,7 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
-                            android:text="5 events registered"
+                            android:text="No event registered"
                             android:textColor="@color/app_color"
                             android:textSize="@dimen/event_month_count_size"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -191,6 +193,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txFebruary"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -198,7 +201,7 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginBottom="5dp"
                             android:gravity="center"
-                            android:text="5 events registered"
+                            android:text="No event registered"
                             android:textColor="@color/app_color"
                             android:textSize="@dimen/event_month_count_size"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -240,6 +243,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txApril"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -290,6 +294,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txMay"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -339,6 +344,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txJune"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -387,6 +393,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txJuly"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -437,6 +444,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txAugust"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -486,6 +494,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txSeptember"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -534,6 +543,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txOctober"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -584,6 +594,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txNovember"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"
@@ -633,6 +644,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/txDecember"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginStart="5dp"

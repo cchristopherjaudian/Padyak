@@ -47,7 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/etCreateEmail"
+                android:id="@+id/txAddEventTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -75,7 +75,7 @@
                 android:textColor="#000"
                 android:textSize="@dimen/subheader_size"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etCreateEmail" />
+                app:layout_constraintTop_toBottomOf="@+id/txAddEventTitle" />
 
             <EditText
                 android:id="@+id/etCreateFirstName"
@@ -103,7 +103,7 @@
                 android:textColor="#000"
                 android:textSize="@dimen/subheader_size"
                 app:layout_constraintStart_toStartOf="@+id/etCreateLastName"
-                app:layout_constraintTop_toBottomOf="@+id/etCreateEmail" />
+                app:layout_constraintTop_toBottomOf="@+id/txAddEventTitle" />
 
             <EditText
                 android:id="@+id/etCreateLastName"

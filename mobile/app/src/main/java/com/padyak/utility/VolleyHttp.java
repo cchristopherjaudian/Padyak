@@ -42,7 +42,9 @@ public class VolleyHttp {
 
         if (getType().equals("USER")) {
             endpoint = Constants.userURL.concat(url);
-        } else if (getType().equals("EVENT")) {
+        } else if (getType().equals("ADMIN")) {
+            endpoint = Constants.adminURL.concat(url);
+        }else if (getType().equals("EVENT")) {
             endpoint = Constants.eventURL.concat(url);
         } else if (getType().equals("POST")) {
             endpoint = Constants.postURL.concat(url);
@@ -61,7 +63,7 @@ public class VolleyHttp {
                     connURL = new URL(endpoint);
 
 
-                    Log.d("Log_Padyak", "Volley URL: " + connURL);
+                    Log.d(Helper.getInstance().log_code, "Volley URL: " + connURL);
                     conn = (HttpURLConnection) connURL.openConnection();
                     if(auth) conn.setRequestProperty("Authorization",LoggedUser.getInstance().getRefreshToken());
                     if(params != null){
@@ -77,12 +79,12 @@ public class VolleyHttp {
 
 
                     if(params != null){
-                        Log.d("Log_Padyak", "Volley Payload: " + params);
+                        Log.d(Helper.getInstance().log_code, "Volley Payload: " + params);
                         params.forEach((k,v)->{
                             try {
                                 data = data.concat("&").concat(URLEncoder.encode(k, "UTF-8").concat( "=").concat(URLEncoder.encode(String.valueOf(v), "UTF-8")));
                             } catch (UnsupportedEncodingException e) {
-                                Log.d("Log_Padyak",e.getMessage());
+                                Log.d(Helper.getInstance().log_code,e.getMessage());
                             }
                         });
                         data = data.substring(1);
@@ -101,21 +103,21 @@ public class VolleyHttp {
                         content += line + "\n";
                     }
                     if(!getType().equals("MAP")){
-                        Log.d("Log_Padyak", "Response Code Volley: " + responseCode);
-                        Log.d("Log_Padyak", "Request Type Volley: " + conn.getRequestMethod());
-                        Log.d("Log_Padyak", "content volley: " + content);
+                        Log.d(Helper.getInstance().log_code, "Response Code Volley: " + responseCode);
+                        Log.d(Helper.getInstance().log_code, "Request Type Volley: " + conn.getRequestMethod());
+                        Log.d(Helper.getInstance().log_code, "content volley: " + content);
                     }
 
                     return content;
                 } catch (Exception e) {
-                    Log.d("Log_Padyak", "exception: " + e.getMessage());
+                    Log.d(Helper.getInstance().log_code, "exception: " + e.getMessage());
                     return "";
                 }
             }
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                Log.d("Log_Padyak", s);
+                Log.d(Helper.getInstance().log_code, s);
             }
         }.execute(endpoint);
 
@@ -133,13 +135,13 @@ public class VolleyHttp {
             protected Integer doInBackground(String... strings) {
                 try {
                     connURL = new URL(endpoint);
-                    Log.d("Log_Padyak", "doInBackground: " + connURL);
+                    Log.d(Helper.getInstance().log_code, "doInBackground: " + connURL);
                     conn = (HttpURLConnection) connURL.openConnection();
                     conn.setReadTimeout(15000);
                     conn.setConnectTimeout(15000);
                     return conn.getResponseCode();
                 } catch (Exception e) {
-                    Log.d("Log_Padyak", "doInBackground: " + e.getMessage());
+                    Log.d(Helper.getInstance().log_code, "doInBackground: " + e.getMessage());
                     return 500;
                 }
 
@@ -148,7 +150,7 @@ public class VolleyHttp {
             @Override
             protected void onPostExecute(Integer integer) {
                 super.onPostExecute(integer);
-                Log.d("Log_Padyak", String.valueOf(integer));
+                Log.d(Helper.getInstance().log_code, String.valueOf(integer));
             }
         }.execute(endpoint);
         try {

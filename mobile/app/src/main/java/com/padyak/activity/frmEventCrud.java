@@ -5,23 +5,43 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.padyak.R;
+import com.padyak.utility.Helper;
+import com.padyak.utility.LoggedUser;
+import com.padyak.utility.VolleyHttp;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
 public class frmEventCrud extends AppCompatActivity {
 
     CardView clJanuary, clFebruary, clMarch, clApril, clMay, clJune, clJuly, clAugust, clSeptember, clOctober, clNovember, clDecember;
+    TextView txJanuary, txFebruary, txMarch, txApril, txMay, txJune, txJuly, txAugust, txSeptember, txOctober, txNovember, txDecember;
     Intent intent;
     List<CardView> cvMonth;
+    List<TextView> txMonth;
+
+    ImageView imgDP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_crud);
+        imgDP = findViewById(R.id.imgDP);
+        Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgDP);
         clJanuary = findViewById(R.id.clJanuary);
         clFebruary = findViewById(R.id.clFebruary);
         clMarch = findViewById(R.id.clMarch);
@@ -34,6 +54,19 @@ public class frmEventCrud extends AppCompatActivity {
         clOctober = findViewById(R.id.clOctober);
         clNovember = findViewById(R.id.clNovember);
         clDecember = findViewById(R.id.clDecember);
+
+        txJanuary = findViewById(R.id.txJanuary);
+        txFebruary = findViewById(R.id.txFebruary);
+        txMarch = findViewById(R.id.txMarch);
+        txApril = findViewById(R.id.txApril);
+        txMay = findViewById(R.id.txMay);
+        txJune = findViewById(R.id.txJune);
+        txJuly = findViewById(R.id.txJuly);
+        txAugust = findViewById(R.id.txAugust);
+        txSeptember = findViewById(R.id.txSeptember);
+        txOctober = findViewById(R.id.txOctober);
+        txNovember = findViewById(R.id.txNovember);
+        txDecember = findViewById(R.id.txDecember);
 
         cvMonth = new ArrayList<>();
         cvMonth.add(clJanuary);
@@ -49,6 +82,20 @@ public class frmEventCrud extends AppCompatActivity {
         cvMonth.add(clNovember);
         cvMonth.add(clDecember);
 
+        txMonth = new ArrayList<>();
+        txMonth.add(txJanuary);
+        txMonth.add(txFebruary);
+        txMonth.add(txMarch);
+        txMonth.add(txApril);
+        txMonth.add(txMay);
+        txMonth.add(txJune);
+        txMonth.add(txJuly);
+        txMonth.add(txAugust);
+        txMonth.add(txSeptember);
+        txMonth.add(txOctober);
+        txMonth.add(txNovember);
+        txMonth.add(txDecember);
+
         for(int i = 0; i < cvMonth.size();i++){
             final int monthCounter = i+1;
             cvMonth.get(i).setOnClickListener(v->{
@@ -58,6 +105,40 @@ public class frmEventCrud extends AppCompatActivity {
                 intent.putExtras(bundle);
                 startActivity(intent);
             });
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Thread(()->{
+            runOnUiThread(this::loadCalendar);
+        }).start();
+    }
+
+    private void loadCalendar(){
+        VolleyHttp volleyHttp = new VolleyHttp("/count?year=2023",null,"event",frmEventCrud.this);
+        String response = volleyHttp.getResponseBody(true);
+        try {
+            JSONObject responseJSON = new JSONObject(response.toUpperCase());
+            int responseCode = responseJSON.getInt("STATUS");
+            if(responseCode != 200) throw new JSONException("Response Code: " + responseCode);
+            int eventNumber = 0;
+            JSONArray eventArray = responseJSON.optJSONArray("DATA");
+            for(int i = 0;i < eventArray.length();i++){
+                JSONObject monthObject = eventArray.getJSONObject(i);
+                eventNumber = monthObject.getInt(Month.of(i+1).toString());
+                if(eventNumber == 0){
+                    txMonth.get(i).setText("No event registered");
+                    txMonth.get(i).setTextColor(Color.BLACK);
+                } else{
+                    txMonth.get(i).setText(String.valueOf(eventNumber) + " " + ((eventNumber > 1) ? " events" : " event") + " registered");
+                }
+            }
+        } catch (JSONException e) {
+            Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
+            Toast.makeText(this, "Failed to retrieve event calendar. Please try again.", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
     }

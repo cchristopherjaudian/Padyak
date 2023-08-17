@@ -23,6 +23,7 @@ import com.padyak.activity.frmMain;
 import com.padyak.adapter.adapterComment;
 import com.padyak.dto.Comment;
 import com.padyak.dto.Like;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
 
@@ -110,7 +111,7 @@ public class fragmentComments extends BottomSheetDialogFragment {
                 frmMain.frmMain.notifyNewsfeed();
             } catch (JSONException e) {
                 Toast.makeText(v.getContext(), "Failed to add comment. Please try again.", Toast.LENGTH_SHORT).show();
-                Log.d("Log_Padyak", "onCreateView: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onCreateView: " + e.getMessage());
             }
 
         });

@@ -36,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.padyak.R;
+import com.padyak.utility.GCPStorage;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -107,13 +108,11 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmapRide.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 data = baos.toByteArray();
-
                 uploadTask = rideRef.putBytes(data);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(frmSaveRide.this, "Failed to upload image. Please try again", Toast.LENGTH_SHORT).show();
-                        Log.d("Log_Padyak", "onFailure: " + exception.getMessage());
+                        saveRide("");
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -149,6 +148,10 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
 
     private void saveRide(String imgURL) {
         try {
+            if(imgURL.isEmpty()){
+                Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + startPosLat + "," + startPosLong + "&key=" + getString(R.string.maps_publicapi);
             String toLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + endPosLat + "," + endPosLong + "&key=" + getString(R.string.maps_publicapi);
 
@@ -158,8 +161,8 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
             String fromAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
             String toAddress = Helper.getInstance().generateAddress(toVolley.getResponseBody(false));
 
-            Log.d("Log_Padyak", "onCreate jsonFrom: " + fromAddress);
-            Log.d("Log_Padyak", "onCreate jsonTo: " + toAddress);
+            Log.d(Helper.getInstance().log_code, "onCreate jsonFrom: " + fromAddress);
+            Log.d(Helper.getInstance().log_code, "onCreate jsonTo: " + toAddress);
 
             Map<String, Object> payload = new HashMap<>();
             payload.put("post", etRideTitle.getText().toString());
@@ -188,9 +191,9 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
                 Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            Log.d("Log_Padyak", "saveRide JSONException: " + e.getMessage());
+            Log.d(Helper.getInstance().log_code, "saveRide JSONException: " + e.getMessage());
         } catch (Exception ee){
-            Log.d("Log_Padyak", "saveRide Exception: " + ee.getMessage());
+            Log.d(Helper.getInstance().log_code, "saveRide Exception: " + ee.getMessage());
         }
     }
 
