@@ -29,7 +29,9 @@ const getUserByEmail = async (
   next: NextFunction
 ) => {
   try {
-    const user = await userInstance.getUserByEmail(req.body.emailAddress);
+    const user = await userInstance.getUserByEmail(
+      req.query.emailAddress as string
+    );
 
     responseObject.createResponse(
       res,
