@@ -6,6 +6,7 @@ import {
   addCommentSchema,
   addLikesSchema,
   createPostSchema,
+  getPostsSchema,
   updatePostSchema,
 } from "../lib/joi-schemas/posts-schema";
 
@@ -23,7 +24,10 @@ router.post(
 
 router.get(
   "/",
-  [tokenMiddleware.endUserValidate as any],
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(getPostsSchema),
+  ],
   postController.getPosts
 );
 

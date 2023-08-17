@@ -5,6 +5,8 @@ import { IPost } from "../database/models/post";
 
 export type TPostsQuery = {
   id?: string;
+  uid?: string;
+  limit?: number;
 };
 
 class PostLikesRepository {
@@ -53,8 +55,19 @@ class PostLikesRepository {
       ) as firestoreDb.CollectionReference;
     }
 
+    if (query?.uid) {
+      postsRef = postsRef.where(
+        "author.id",
+        "==",
+        query.uid
+      ) as firestoreDb.CollectionReference;
+    }
+
     const mappedRef = (
-      await postsRef.orderBy("createdAt", "desc").get()
+      await postsRef
+        .orderBy("createdAt", "desc")
+        .limit(query.limit as number)
+        .get()
     ).docs.map((k) => k.data());
     return mappedRef as IPost[];
   }

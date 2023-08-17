@@ -27,7 +27,10 @@ const requestSchemaValidate =
 
       next(error);
     }
-    req.body = value;
+
+    if (Object.keys(req.body).length > 0) req.body = value;
+    if (Object.keys(req.query).length > 0) req.query = value;
+
     next();
   };
 
