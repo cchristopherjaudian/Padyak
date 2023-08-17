@@ -41,7 +41,6 @@ const getYearlyEvents = async (
 ) => {
   const request = req as IRequestWithUser;
   try {
-    console.log("req.query", req.query);
     const events = await eventInstance.getYearlyEvents(
       req.query.year as string,
       request.user.id

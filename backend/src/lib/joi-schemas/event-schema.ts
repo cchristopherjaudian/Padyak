@@ -16,7 +16,7 @@ const createEventSchema = Joi.object({
 });
 
 const getYearlyEventSchema = Joi.object({
-  year: Joi.number().required(),
+  year: Joi.string().required(),
 });
 
 const updateEventSchema = Joi.object({

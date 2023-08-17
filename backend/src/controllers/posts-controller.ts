@@ -36,7 +36,6 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
 
 const getPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("req.query controller", req.query);
     const posts = await postInstance.getPosts(req.query as TPostsQuery);
 
     responseObject.createResponse(
