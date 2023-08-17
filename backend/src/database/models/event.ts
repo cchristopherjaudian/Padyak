@@ -15,6 +15,7 @@ export interface IEvent extends IBaseModel {
   photoUrl: string;
   startTime: string;
   endTime: string;
+  eventDescription: string;
   award: string;
   registeredUser?: IRegisteredUser[];
   author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname" | "id">;

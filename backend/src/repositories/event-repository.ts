@@ -8,6 +8,7 @@ export type TCreateEvent = {
   year: string;
   eventDate: string;
   name: string;
+  eventDescription: string;
   startTime: string;
   endTime: string;
   award: string;
