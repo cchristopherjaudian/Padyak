@@ -11,11 +11,12 @@ const eventRegister = new EventRegistration(eventInstance);
 
 const createEvent = async (req: Request, res: Response, next: NextFunction) => {
   const request = req as IRequestWithUser;
-  const { photoUrl, firstname, lastname } = request.user;
+  const { photoUrl, firstname, lastname, id } = request.user;
   try {
     const newEvent = await eventInstance.createEvent({
       ...req.body,
       author: {
+        id,
         photoUrl,
         firstname,
         lastname,
@@ -40,6 +41,7 @@ const getYearlyEvents = async (
 ) => {
   const request = req as IRequestWithUser;
   try {
+    console.log("req.query", req.query);
     const events = await eventInstance.getYearlyEvents(
       req.query.year as string,
       request.user.id

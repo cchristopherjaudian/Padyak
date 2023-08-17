@@ -8,9 +8,11 @@ export type TCreateEvent = {
   year: string;
   eventDate: string;
   name: string;
-  photoUrl: string;
+  startTime: string;
+  endTime: string;
+  award: string;
   registeredUser?: IRegisteredUser[];
-  author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname">;
+  author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname" | "id">;
 };
 
 const arrayOfMonths = [
@@ -68,7 +70,7 @@ class EventRepository {
     const eventsRef = await this._firestore
       .getDb()
       .collection(this._colName)
-      .where("uid", "==", uid)
+      .where("author.id", "==", uid)
       .where("year", "==", year)
       .get();
 

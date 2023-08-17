@@ -9,6 +9,9 @@ const createEventSchema = Joi.object({
   eventDate: Joi.string().required(),
   name: Joi.string().required(),
   photoUrl: Joi.string().required(),
+  startTime: Joi.string().required(),
+  endTime: Joi.string().required(),
+  award: Joi.string().required(),
   registeredUser: Joi.array().optional().default([]),
 });
 
