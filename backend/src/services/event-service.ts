@@ -58,9 +58,9 @@ class EventService implements IEventService {
     }
   }
 
-  public async getYearlyEvents(year: string, uid: string) {
+  public async getYearlyEvents(year: string) {
     try {
-      return await this._repository.getEventsCount(year, uid);
+      return await this._repository.getEventsCount(year);
     } catch (error) {
       throw error;
     }

@@ -43,8 +43,7 @@ const getYearlyEvents = async (
   const request = req as IRequestWithUser;
   try {
     const events = await eventInstance.getYearlyEvents(
-      req.query.year as string,
-      request.user.id
+      req.query.year as string
     );
 
     responseObject.createResponse(
