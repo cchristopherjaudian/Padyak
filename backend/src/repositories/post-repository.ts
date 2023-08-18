@@ -1,4 +1,4 @@
-import * as firestoreDb from "firebase-admin/firestore";
+import type * as firestoreDb from "firebase-admin/firestore";
 
 import Firstore from "../database/firestore";
 import { IPost } from "../database/models/post";

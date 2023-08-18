@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "type": "POLICE_STATION",
+      "name": "Tiaong Police Station",
+      "latitude": 13.9591,
+      "longitude": 121.3235,
+      "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Sj-VQliQE-cC7wbv-yApxg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=236.75836&pitch=0&thumbfov=100"
+    },
+    {
+      "type": "POLICE_STATION",
+      "name": "Candelaria Police Station",
+      "latitude": 13.9284,
+      "longitude": 121.4244,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipOD_k3JIAnkB2j-8SZqhfjS1Xl3YaCVvi5kSCeW=w408-h544-k-no"
+    },
+    {
+      "type": "POLICE_STATION",
+      "name": "Sariaya Police Station",
+      "latitude": 13.963,
+      "longitude": 121.5237,
+      "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=lL_nQEyOr4e7SEBMSGfAkQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=271.51596&pitch=0&thumbfov=100"
+    },
+    {
+      "type": "POLICE_STATION",
+      "name": "Tayabas City Police Station",
+      "latitude": 14.0203,
+      "longitude": 121.5842,
+      "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=akYGvuwFh_xAI7wQ-rwHaQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=3.0110617&pitch=0&thumbfov=100"
+    },
+    {
+      "type": "POLICE_STATION",
+      "name": "Lucena City Police Station",
+      "latitude": 13.9362,
+      "longitude": 121.6116,
+      "photoUrl": "https://lh4.googleusercontent.com/dSDQ2oU3krhCBLyfCBc8X63qyK4qhWnLNnlr-ZsjWH6eMIco2k6rC2Jfc65qsiFrdQ=w408-h654-k-no"
+    }
+  ]
+}
