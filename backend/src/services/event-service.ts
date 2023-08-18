@@ -1,5 +1,6 @@
 import { IEvent, IRegisteredUser } from "../database/models/event";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
+import DateUtils from "../lib/date";
 import EventMapper from "../lib/mappers/event-mapper";
 import EventRepository, {
   TCreateEvent,
@@ -48,6 +49,7 @@ class EventRegistration {
 class EventService implements IEventService {
   private _repository = new EventRepository();
   private _mapper = new EventMapper();
+  private _dateUtils = DateUtils.getInstance();
 
   public async createEvent(payload: TCreateEvent) {
     try {
@@ -88,7 +90,16 @@ class EventService implements IEventService {
 
   public async getEvents(query: TEventListQuery) {
     try {
-      return await this._repository.getEventList(query);
+      const events = await this._repository.getEventList(query);
+      const mappedEvents = events.map((event) => {
+        return {
+          ...event,
+          isDone: this._dateUtils
+            .getMomentInstance(new Date())
+            .isAfter(new Date(event.eventDate)),
+        };
+      });
+      return mappedEvents;
     } catch (error) {
       throw error;
     }
