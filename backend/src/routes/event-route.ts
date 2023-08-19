@@ -42,7 +42,7 @@ router.get(
 
 router.get(
   "/:eventId",
-  [tokenMiddleware.adminValidate as any],
+  [tokenMiddleware.endUserValidate as any],
   eventController.getEvent
 );
 

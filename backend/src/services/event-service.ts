@@ -80,12 +80,21 @@ class EventService implements IEventService {
 
   public async getEvent(id: string) {
     try {
-      const event = await this._repository.findEventById(id);
+      const event = (await this._repository.findEventById(id)) as IEvent & {
+        isDone: boolean;
+      };
       if (!event) throw new NotFoundError("Event not found.");
+      event.isDone = this.getEventValidity(event.eventDate);
       return event as IEvent;
     } catch (error) {
       throw error;
     }
+  }
+
+  private getEventValidity(eventDate: string) {
+    return this._dateUtils
+      .getMomentInstance(new Date())
+      .isAfter(new Date(eventDate));
   }
 
   public async getEvents(query: TEventListQuery) {
@@ -94,9 +103,7 @@ class EventService implements IEventService {
       const mappedEvents = events.map((event) => {
         return {
           ...event,
-          isDone: this._dateUtils
-            .getMomentInstance(new Date())
-            .isAfter(new Date(event.eventDate)),
+          isDone: this.getEventValidity(event.eventDate),
         };
       });
       return mappedEvents;
