@@ -32,7 +32,7 @@ class EventRegistration {
 
       if (
         !event.registeredUser?.find(
-          (user: IRegisteredUser) => user.uid === payload.uid
+          (user: IRegisteredUser) => user.user.id === payload.user.id
         )
       ) {
         event.registeredUser?.push(payload);

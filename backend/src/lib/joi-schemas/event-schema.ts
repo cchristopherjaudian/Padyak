@@ -35,9 +35,9 @@ const updateEventSchema = Joi.object({
 });
 
 const registerEventSchema = Joi.object({
-  photoUrl: Joi.string().required(),
   paymentUrl: Joi.string().required(),
   modifiedAt: Joi.string().optional().default(date.getIsoDate(new Date())),
+  createdAt: Joi.string().optional().default(date.getIsoDate(new Date())),
 });
 
 export {

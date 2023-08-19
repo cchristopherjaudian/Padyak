@@ -1,10 +1,10 @@
 import { IBaseModel } from "./model";
 import { IUserModel } from "./user";
 
-export interface IRegisteredUser extends Pick<IUserModel, "photoUrl"> {
-  displayName: string;
-  uid: string;
+export interface IRegisteredUser {
   paymentUrl: string;
+  createdAt: string;
+  user: Pick<IUserModel, "photoUrl" | "id" | "firstname" | "lastname">;
 }
 
 export interface IEvent extends IBaseModel {
