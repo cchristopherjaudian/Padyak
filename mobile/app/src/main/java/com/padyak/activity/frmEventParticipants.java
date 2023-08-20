@@ -7,6 +7,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -16,6 +19,12 @@ import com.padyak.adapter.adapterParticipant;
 import com.padyak.dto.Participants;
 import com.padyak.fragment.fragmentEvent;
 import com.padyak.utility.CustomViewPager;
+import com.padyak.utility.LoggedUser;
+import com.padyak.utility.VolleyHttp;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +35,8 @@ public class frmEventParticipants extends AppCompatActivity {
     RecyclerView rvEventInfoParticipants;
     LinearLayoutManager linearLayoutManager;
     com.padyak.adapter.adapterParticipant adapterParticipant;
-
+    TextView txEventName, txParticipantDescription;
+    ImageView imgEventParticipant;
     Button btnEventCancel;
     int tempPos = 0;
     CustomViewPager viewPager;
@@ -34,10 +44,22 @@ public class frmEventParticipants extends AppCompatActivity {
     FragmentPagerItemAdapter adapter;
     List<Participants> participantsList;
     public static String selectedTab;
+    String eventId,eventName,eventImg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_participants);
+        txParticipantDescription = findViewById(R.id.txParticipantDescription);
+        txEventName = findViewById(R.id.txEventName);
+        imgEventParticipant = findViewById(R.id.imgEventParticipant);
+        eventId = getIntent().getStringExtra("id");
+        eventName = getIntent().getStringExtra("name");
+        eventImg = getIntent().getStringExtra("img");
+
+        txEventName.setText(eventName);
+        Picasso.get().load(eventImg).into(imgEventParticipant);
+
         rvEventInfoParticipants = findViewById(R.id.rvEventInfoParticipants);
         btnEventCancel = findViewById(R.id.btnEventCancel);
         viewPager = findViewById(R.id.customviewpager);
@@ -48,44 +70,44 @@ public class frmEventParticipants extends AppCompatActivity {
         adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), FragmentPagerItems.with(this)
                 .add("Participants", fragmentEvent.class)
-                .add("Following",fragmentEvent.class)
                 .create());
         viewPager.setAdapter(adapter);
         viewPagerTab.setViewPager(viewPager);
         viewPager.disableScroll(true);
-        selectedTab = "Participants";
 
-        btnEventCancel.setOnClickListener(v->finish());
+        btnEventCancel.setOnClickListener(v -> finish());
 
-        viewPagerTab.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                tempPos = position;
-                selectedTab = adapter.getPageTitle(position).toString().trim();
-                if(position == 0) loadParticipants();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        loadParticipants();
+        new Thread(() -> {
+            runOnUiThread(this::loadParticipants);
+        }).start();
     }
 
-    public void loadParticipants(){
+    public void loadParticipants() {
+        try {
+            participantsList = new ArrayList<>();
+            VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", frmEventParticipants.this);
+            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+            if (responseJSON == null) throw new Exception("responseJSON is null");
+            JSONObject eventObject = responseJSON.getJSONObject("data");
+            JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
+            List<Participants> participantsList = new ArrayList<>();
+            for(int i = 0; i < participantJSON.length(); i++){
+                JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
+                Participants participants = new Participants();
+                participants.setUserImage(participantObject.getString("photoUrl"));
+                participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
+                participantsList.add(participants);
+            }
+            adapterParticipant = new adapterParticipant(participantsList);
+            rvEventInfoParticipants.setAdapter(adapterParticipant);
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to load list of participants.", Toast.LENGTH_SHORT).show();
+        }
 
-        participantsList = new ArrayList<>();
-        participantsList.add(new Participants());
-        participantsList.add(new Participants());
-        participantsList.add(new Participants());
+    }
 
-        adapterParticipant = new adapterParticipant(participantsList);
-        rvEventInfoParticipants.setAdapter(adapterParticipant);
+    @Override
+    public void onBackPressed() {
+
     }
 }

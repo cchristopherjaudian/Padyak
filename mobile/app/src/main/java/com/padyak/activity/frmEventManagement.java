@@ -98,6 +98,7 @@ public class frmEventManagement extends AppCompatActivity {
                 calendarEvent.setEventDescription(eventObject.getString("eventDescription"));
                 calendarEvent.setEventStart(eventObject.getString("startTime"));
                 calendarEvent.setEventEnd(eventObject.getString("endTime"));
+                calendarEvent.setIs_done(false);
                 calendarEvent.setEventRegistrar(null);
                 is_selected.add(false);
                 calendarEvents.add(calendarEvent);

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
 import com.padyak.dto.Participants;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -33,8 +34,9 @@ public class adapterParticipant extends RecyclerView.Adapter<adapterParticipant.
     public void onBindViewHolder(@NonNull adapterParticipant.viewHolder holder, int position) {
         holder.txRowNumber.setText(String.valueOf(position+1));
         //holder.txRowName.setText(participants.get(position).getUserName());
-        holder.txRowName.setText("Angelo Carlos");
+        holder.txRowName.setText(participants.get(position).getUserName());
         holder.txRowDistance.setText("");
+        Picasso.get().load(participants.get(position).getUserImage()).into(holder.img);
     }
 
     @Override

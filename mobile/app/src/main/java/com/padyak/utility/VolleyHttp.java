@@ -29,6 +29,7 @@ public class VolleyHttp {
     String endpoint = "";
     AsyncTask<String, Void, Integer> syncTask;
     AsyncTask<String, Void, String> syncBodyTask;
+    AsyncTask<String, Void, JSONObject> syncJsonTask;
     String url,type;
     Map<String, Object> params;
     Context c;
@@ -40,16 +41,20 @@ public class VolleyHttp {
         this.type = type.toUpperCase();
         this.c = c;
 
-        if (getType().equals("USER")) {
+        if (getType().contains("USER")) {
             endpoint = Constants.userURL.concat(url);
-        } else if (getType().equals("ADMIN")) {
+        } else if (getType().contains("ADMIN")) {
             endpoint = Constants.adminURL.concat(url);
-        }else if (getType().equals("EVENT")) {
+        }else if (getType().contains("EVENT")) {
             endpoint = Constants.eventURL.concat(url);
-        } else if (getType().equals("POST")) {
+        } else if (getType().contains("POST")) {
             endpoint = Constants.postURL.concat(url);
-        } else if(getType().equals("MAP")){
+        } else if(getType().contains("MAP")){
             endpoint = url;
+        } else if(getType().contains("LOCATION")){
+            endpoint = Constants.locationURL.concat(url);
+        } else if(getType().contains("ALERT")){
+            endpoint = Constants.alertURL.concat(url);
         }
     }
     @SuppressLint("StaticFieldLeak")
@@ -66,18 +71,17 @@ public class VolleyHttp {
                     Log.d(Helper.getInstance().log_code, "Volley URL: " + connURL);
                     conn = (HttpURLConnection) connURL.openConnection();
                     if(auth) conn.setRequestProperty("Authorization",LoggedUser.getInstance().getRefreshToken());
-                    if(params != null){
+                    if(params != null && type.contains("PATCH")){
+                        conn.setRequestMethod("PATCH");
+                        conn.setDoOutput(true);
+                    } else if(params != null) {
                         conn.setRequestMethod("POST");
                         conn.setDoOutput(true);
-                    } else{
+                    }else{
                         conn.setRequestMethod("GET");
                     }
-
-
                     conn.setReadTimeout(15000);
                     conn.setConnectTimeout(15000);
-
-
                     if(params != null){
                         Log.d(Helper.getInstance().log_code, "Volley Payload: " + params);
                         params.forEach((k,v)->{
@@ -95,7 +99,8 @@ public class VolleyHttp {
                     }
 
                     int responseCode=conn.getResponseCode();
-
+                    if(responseCode != 200) throw new Exception("Response Code: " + responseCode);
+                    Log.d(Helper.getInstance().log_code, "Response Code Volley: " + responseCode);
 
                     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                     String content = "", line;
@@ -103,7 +108,7 @@ public class VolleyHttp {
                         content += line + "\n";
                     }
                     if(!getType().equals("MAP")){
-                        Log.d(Helper.getInstance().log_code, "Response Code Volley: " + responseCode);
+
                         Log.d(Helper.getInstance().log_code, "Request Type Volley: " + conn.getRequestMethod());
                         Log.d(Helper.getInstance().log_code, "content volley: " + content);
                     }
@@ -125,6 +130,81 @@ public class VolleyHttp {
             return syncBodyTask.get();
         } catch (ExecutionException | InterruptedException e) {
             return "";
+        }
+    }
+    @SuppressLint("StaticFieldLeak")
+    public JSONObject getJsonResponse(boolean auth){
+        syncJsonTask = new AsyncTask<String, Void, JSONObject>() {
+            String data = "";
+            @Override
+            protected JSONObject doInBackground(String... strings) {
+                try {
+
+                    connURL = new URL(endpoint);
+                    Log.d(Helper.getInstance().log_code, "Volley URL: " + connURL);
+                    conn = (HttpURLConnection) connURL.openConnection();
+                    if(auth) conn.setRequestProperty("Authorization",LoggedUser.getInstance().getRefreshToken());
+                    if(params != null && type.contains("PATCH")){
+                        conn.setRequestMethod("PATCH");
+                        conn.setDoOutput(true);
+                    } else if(params != null) {
+                        conn.setRequestMethod("POST");
+                        conn.setDoOutput(true);
+                    }else{
+                        conn.setRequestMethod("GET");
+                    }
+
+
+                    conn.setReadTimeout(15000);
+                    conn.setConnectTimeout(15000);
+
+
+                    if(params != null){
+
+                        params.forEach((k,v)->{
+                            try {
+                                data = data.concat("&").concat(URLEncoder.encode(k, "UTF-8").concat( "=").concat(URLEncoder.encode(String.valueOf(v), "UTF-8")));
+                            } catch (UnsupportedEncodingException e) {
+                                Log.d(Helper.getInstance().log_code,e.getMessage());
+                            }
+                        });
+                        data = data.substring(1);
+                        Log.d(Helper.getInstance().log_code, "Volley Payload: " + data);
+                        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                        wr.write(data);
+                        wr.flush();
+                    }
+                    Log.d(Helper.getInstance().log_code, "Request Type: " + conn.getRequestMethod());
+                    int responseCode=conn.getResponseCode();
+                    if(responseCode != 200) throw new Exception("Response Code: " + responseCode);
+                    Log.d(Helper.getInstance().log_code, "Response Code Volley: " + responseCode);
+
+                    BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String content = "", line;
+                    while ((line = rd.readLine()) != null) {
+                        content += line + "\n";
+                    }
+                    if(!getType().equals("MAP")){
+                        Log.d(Helper.getInstance().log_code, "Request Type Volley: " + conn.getRequestMethod());
+                        Log.d(Helper.getInstance().log_code, "content volley: " + content);
+                    }
+
+                    return new JSONObject(content);
+                } catch (Exception e) {
+                    Log.d(Helper.getInstance().log_code, "exception: " + e.getMessage());
+                    return null;
+                }
+            }
+            @Override
+            protected void onPostExecute(JSONObject s) {
+                super.onPostExecute(s);
+            }
+        }.execute(endpoint);
+
+        try {
+            return syncJsonTask.get();
+        } catch (ExecutionException | InterruptedException e) {
+            return null;
         }
     }
     @SuppressLint("StaticFieldLeak")

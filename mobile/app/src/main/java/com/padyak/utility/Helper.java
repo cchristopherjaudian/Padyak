@@ -1,11 +1,17 @@
 package com.padyak.utility;
 
+import android.content.Context;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -43,7 +49,14 @@ public class Helper {
 
         return titleCase.toString();
     }
-
+    public Calendar toCalendar(String d){
+        LocalDate localDate = LocalDate.parse(d);
+        ZonedDateTime zonedDateTime = localDate.atStartOfDay(ZoneId.systemDefault());
+        Instant instant = zonedDateTime.toInstant();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(Date.from(instant));
+        return calendar;
+    }
     public double calculateDistance(LatLng startPos, LatLng endPos){
         double d2r = Math.PI / 180;
 
@@ -82,5 +95,9 @@ public class Helper {
         int minutes = (int) ((seconds % 3600) / 60);
         int remainingSeconds = (int) (seconds % 60);
         return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
+    }
+
+    public void toggleProgress(String title, String content, boolean show, Context c){
+
     }
 }

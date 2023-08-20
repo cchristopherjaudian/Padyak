@@ -133,10 +133,10 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         } else{
 
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-            LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
-                    .setIntervalMillis(2000)
-                    .setMinUpdateIntervalMillis(1000)
-                    .setMaxUpdateDelayMillis(3000)
+            LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY)
+                    .setIntervalMillis(3000)
+                    .setMinUpdateIntervalMillis(2000)
+                    .setMaxUpdateDelayMillis(4000)
                     .build();
 
             locationCallback = new LocationCallback() {

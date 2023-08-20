@@ -3,9 +3,12 @@ package com.padyak.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,6 +60,10 @@ public class frmSplash extends AppCompatActivity {
         spinner = findViewById(R.id.progressBar);
         btnGAuth = findViewById(R.id.btnGAuth);
         spinner.getIndeterminateDrawable().setColorFilter(0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(frmSplash.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
 
         oneTapClient = Identity.getSignInClient(this);
         signInRequest = BeginSignInRequest.builder()
@@ -203,6 +210,14 @@ public class frmSplash extends AppCompatActivity {
             spinner.setVisibility(View.INVISIBLE);
             textView2.setText("Please Sign-in with your Google Account");
             btnGAuth.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+           finish();
         }
     }
 }
