@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/coolvetica"
-        android:text="Find Hospital"
+        android:text=""
         android:textColor="#FFF"
         android:textSize="@dimen/form_header_size"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,13 +31,14 @@
 
         <Button
             android:id="@+id/btnFind"
+            android:visibility="invisible"
             android:layout_width="0dp"
             android:layout_height="@dimen/button_size"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/rounded_affirmative_button"
-            android:text="Find"
+            android:text=""
             android:textColor="#FFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,8 +57,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.gms.maps.MapView
+            <fragment
                 android:id="@+id/mapFind"
+                class="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </androidx.cardview.widget.CardView>
@@ -68,10 +70,10 @@
             android:layout_height="150dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="#fafafa"
             app:cardCornerRadius="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnFind"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -90,10 +92,10 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
+                        android:id="@+id/imgNearestImage"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/bike1" />
+                        android:scaleType="fitXY" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -103,14 +105,14 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="Nearest Hospital"
+                    android:text=""
                     android:textColor="@color/app_color"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/cardView2"
                     app:layout_constraintTop_toTopOf="@+id/cardView2" />
 
                 <TextView
-                    android:id="@+id/txNearestName"
+                    android:id="@+id/txNearestAddress"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
@@ -118,9 +120,9 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="Sample Hospital 123"
-                    android:textSize="15dp"
-                    app:layout_constraintBottom_toTopOf="@+id/textView20"
+                    android:text=""
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/txNearestContact"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/cardView2"
                     app:layout_constraintTop_toBottomOf="@+id/txFindNearestTitle" />
@@ -132,18 +134,20 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:src="@drawable/baseline_local_phone_24"
+                    android:visibility="invisible"
                     app:layout_constraintStart_toEndOf="@+id/cardView2"
-                    app:layout_constraintTop_toBottomOf="@+id/txNearestName" />
+                    app:layout_constraintTop_toBottomOf="@+id/txNearestAddress" />
 
                 <TextView
-                    android:id="@+id/textView20"
+                    android:id="@+id/txNearestContact"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="(047) 123-4567"
+                    android:text=""
                     android:textSize="@dimen/nearest_card_size"
+                    android:visibility="invisible"
                     app:layout_constraintBottom_toBottomOf="@+id/cardView2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imageView3"
@@ -156,9 +160,10 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="15dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="Hospital"
+                    android:text=""
                     android:textColor="#000"
                     android:textSize="@dimen/nearest_card_size"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -166,20 +171,19 @@
                     android:id="@+id/imageView7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
                     android:layout_marginBottom="10dp"
                     android:src="@drawable/baseline_location_on_24"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/txNearestCategory" />
+                    app:layout_constraintStart_toStartOf="@+id/cardView2" />
 
                 <TextView
-                    android:id="@+id/textView22"
+                    android:id="@+id/txNearestDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginBottom="15dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="1.2km"
+                    android:text=""
                     android:textColor="#000"
                     android:textSize="@dimen/nearest_card_size"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -195,12 +199,13 @@
                     app:layout_constraintStart_toStartOf="@+id/imageView3" />
 
                 <TextView
+                    android:id="@+id/txNearestTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginBottom="15dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="4min(s)"
+                    android:text=""
                     android:textColor="#000"
                     android:textSize="@dimen/nearest_card_size"
                     app:layout_constraintBottom_toBottomOf="parent"
