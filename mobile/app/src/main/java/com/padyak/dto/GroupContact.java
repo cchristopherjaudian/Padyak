@@ -11,6 +11,9 @@ public class GroupContact {
         this.isSelected = isSelected;
     }
 
+    public GroupContact() {
+    }
+
     public String getUserName() {
         return userName;
     }

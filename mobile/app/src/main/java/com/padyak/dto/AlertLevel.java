@@ -3,18 +3,19 @@ package com.padyak.dto;
 import java.util.Objects;
 
 public class AlertLevel {
-    String level, description;
+    String description;
+    int level;
 
-    public AlertLevel(String level, String description) {
+    public AlertLevel(int level, String description) {
         this.level = level;
         this.description = description;
     }
 
-    public String getLevel() {
+    public int getLevel() {
         return level;
     }
 
-    public void setLevel(String level) {
+    public void setLevel(int level) {
         this.level = level;
     }
 

@@ -107,7 +107,7 @@ public class VolleyHttp {
                     while ((line = rd.readLine()) != null) {
                         content += line + "\n";
                     }
-                    if(!getType().equals("MAP")){
+                    if(!getType().equals("MAP") && !getType().equals("LOCATION")){
 
                         Log.d(Helper.getInstance().log_code, "Request Type Volley: " + conn.getRequestMethod());
                         Log.d(Helper.getInstance().log_code, "content volley: " + content);
@@ -184,7 +184,7 @@ public class VolleyHttp {
                     while ((line = rd.readLine()) != null) {
                         content += line + "\n";
                     }
-                    if(!getType().equals("MAP")){
+                    if(!getType().equals("MAP") && !getType().equals("LOCATION")){
                         Log.d(Helper.getInstance().log_code, "Request Type Volley: " + conn.getRequestMethod());
                         Log.d(Helper.getInstance().log_code, "content volley: " + content);
                     }

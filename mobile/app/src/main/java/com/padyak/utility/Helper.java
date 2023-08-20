@@ -3,6 +3,7 @@ package com.padyak.utility;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.padyak.dto.AlertLevel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,8 +13,10 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Helper {
     static Helper helper;
@@ -97,7 +100,12 @@ public class Helper {
         return String.format("%02d:%02d:%02d", hours, minutes, remainingSeconds);
     }
 
-    public void toggleProgress(String title, String content, boolean show, Context c){
-
+    public String getAlertDescription(int level){
+        List<AlertLevel> alertLevelList = new ArrayList<>();
+        alertLevelList.add(new AlertLevel(1, "I am safe. I just can't maintain the pace"));
+        alertLevelList.add(new AlertLevel(2, "My bike has a problem"));
+        alertLevelList.add(new AlertLevel(3, "I had a bike breakdown and I don't have any tools. Please help."));
+        alertLevelList.add(new AlertLevel(4, "I had an accident and I need help."));
+        return alertLevelList.get(level -1).getDescription();
     }
 }

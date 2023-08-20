@@ -28,6 +28,7 @@ import com.padyak.dto.PostAuthor;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
+import com.padyak.utility.VolleyJson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -39,9 +40,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
@@ -157,21 +161,21 @@ public class frmMain extends AppCompatActivity {
         rlHospital.setOnClickListener(v -> {
             intent = new Intent(frmMain.this, frmFindLocation.class);
             Bundle bundle = new Bundle();
-            bundle.putString("find", "Hospital");
+            bundle.putString("find", "HOSPITAL");
             intent.putExtras(bundle);
             startActivity(intent);
         });
         rlRepair.setOnClickListener(v -> {
             intent = new Intent(frmMain.this, frmFindLocation.class);
             Bundle bundle = new Bundle();
-            bundle.putString("find", "Repair Shop");
+            bundle.putString("find", "REPAIR_SHOP");
             intent.putExtras(bundle);
             startActivity(intent);
         });
         rlPolice.setOnClickListener(v -> {
             intent = new Intent(frmMain.this, frmFindLocation.class);
             Bundle bundle = new Bundle();
-            bundle.putString("find", "Police Station");
+            bundle.putString("find", "POLICE_STATION");
             intent.putExtras(bundle);
             startActivity(intent);
         });
@@ -188,7 +192,6 @@ public class frmMain extends AppCompatActivity {
     }
     public void loadCoverPhoto() {
         new Thread(()->{
-            //.concat(LoggedUser.getInstance().getUuid())
             VolleyHttp volleyHttp = new VolleyHttp("?uid=".concat(LoggedUser.getInstance().getUuid()).concat("&limit=1"),null,"post", frmMain);
             String response = volleyHttp.getResponseBody(true);
 

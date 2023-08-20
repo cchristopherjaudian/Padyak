@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
 import com.padyak.dto.GroupContact;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,10 +37,18 @@ public class adapterAlertGroup extends RecyclerView.Adapter<adapterAlertGroup.vi
     @Override
     public void onBindViewHolder(@NonNull adapterAlertGroup.viewHolder holder, int position) {
         //holder.txRowName.setText(contact.get(position).getUserName());
-        holder.txRowName.setText("Angelo Carlos");
+        holder.txRowName.setText(contact.get(position).getUserName());
         holder.checkBox.setChecked(contact.get(position).isSelected());
+        Picasso.get().load(contact.get(position).getUserImage()).into(holder.img);
     }
+    public String getChecked(){
+        List<String> checkedNumbers = new ArrayList<>();
+        contact.forEach(c->{
+            if(c.isSelected()) checkedNumbers.add(c.getUserContact());
+        });
+        return String.join(",", checkedNumbers);
 
+    }
     @Override
     public int getItemCount() {
         return contact.size();
@@ -52,6 +63,12 @@ public class adapterAlertGroup extends RecyclerView.Adapter<adapterAlertGroup.vi
             img = itemView.findViewById(R.id.imgParticipant);
             txRowName = itemView.findViewById(R.id.txRowName);
             checkBox = itemView.findViewById(R.id.checkBox2);
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    contact.get(getAdapterPosition()).setSelected(isChecked);
+                }
+            });
         }
     }
     public void setCheck(boolean is_checked){

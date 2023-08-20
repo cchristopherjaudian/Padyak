@@ -3,21 +3,34 @@ package com.padyak.dto;
 import java.util.Objects;
 
 public class MemberAlert {
-    private String alertId,userId,userName,userImage,alertDescription;
-    private double latitude,longitude,alertLevel;
-
-    public MemberAlert(String alertId, String userId, String userName, String userImage, String alertDescription, double latitude, double longitude, double alertLevel) {
+    private String alertId,userName,userImage,locationName;
+    private int alertLevel;
+    private double latitude, longitude;
+    String createdAt;
+    public MemberAlert(String alertId, String userName, String userImage, int alertLevel) {
         this.alertId = alertId;
-        this.userId = userId;
         this.userName = userName;
         this.userImage = userImage;
-        this.alertDescription = alertDescription;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.alertLevel = alertLevel;
     }
 
     public MemberAlert() {
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
     }
 
     public String getAlertId() {
@@ -28,14 +41,6 @@ public class MemberAlert {
         this.alertId = alertId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -44,12 +49,20 @@ public class MemberAlert {
         this.userName = userName;
     }
 
-    public String getAlertDescription() {
-        return alertDescription;
+    public String getUserImage() {
+        return userImage;
     }
 
-    public void setAlertDescription(String alertDescription) {
-        this.alertDescription = alertDescription;
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public int getAlertLevel() {
+        return alertLevel;
+    }
+
+    public void setAlertLevel(int alertLevel) {
+        this.alertLevel = alertLevel;
     }
 
     public double getLatitude() {
@@ -68,45 +81,26 @@ public class MemberAlert {
         this.longitude = longitude;
     }
 
-    public double getAlertLevel() {
-        return alertLevel;
-    }
-
-    public void setAlertLevel(double alertLevel) {
-        this.alertLevel = alertLevel;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MemberAlert that = (MemberAlert) o;
-        return Double.compare(that.latitude, latitude) == 0 && Double.compare(that.longitude, longitude) == 0 && Double.compare(that.alertLevel, alertLevel) == 0 && Objects.equals(alertId, that.alertId) && Objects.equals(userId, that.userId) && Objects.equals(userName, that.userName) && Objects.equals(alertDescription, that.alertDescription);
+        return alertLevel == that.alertLevel && Objects.equals(alertId, that.alertId) && Objects.equals(userName, that.userName) && Objects.equals(userImage, that.userImage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(alertId, userId, userName, alertDescription, latitude, longitude, alertLevel);
+        return Objects.hash(alertId, userName, userImage, alertLevel);
     }
 
     @Override
     public String toString() {
         return "MemberAlert{" +
                 "alertId='" + alertId + '\'' +
-                ", userId='" + userId + '\'' +
                 ", userName='" + userName + '\'' +
-                ", alertDescription='" + alertDescription + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
+                ", userImage='" + userImage + '\'' +
                 ", alertLevel=" + alertLevel +
                 '}';
-    }
-
-    public String getUserImage() {
-        return userImage;
-    }
-
-    public void setUserImage(String userImage) {
-        this.userImage = userImage;
     }
 }
