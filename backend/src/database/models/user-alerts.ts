@@ -5,4 +5,6 @@ export interface IUserAlerts extends IBaseModel {
   level: number;
   location: string;
   uid: string;
+  longitude: number;
+  latitude: number;
 }

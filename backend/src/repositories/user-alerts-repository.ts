@@ -9,6 +9,8 @@ export type TUserSendAlert = {
   level: number;
   location: string;
   uid: string;
+  longitude: number;
+  latitude: number;
 };
 
 export type TRawSendAlert = {
@@ -19,6 +21,8 @@ export type TRawSendAlert = {
   level: number;
   location: string;
   uid: string;
+  longitude: number;
+  latitude: number;
 };
 
 class UserAlertsRepository {

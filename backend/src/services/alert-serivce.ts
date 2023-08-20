@@ -41,6 +41,8 @@ class UserAlerts {
         uid: payload.uid,
         level: payload.level,
         location: payload.location,
+        longitude: payload.longitude,
+        latitude: payload.latitude,
       });
 
       await this._repository.create(mappedUserAlert);
@@ -75,7 +77,6 @@ class AlertService implements IAlertService {
     try {
       return {
         ...payload,
-        to: payload.to,
       };
     } catch (error) {
       throw error;
