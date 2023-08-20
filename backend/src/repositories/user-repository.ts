@@ -32,6 +32,22 @@ class UserRepository {
     }
   }
 
+  public async list() {
+    try {
+      const users = await this._firestore
+        .getDb()
+        .collection(this._colName)
+        .where("isAdmin", "==", false)
+        .get();
+
+      return users.docs.length === 0
+        ? []
+        : (users.docs.map((user) => user.data()) as IUserModel[]);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public async update(payload: TUpdateUser) {
     try {
       const user = await this._firestore

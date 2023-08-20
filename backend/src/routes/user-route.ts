@@ -23,6 +23,12 @@ router.get(
   userController.getUserByEmail
 );
 
+router.get(
+  "/",
+  [tokenMiddleware.endUserValidate as any],
+  userController.getUserList
+);
+
 router.patch(
   "/",
   [

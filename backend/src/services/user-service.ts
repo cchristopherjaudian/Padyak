@@ -7,16 +7,16 @@ import { NotFoundError } from "../lib/custom-errors/class-errors";
 class UserService {
   private _jwt = new JsonWebToken();
   private _mapper = new UserMapper();
-  private _firestore = new UserRepository();
+  private _repository = new UserRepository();
 
   public async createUser(payload: IUserModel): Promise<Record<string, any>> {
     try {
-      const hasAccount = await this._firestore.findUserByEmail(
+      const hasAccount = await this._repository.findUserByEmail(
         payload.emailAddress
       );
       if (!hasAccount) {
         const mappedPayload = this._mapper.createUser(payload);
-        const newUser = await this._firestore.create(mappedPayload);
+        const newUser = await this._repository.create(mappedPayload);
         const token = await this._jwt.sign({ id: newUser.id });
         return {
           auth: true,
@@ -50,7 +50,7 @@ class UserService {
 
   public async getUserByEmail(email: string) {
     try {
-      const user = await this._firestore.findUserByEmail(email);
+      const user = await this._repository.findUserByEmail(email);
 
       if (!user) {
         throw new NotFoundError("User does not exists.");
@@ -61,9 +61,17 @@ class UserService {
     }
   }
 
+  public async getUsers() {
+    try {
+      return await this._repository.list();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public async updateUser(payload: TUpdateUser) {
     try {
-      const updatedUser = await this._firestore.update(payload);
+      const updatedUser = await this._repository.update(payload);
       return updatedUser;
     } catch (error) {
       throw error;
