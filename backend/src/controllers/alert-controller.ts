@@ -51,4 +51,23 @@ const updateAlertStatus = async (
   }
 };
 
-export default { sendAlert, updateAlertStatus };
+const getUserAlerts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const alerts = await userAlertsService.getUserAlerts(req.query);
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.LIST_RETRIEVED,
+      alerts
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { sendAlert, updateAlertStatus, getUserAlerts };

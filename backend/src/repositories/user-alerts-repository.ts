@@ -1,3 +1,4 @@
+import type * as firestoreDb from "firebase-admin/firestore";
 import Firstore from "../database/firestore";
 import { IAlertStatuses } from "../database/models/alert";
 import { IUserAlerts } from "../database/models/user-alerts";
@@ -33,6 +34,10 @@ export type TUpdateAlertStatus = {
   status: IAlertStatuses;
 };
 
+export type TListUserAlerts = {
+  status?: string;
+};
+
 class UserAlertsRepository {
   private _colName = "user-alerts";
   private _firestore = Firstore.getInstance();
@@ -58,6 +63,27 @@ class UserAlertsRepository {
         .update(payload);
 
       return payload;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async list(query: TListUserAlerts) {
+    try {
+      let alertsRef = this._firestore.getDb().collection(this._colName);
+
+      if (query?.status) {
+        alertsRef = alertsRef.where(
+          "status",
+          "==",
+          query.status
+        ) as firestoreDb.CollectionReference;
+      }
+
+      const alerts = await alertsRef.get();
+      return alerts.docs.length > 0
+        ? (alerts.docs.map((alert) => alert.data()) as IUserAlerts[])
+        : [];
     } catch (error) {
       throw error;
     }

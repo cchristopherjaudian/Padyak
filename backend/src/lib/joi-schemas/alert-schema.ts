@@ -18,4 +18,10 @@ const patchAlertSchema = Joi.object({
     .required(),
 });
 
-export { sendAlertSchema, patchAlertSchema };
+const getUserAlerts = Joi.object({
+  status: Joi.string()
+    .valid(...["ACTIVE", "COMPLETED"])
+    .optional(),
+});
+
+export { sendAlertSchema, patchAlertSchema, getUserAlerts };

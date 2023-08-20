@@ -3,6 +3,7 @@ import { alertController } from "../controllers";
 import requestSchemaValidate from "../middlewares/joi-middleware";
 import TokenMiddleware from "../middlewares/token-middleware";
 import {
+  getUserAlerts,
   patchAlertSchema,
   sendAlertSchema,
 } from "../lib/joi-schemas/alert-schema";
@@ -26,6 +27,12 @@ router.patch(
     requestSchemaValidate(patchAlertSchema),
   ],
   alertController.updateAlertStatus
+);
+
+router.get(
+  "/",
+  [tokenMiddleware.adminValidate as any, requestSchemaValidate(getUserAlerts)],
+  alertController.getUserAlerts
 );
 
 export default router;

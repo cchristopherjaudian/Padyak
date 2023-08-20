@@ -3,6 +3,7 @@ import { NotFoundError } from "../lib/custom-errors/class-errors";
 import UserAlertsMapper from "../lib/mappers/user-alerts-mapper";
 import AlertRepository from "../repositories/alerts-repository";
 import UserAlertsRepository, {
+  TListUserAlerts,
   TRawSendAlert,
   TUpdateAlertStatus,
   TUserSendAlert,
@@ -33,6 +34,14 @@ class UserAlerts {
   public async updateStatus(payload: TUpdateAlertStatus) {
     try {
       return await this._repository.update(payload);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getUserAlerts(query: TListUserAlerts) {
+    try {
+      return await this._repository.list(query);
     } catch (error) {
       throw error;
     }
