@@ -62,6 +62,7 @@ class UserAlerts {
         longitude: payload.longitude,
         latitude: payload.latitude,
         status: payload.status,
+        sender: payload.sender,
       });
 
       await this._repository.create(mappedUserAlert);

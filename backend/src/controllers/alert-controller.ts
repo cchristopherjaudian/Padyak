@@ -11,11 +11,13 @@ const userAlertsService = new UserAlerts(alertService);
 
 const sendAlert = async (req: Request, res: Response, next: NextFunction) => {
   const request = req as IRequestWithUser;
+  const { id, firstname, lastname, photoUrl } = request.user;
   try {
     const alert = await userAlertsService.sendAlert({
       ...req.body,
       uid: request.user.id,
       displayName: `${request.user.firstname} ${request.user.firstname}`,
+      sender: { id, firstname, lastname, photoUrl },
     });
 
     responseObject.createResponse(
