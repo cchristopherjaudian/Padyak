@@ -11,6 +11,16 @@ export type TUserSendAlert = {
   uid: string;
 };
 
+export type TRawSendAlert = {
+  id: string;
+  createdAt: string;
+  to: string;
+  displayName: string;
+  level: number;
+  location: string;
+  uid: string;
+};
+
 class UserAlertsRepository {
   private _colName = "user-alerts";
   private _firestore = Firstore.getInstance();

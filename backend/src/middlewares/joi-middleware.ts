@@ -15,7 +15,6 @@ const requestSchemaValidate =
 
     if (error) {
       const joiError = error as Partial<ValidationError> & TJoiError;
-
       joiError.message = error.details![0]?.message || "joi error";
       joiError.status = httpStatus.BAD_REQUEST;
       joiError.statusCode = ResponseCodes.BAD_REQUEST;
