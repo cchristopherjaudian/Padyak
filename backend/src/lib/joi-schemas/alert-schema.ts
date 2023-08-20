@@ -6,6 +6,16 @@ const sendAlertSchema = Joi.object({
   location: Joi.string().required(),
   longitude: Joi.any().required(),
   latitude: Joi.any().required(),
+  status: Joi.string()
+    .valid(...["ACTIVE", "COMPLETED"])
+    .optional()
+    .default("ACTIVE"),
 });
 
-export { sendAlertSchema };
+const patchAlertSchema = Joi.object({
+  status: Joi.string()
+    .valid(...["ACTIVE", "COMPLETED"])
+    .required(),
+});
+
+export { sendAlertSchema, patchAlertSchema };

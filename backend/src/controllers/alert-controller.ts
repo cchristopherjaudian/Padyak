@@ -29,4 +29,26 @@ const sendAlert = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { sendAlert };
+const updateAlertStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const alert = await userAlertsService.updateStatus({
+      ...req.body,
+      id: req.params.alertId,
+    });
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_MODIFIED,
+      alert
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { sendAlert, updateAlertStatus };

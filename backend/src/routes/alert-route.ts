@@ -2,7 +2,10 @@ import express from "express";
 import { alertController } from "../controllers";
 import requestSchemaValidate from "../middlewares/joi-middleware";
 import TokenMiddleware from "../middlewares/token-middleware";
-import { sendAlertSchema } from "../lib/joi-schemas/alert-schema";
+import {
+  patchAlertSchema,
+  sendAlertSchema,
+} from "../lib/joi-schemas/alert-schema";
 
 const router = express.Router();
 const tokenMiddleware = new TokenMiddleware();
@@ -14,6 +17,15 @@ router.post(
     requestSchemaValidate(sendAlertSchema),
   ],
   alertController.sendAlert
+);
+
+router.patch(
+  "/:alertId",
+  [
+    tokenMiddleware.adminValidate as any,
+    requestSchemaValidate(patchAlertSchema),
+  ],
+  alertController.updateAlertStatus
 );
 
 export default router;

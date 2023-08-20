@@ -1,5 +1,5 @@
 import Firstore from "../database/firestore";
-import { IAlert } from "../database/models/alert";
+import { IAlert, IAlertStatuses } from "../database/models/alert";
 
 class AlertRepository {
   private _colName = "alerts";

@@ -3,3 +3,8 @@ export interface IAlert {
   level: 0;
   message: string;
 }
+
+export enum IAlertStatuses {
+  ACTIVE = "ACTIVE",
+  COMPLETED = "COMPLETED",
+}

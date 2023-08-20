@@ -4,6 +4,7 @@ import UserAlertsMapper from "../lib/mappers/user-alerts-mapper";
 import AlertRepository from "../repositories/alerts-repository";
 import UserAlertsRepository, {
   TRawSendAlert,
+  TUpdateAlertStatus,
   TUserSendAlert,
 } from "../repositories/user-alerts-repository";
 
@@ -29,6 +30,14 @@ class UserAlerts {
     } Emergency,`;
   }
 
+  public async updateStatus(payload: TUpdateAlertStatus) {
+    try {
+      return await this._repository.update(payload);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public async sendAlert(payload: TRawSendAlert) {
     try {
       const alert = await this._alert.getAlert(payload.level);
@@ -43,6 +52,7 @@ class UserAlerts {
         location: payload.location,
         longitude: payload.longitude,
         latitude: payload.latitude,
+        status: payload.status,
       });
 
       await this._repository.create(mappedUserAlert);
