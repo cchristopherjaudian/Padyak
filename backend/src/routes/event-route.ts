@@ -34,7 +34,7 @@ router.get(
 router.get(
   "/",
   [
-    tokenMiddleware.adminValidate as any,
+    tokenMiddleware.endUserValidate as any,
     requestSchemaValidate(getEventsSchema),
   ],
   eventController.getEvents
@@ -42,7 +42,7 @@ router.get(
 
 router.get(
   "/:eventId",
-  [tokenMiddleware.adminValidate as any],
+  [tokenMiddleware.endUserValidate as any],
   eventController.getEvent
 );
 

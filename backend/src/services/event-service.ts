@@ -1,5 +1,6 @@
 import { IEvent, IRegisteredUser } from "../database/models/event";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
+import DateUtils from "../lib/date";
 import EventMapper from "../lib/mappers/event-mapper";
 import EventRepository, {
   TCreateEvent,
@@ -31,7 +32,7 @@ class EventRegistration {
 
       if (
         !event.registeredUser?.find(
-          (user: IRegisteredUser) => user.uid === payload.uid
+          (user: IRegisteredUser) => user.user.id === payload.user.id
         )
       ) {
         event.registeredUser?.push(payload);
@@ -48,6 +49,7 @@ class EventRegistration {
 class EventService implements IEventService {
   private _repository = new EventRepository();
   private _mapper = new EventMapper();
+  private _dateUtils = DateUtils.getInstance();
 
   public async createEvent(payload: TCreateEvent) {
     try {
@@ -58,9 +60,9 @@ class EventService implements IEventService {
     }
   }
 
-  public async getYearlyEvents(year: string, uid: string) {
+  public async getYearlyEvents(year: string) {
     try {
-      return await this._repository.getEventsCount(year, uid);
+      return await this._repository.getEventsCount(year);
     } catch (error) {
       throw error;
     }
@@ -78,17 +80,33 @@ class EventService implements IEventService {
 
   public async getEvent(id: string) {
     try {
-      const event = await this._repository.findEventById(id);
+      const event = (await this._repository.findEventById(id)) as IEvent & {
+        isDone: boolean;
+      };
       if (!event) throw new NotFoundError("Event not found.");
+      event.isDone = this.getEventValidity(event.eventDate);
       return event as IEvent;
     } catch (error) {
       throw error;
     }
   }
 
+  private getEventValidity(eventDate: string) {
+    return this._dateUtils
+      .getMomentInstance(new Date())
+      .isAfter(new Date(eventDate));
+  }
+
   public async getEvents(query: TEventListQuery) {
     try {
-      return await this._repository.getEventList(query);
+      const events = await this._repository.getEventList(query);
+      const mappedEvents = events.map((event) => {
+        return {
+          ...event,
+          isDone: this.getEventValidity(event.eventDate),
+        };
+      });
+      return mappedEvents;
     } catch (error) {
       throw error;
     }

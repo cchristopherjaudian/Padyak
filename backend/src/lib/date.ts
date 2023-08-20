@@ -11,8 +11,14 @@ class DateUtils {
     return DateUtils._instance;
   }
 
-  public getIsoDate(date: Date) {
-    return moment(date).tz(this._defaultTz).format();
+  public getIsoDate(date?: Date) {
+    return moment(date || new Date())
+      .tz(this._defaultTz)
+      .format();
+  }
+
+  public getMomentInstance(date: Date) {
+    return moment(date);
   }
 }
 

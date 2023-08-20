@@ -1,3 +1,4 @@
+import { IAlertStatuses } from "./alert";
 import { IBaseModel } from "./model";
 
 export interface IUserAlerts extends IBaseModel {
@@ -5,4 +6,7 @@ export interface IUserAlerts extends IBaseModel {
   level: number;
   location: string;
   uid: string;
+  longitude: number;
+  latitude: number;
+  status: IAlertStatuses;
 }

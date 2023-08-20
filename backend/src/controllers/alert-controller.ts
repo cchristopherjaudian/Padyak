@@ -29,4 +29,45 @@ const sendAlert = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { sendAlert };
+const updateAlertStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const alert = await userAlertsService.updateStatus({
+      ...req.body,
+      id: req.params.alertId,
+    });
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_MODIFIED,
+      alert
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getUserAlerts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const alerts = await userAlertsService.getUserAlerts(req.query);
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.LIST_RETRIEVED,
+      alerts
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { sendAlert, updateAlertStatus, getUserAlerts };

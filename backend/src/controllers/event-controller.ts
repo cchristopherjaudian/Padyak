@@ -43,8 +43,7 @@ const getYearlyEvents = async (
   const request = req as IRequestWithUser;
   try {
     const events = await eventInstance.getYearlyEvents(
-      req.query.year as string,
-      request.user.id
+      req.query.year as string
     );
 
     responseObject.createResponse(
@@ -118,10 +117,18 @@ const registerEvent = async (
   res: Response,
   next: NextFunction
 ) => {
+  const request = req as IRequestWithUser;
+  const { photoUrl, firstname, lastname, id } = request.user;
   try {
     const event = await eventRegister.registerCyclist({
       eventId: req.params.eventId,
       ...req.body,
+      user: {
+        photoUrl,
+        firstname,
+        lastname,
+        id,
+      },
     });
 
     responseObject.createResponse(

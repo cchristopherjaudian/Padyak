@@ -1,4 +1,6 @@
+import type * as firestoreDb from "firebase-admin/firestore";
 import Firstore from "../database/firestore";
+import { IAlertStatuses } from "../database/models/alert";
 import { IUserAlerts } from "../database/models/user-alerts";
 
 export type TUserSendAlert = {
@@ -9,6 +11,31 @@ export type TUserSendAlert = {
   level: number;
   location: string;
   uid: string;
+  longitude: number;
+  latitude: number;
+  status: IAlertStatuses;
+};
+
+export type TRawSendAlert = {
+  id: string;
+  createdAt: string;
+  to: string;
+  displayName: string;
+  level: number;
+  location: string;
+  uid: string;
+  longitude: number;
+  latitude: number;
+  status: IAlertStatuses;
+};
+
+export type TUpdateAlertStatus = {
+  id: string;
+  status: IAlertStatuses;
+};
+
+export type TListUserAlerts = {
+  status?: string;
 };
 
 class UserAlertsRepository {
@@ -22,6 +49,41 @@ class UserAlertsRepository {
         .setDocId(payload.id as string)
         .create(payload);
       return newUser as IUserAlerts;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async update(payload: TUpdateAlertStatus) {
+    try {
+      await this._firestore
+        .getDb()
+        .collection(this._colName)
+        .doc(payload.id)
+        .update(payload);
+
+      return payload;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async list(query: TListUserAlerts) {
+    try {
+      let alertsRef = this._firestore.getDb().collection(this._colName);
+
+      if (query?.status) {
+        alertsRef = alertsRef.where(
+          "status",
+          "==",
+          query.status
+        ) as firestoreDb.CollectionReference;
+      }
+
+      const alerts = await alertsRef.get();
+      return alerts.docs.length > 0
+        ? (alerts.docs.map((alert) => alert.data()) as IUserAlerts[])
+        : [];
     } catch (error) {
       throw error;
     }

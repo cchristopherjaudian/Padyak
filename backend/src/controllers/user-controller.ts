@@ -63,4 +63,19 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { createUser, getUserByEmail, updateUser };
+const getUserList = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await userInstance.getUsers();
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_RETRIEVED,
+      users
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { createUser, getUserByEmail, updateUser, getUserList };

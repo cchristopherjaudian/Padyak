@@ -1,0 +1,109 @@
+{
+  "data": [
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Ric Bikeshop",
+      "latitude": 13.94701755,
+      "longitude": 121.3594944,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipN6GINCgULM9MMfIF_trOU6TTcMVw3Z1JKkBcXe=w424-h240-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Wild Bikes",
+      "latitude": 13.92596,
+      "longitude": 121.61619,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipNEd9x17U8EuBFvlzyQd49UgbmbsAqnAldiVL6r=w408-h306-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Cycle Republik",
+      "latitude": 13.92604,
+      "longitude": 121.61617,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMTXQQbamaqjBhKr5wMdx1P6ZSIS01JMBuBmZm1=w408-h306-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Century Bike",
+      "latitude": 13.92956,
+      "longitude": 121.61619,
+      "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=6WIc5gBRFU_Nkmc5x3U8QA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=47.482044&pitch=0&thumbfov=100"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Bike for Less",
+      "latitude": 13.92602,
+      "longitude": 121.6162,
+      "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=GcrNLY7gcNWgiuMgAAvvZQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=116.90683&pitch=0&thumbfov=100"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Win’s Bike",
+      "latitude": 13.92604,
+      "longitude": 121.6162,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipM03IrvosjLPKcLF6aWRovaDv82YnTQ2Qxv6KXH=w408-h306-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Erwin Catapang - Ebike Repair Shop",
+      "latitude": 13.926,
+      "longitude": 121.61625,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMvt86HSWjxsOItHZDeVinxdGn2c48KmjTPHm_M=w533-h240-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "V. Querubin Bicycle Parts & Accessories",
+      "latitude": 13.92605,
+      "longitude": 121.61623,
+      "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=I_AoA9FCRw8IXP6B7c8uxw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=39.150234&pitch=0&thumbfov=100"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Bike Shop ni Mang Gary",
+      "latitude": 13.92604,
+      "longitude": 121.61625,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipPjoMq3dabizS8xG--a-xpXoX4TqkdBCG-HkcRJ=w408-h544-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Yaoson Bike Shop",
+      "latitude": 13.92605,
+      "longitude": 121.61604,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMnUv8WN6IiQfbTuUmKUIl_vAkVahQoCYvtN8Nb=w408-h320-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Pechak Cycle Center",
+      "latitude": 13.93132978,
+      "longitude": 121.6119462,
+      "photoUrl": "https://lh4.googleusercontent.com/yyorddONccdanKOjBhNH2zIAIjgQ2NVIeMycWfeWFJOMSC743lYD-gG0q2b1_rL0RA=w426-h240-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Bike One",
+      "latitude": 13.9325928,
+      "longitude": 121.611219,
+      "photoUrl": "https://lh4.googleusercontent.com/YIxpYgPsHQxfjJuGKR3nR9e_AuniCp_VY5lp0lRUogIlYUnz0qTteSkThaTRJ2g=w408-h725-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Bikeyard Bicycle Shop",
+      "latitude": 13.94122,
+      "longitude": 121.62366,
+      "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mqZXrgLgq_zhpv4HrdKJVQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=358.70856&pitch=0&thumbfov=100"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Bikexzone",
+      "latitude": 13.9422,
+      "longitude": 121.6045,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipPQ8YpuFQriPy9BXUrR-ZQ6pVySYJzq6lNnccK7=w408-h544-k-no"
+    },
+    {
+      "type": "REPAIR_SHOP",
+      "name": "Bikepunx bike shop",
+      "latitude": 13.92603,
+      "longitude": 121.61624,
+      "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipP3cW--vzRF_XzsPaXB29xnaNQxtQqAeLU5xcrH=w408-h306-k-no"
+    }
+  ]
+}

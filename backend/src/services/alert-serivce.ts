@@ -3,6 +3,9 @@ import { NotFoundError } from "../lib/custom-errors/class-errors";
 import UserAlertsMapper from "../lib/mappers/user-alerts-mapper";
 import AlertRepository from "../repositories/alerts-repository";
 import UserAlertsRepository, {
+  TListUserAlerts,
+  TRawSendAlert,
+  TUpdateAlertStatus,
   TUserSendAlert,
 } from "../repositories/user-alerts-repository";
 
@@ -28,7 +31,23 @@ class UserAlerts {
     } Emergency,`;
   }
 
-  public async sendAlert(payload: TUserSendAlert) {
+  public async updateStatus(payload: TUpdateAlertStatus) {
+    try {
+      return await this._repository.update(payload);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getUserAlerts(query: TListUserAlerts) {
+    try {
+      return await this._repository.list(query);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async sendAlert(payload: TRawSendAlert) {
     try {
       const alert = await this._alert.getAlert(payload.level);
       const message = `${this.baseMessage(payload)}, ${alert.message} ${
@@ -36,15 +55,18 @@ class UserAlerts {
       }`;
 
       const mappedUserAlert = await this._mapper.createUserAlert({
-        to: payload.to,
+        to: payload.to.split(","),
         uid: payload.uid,
         level: payload.level,
         location: payload.location,
+        longitude: payload.longitude,
+        latitude: payload.latitude,
+        status: payload.status,
       });
 
       await this._repository.create(mappedUserAlert);
       const alerted = await this._alert.sendAlert({
-        to: payload.to,
+        to: payload.to.split(","),
         message: message,
       });
 
@@ -72,7 +94,9 @@ class AlertService implements IAlertService {
     payload: Pick<TUserSendAlert, "to"> & { message: string }
   ) {
     try {
-      return payload;
+      return {
+        ...payload,
+      };
     } catch (error) {
       throw error;
     }
