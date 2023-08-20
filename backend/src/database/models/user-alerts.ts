@@ -1,5 +1,6 @@
 import { IAlertStatuses } from "./alert";
 import { IBaseModel } from "./model";
+import { IUserModel } from "./user";
 
 export interface IUserAlerts extends IBaseModel {
   to: string[];
@@ -9,4 +10,5 @@ export interface IUserAlerts extends IBaseModel {
   longitude: number;
   latitude: number;
   status: IAlertStatuses;
+  sender: Pick<IUserModel, "id" | "firstname" | "lastname" | "photoUrl">;
 }

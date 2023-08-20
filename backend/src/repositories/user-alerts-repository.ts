@@ -2,6 +2,7 @@ import type * as firestoreDb from "firebase-admin/firestore";
 import Firstore from "../database/firestore";
 import { IAlertStatuses } from "../database/models/alert";
 import { IUserAlerts } from "../database/models/user-alerts";
+import { IUserModel } from "../database/models/user";
 
 export type TUserSendAlert = {
   id: string;
@@ -14,6 +15,7 @@ export type TUserSendAlert = {
   longitude: number;
   latitude: number;
   status: IAlertStatuses;
+  sender: Pick<IUserModel, "id" | "firstname" | "lastname" | "photoUrl">;
 };
 
 export type TRawSendAlert = {
@@ -27,6 +29,7 @@ export type TRawSendAlert = {
   longitude: number;
   latitude: number;
   status: IAlertStatuses;
+  sender: Pick<IUserModel, "id" | "firstname" | "lastname" | "photoUrl">;
 };
 
 export type TUpdateAlertStatus = {
