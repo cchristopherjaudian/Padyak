@@ -20,8 +20,8 @@
         app:layout_constraintTop_toTopOf="@+id/cardView4" />
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView4"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/dp_circle_size"
+        android:layout_height="@dimen/dp_circle_size"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:elevation="10dp"

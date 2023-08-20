@@ -30,17 +30,17 @@ public class frmAlertInfo extends AppCompatActivity {
         cl3 = findViewById(R.id.cl3);
         cl4 = findViewById(R.id.cl4);
         alertLevelList = new ArrayList<>();
-        alertLevelList.add(new AlertLevel("Level 1", "I am safe. I just can't maintain the pace"));
-        alertLevelList.add(new AlertLevel("Level 2", "My bike has a problem"));
-        alertLevelList.add(new AlertLevel("Level 3", "I had a bike breakdown and I don't have any tools. Please help."));
-        alertLevelList.add(new AlertLevel("Level 4", "I had an accident and I need help."));
+        alertLevelList.add(new AlertLevel(1, "I am safe. I just can't maintain the pace"));
+        alertLevelList.add(new AlertLevel(2, "My bike has a problem"));
+        alertLevelList.add(new AlertLevel(3, "I had a bike breakdown and I don't have any tools. Please help."));
+        alertLevelList.add(new AlertLevel(4, "I had an accident and I need help."));
 
         intent = new Intent(frmAlertInfo.this, frmAlertSend.class);
         cl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bundle =new Bundle();
-                bundle.putString("Level",alertLevelList.get(0).getLevel());
+                bundle.putInt("level",alertLevelList.get(0).getLevel());
                 bundle.putString("Description",alertLevelList.get(0).getDescription());
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -50,7 +50,7 @@ public class frmAlertInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bundle =new Bundle();
-                bundle.putString("Level",alertLevelList.get(1).getLevel());
+                bundle.putInt("level",alertLevelList.get(1).getLevel());
                 bundle.putString("Description",alertLevelList.get(1).getDescription());
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -60,7 +60,7 @@ public class frmAlertInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bundle =new Bundle();
-                bundle.putString("Level",alertLevelList.get(2).getLevel());
+                bundle.putInt("level",alertLevelList.get(2).getLevel());
                 bundle.putString("Description",alertLevelList.get(2).getDescription());
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -70,7 +70,7 @@ public class frmAlertInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bundle = new Bundle();
-                bundle.putString("Level",alertLevelList.get(3).getLevel());
+                bundle.putInt("level",alertLevelList.get(3).getLevel());
                 bundle.putString("Description",alertLevelList.get(3).getDescription());
                 intent.putExtras(bundle);
                 startActivity(intent);
