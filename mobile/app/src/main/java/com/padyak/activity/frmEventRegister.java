@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.padyak.R;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
@@ -45,6 +47,7 @@ public class frmEventRegister extends AppCompatActivity {
     StorageReference storageRef, eventRef;
     UploadTask uploadTask;
     String eventId,eventName,eventImg;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +95,9 @@ public class frmEventRegister extends AppCompatActivity {
 
 
     public void processRegistration(){
-
+        progressDialog = Helper.getInstance().progressDialog(frmEventRegister.this,"Processing registration.");
+        progressDialog.show();
+        new Thread(()->{
             String ref = "payment/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".jpg";
             FirebaseApp.initializeApp(this);
             storage = FirebaseStorage.getInstance();
@@ -119,8 +124,7 @@ public class frmEventRegister extends AppCompatActivity {
 
                 }
             });
-
-
+        }).start();
     }
     private void savePayment(String imgURI){
         Map<String, Object> payload = new HashMap<>();
@@ -128,19 +132,23 @@ public class frmEventRegister extends AppCompatActivity {
 
         VolleyHttp volleyHttp = new VolleyHttp("/cyclist/".concat(eventId),payload,"event-patch",frmEventRegister.this);
         JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-        if(responseJSON == null){
-            Toast.makeText(this, "Failed to process request. Please try again.", Toast.LENGTH_SHORT).show();
-        } else{
-            Intent intent = new Intent(frmEventRegister.this, frmEventParticipants.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("id",eventId);
-            bundle.putString("name",eventName);
-            bundle.putString("img",eventImg);
-            intent.putExtras(bundle);
-            startActivity(intent);
-            frmEventInfo.frmEventInfo.finish();
-            finish();
-        }
+        runOnUiThread(()->{
+            progressDialog.dismiss();
+            if(responseJSON == null){
+                Toast.makeText(this, "Failed to process request. Please try again.", Toast.LENGTH_SHORT).show();
+            } else{
+                Intent intent = new Intent(frmEventRegister.this, frmEventParticipants.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id",eventId);
+                bundle.putString("name",eventName);
+                bundle.putString("img",eventImg);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                frmEventInfo.frmEventInfo.finish();
+                finish();
+            }
+        });
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

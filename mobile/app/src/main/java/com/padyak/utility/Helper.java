@@ -1,8 +1,10 @@
 package com.padyak.utility;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.padyak.R;
 import com.padyak.dto.AlertLevel;
 
 import org.json.JSONArray;
@@ -24,11 +26,19 @@ public class Helper {
     public Helper() {
     }
 
+
     public static Helper getInstance(){
         if(helper == null) helper = new Helper();
         return helper;
     }
-
+    public ProgressDialog progressDialog(Context c, String body){
+        ProgressDialog progressDialog = new ProgressDialog(c);
+        progressDialog.setTitle(c.getString(R.string.app_name));
+        progressDialog.setMessage(body.concat(" Please wait..."));
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        return progressDialog;
+    }
     public String dateFormat(Date date){
         int monthNum = date.getMonth() + 1;
         int dayNum = date.getDate();

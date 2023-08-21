@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -34,7 +35,7 @@ public class frmEventCrud extends AppCompatActivity {
     Intent intent;
     List<CardView> cvMonth;
     List<TextView> txMonth;
-
+    ProgressDialog progressDialog;
     ImageView imgDP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +97,9 @@ public class frmEventCrud extends AppCompatActivity {
         txMonth.add(txNovember);
         txMonth.add(txDecember);
 
-        for(int i = 0; i < cvMonth.size();i++){
-            final int monthCounter = i+1;
-            cvMonth.get(i).setOnClickListener(v->{
+        for (int i = 0; i < cvMonth.size(); i++) {
+            final int monthCounter = i + 1;
+            cvMonth.get(i).setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
                 bundle.putInt("month", monthCounter);
                 intent = new Intent(frmEventCrud.this, frmEventManagement.class);
@@ -111,35 +112,44 @@ public class frmEventCrud extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new Thread(()->{
-            runOnUiThread(this::loadCalendar);
-        }).start();
+        loadCalendar();
+
     }
 
-    private void loadCalendar(){
-        VolleyHttp volleyHttp = new VolleyHttp("/count?year=2023",null,"event",frmEventCrud.this);
-        String response = volleyHttp.getResponseBody(true);
-        try {
-            JSONObject responseJSON = new JSONObject(response.toUpperCase());
-            int responseCode = responseJSON.getInt("STATUS");
-            if(responseCode != 200) throw new JSONException("Response Code: " + responseCode);
-            int eventNumber = 0;
-            JSONArray eventArray = responseJSON.optJSONArray("DATA");
-            for(int i = 0;i < eventArray.length();i++){
-                JSONObject monthObject = eventArray.getJSONObject(i);
-                eventNumber = monthObject.getInt(Month.of(i+1).toString());
-                if(eventNumber == 0){
-                    txMonth.get(i).setText("No event registered");
-                    txMonth.get(i).setTextColor(Color.BLACK);
-                } else{
-                    txMonth.get(i).setText(String.valueOf(eventNumber) + " " + ((eventNumber > 1) ? " events" : " event") + " registered");
+    private void loadCalendar() {
+        progressDialog = Helper.getInstance().progressDialog(frmEventCrud.this, "Retrieving events.");
+        progressDialog.show();
+
+        new Thread(() -> {
+            VolleyHttp volleyHttp = new VolleyHttp("/count?year=2023", null, "event", frmEventCrud.this);
+            String response = volleyHttp.getResponseBody(true);
+            runOnUiThread(()->{
+                try {
+                    progressDialog.dismiss();
+                    JSONObject responseJSON = new JSONObject(response.toUpperCase());
+                    int responseCode = responseJSON.getInt("STATUS");
+                    if (responseCode != 200) throw new JSONException("Response Code: " + responseCode);
+                    int eventNumber = 0;
+                    JSONArray eventArray = responseJSON.optJSONArray("DATA");
+                    for (int i = 0; i < eventArray.length(); i++) {
+                        JSONObject monthObject = eventArray.getJSONObject(i);
+                        eventNumber = monthObject.getInt(Month.of(i + 1).toString());
+                        if (eventNumber == 0) {
+                            txMonth.get(i).setText("No event registered");
+                            txMonth.get(i).setTextColor(Color.BLACK);
+                        } else {
+                            txMonth.get(i).setText(String.valueOf(eventNumber) + " " + ((eventNumber > 1) ? " events" : " event") + " registered");
+                        }
+                    }
+                } catch (JSONException e) {
+                    Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
+                    Toast.makeText(this, "Failed to retrieve event calendar. Please try again.", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
-            }
-        } catch (JSONException e) {
-            Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
-            Toast.makeText(this, "Failed to retrieve event calendar. Please try again.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+            });
+
+        }).start();
+
 
     }
 }

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -48,7 +49,7 @@ import java.util.Map;
 public class frmAddEvent extends AppCompatActivity {
 
     Button btnEventRegister, btnEventCancel;
-    EditText txAddEventDate, txAddEventStart, txAddEventEnd, txAddEventAward, txAddEventDescription,txAddEventTitle;
+    EditText txAddEventDate, txAddEventStart, txAddEventEnd, txAddEventAward, txAddEventDescription, txAddEventTitle;
     ImageView imgAddEvent;
     String selectedYear, selectedMonth;
     Bitmap bitmapEvent;
@@ -56,7 +57,8 @@ public class frmAddEvent extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef, eventRef;
     UploadTask uploadTask;
-
+    ProgressDialog progressDialog;
+    boolean data_inserted;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,36 +178,41 @@ public class frmAddEvent extends AppCompatActivity {
         });
 
         btnEventRegister.setOnClickListener(v -> {
-            if (bitmapEvent != null) {
-                String ref = "events/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".jpg";
-                FirebaseApp.initializeApp(this);
-                storage = FirebaseStorage.getInstance();
-                storageRef = storage.getReference();
-                eventRef = storageRef.child(ref);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmapEvent.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                data = baos.toByteArray();
-                uploadTask = eventRef.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        saveEvent("");
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                saveEvent(uri.toString());
-                            }
-                        });
+            progressDialog = Helper.getInstance().progressDialog(frmAddEvent.this, "Registering event.");
+            progressDialog.show();
+            new Thread(() -> {
+                if (bitmapEvent != null) {
+                    String ref = "events/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".jpg";
+                    FirebaseApp.initializeApp(this);
+                    storage = FirebaseStorage.getInstance();
+                    storageRef = storage.getReference();
+                    eventRef = storageRef.child(ref);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmapEvent.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    data = baos.toByteArray();
+                    uploadTask = eventRef.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            saveEvent("");
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    saveEvent(uri.toString());
+                                }
+                            });
 
-                    }
-                });
-            } else {
-                saveEvent("n/a");
-            }
+                        }
+                    });
+                } else {
+                    saveEvent("n/a");
+                }
+            }).start();
+
 
         });
     }
@@ -213,7 +220,7 @@ public class frmAddEvent extends AppCompatActivity {
     private void saveEvent(String imgURL) {
         try {
             if (imgURL.isEmpty()) {
-                Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_SHORT).show());
                 return;
             }
             String etDate = txAddEventDate.getText().toString();
@@ -243,7 +250,7 @@ public class frmAddEvent extends AppCompatActivity {
 
             VolleyHttp volleyHttp = new VolleyHttp("", payload, "event", frmAddEvent.this);
             String response = volleyHttp.getResponseBody(true);
-            boolean data_inserted = false;
+            data_inserted = false;
             try {
                 JSONObject responseJSON = new JSONObject(response);
                 int responseCode = responseJSON.getInt("status");
@@ -251,15 +258,22 @@ public class frmAddEvent extends AppCompatActivity {
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "onCreate: JSON " + e.getMessage());
             }
+            runOnUiThread(() -> {
+                progressDialog.dismiss();
+                if (data_inserted) {
+                    Toast.makeText(this, "Event registered successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Failed to register event. Please try again", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            if (data_inserted) {
-                Toast.makeText(this, "Event registered successfully", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "Failed to register event. Please try again", Toast.LENGTH_SHORT).show();
-            }
         } catch (Exception err) {
             Log.d(Helper.getInstance().log_code, "saveEvent: " + err.getMessage());
+            runOnUiThread(() -> {
+                progressDialog.dismiss();
+                Toast.makeText(this, "Failed to register event. Please try again", Toast.LENGTH_SHORT).show();
+            });
         }
     }
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,12 +40,18 @@ public class frmEventInfo extends AppCompatActivity {
     public static frmEventInfo frmEventInfo;
     CalendarEvent calendarEvent;
 
-    boolean is_done,is_registered;
-    String eventName,eventPhoto;
-    TextView txEventInfoName,txEventInfoDesc,txEventInfoDate,txEventAward,textView20;
+    boolean is_done, is_registered;
+    String eventName, eventPhoto;
+    TextView txEventInfoName, txEventInfoDesc, txEventInfoDate, txEventAward, textView20;
     RecyclerView rvParticipants;
     LinearLayoutManager linearLayoutManager;
     com.padyak.adapter.adapterParticipant adapterParticipant;
+    ProgressDialog progressDialog;
+
+    String eventDate;
+    String eventTime;
+    String eventDescription;
+    String eventAward;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +83,9 @@ public class frmEventInfo extends AppCompatActivity {
             } else {
                 Intent intent = new Intent(frmEventInfo.this, frmEventRegister.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("id",eventId);
-                bundle.putString("name",eventName);
-                bundle.putString("photoUrl",eventPhoto);
+                bundle.putString("id", eventId);
+                bundle.putString("name", eventName);
+                bundle.putString("photoUrl", eventPhoto);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -89,62 +96,77 @@ public class frmEventInfo extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new Thread(() -> {
-            runOnUiThread(this::loadEventInfo);
-        }).start();
+        runOnUiThread(this::loadEventInfo);
     }
 
     public void loadEventInfo() {
-        try {
-            if (eventId.isEmpty()) throw new Exception("eventId is null");
+        progressDialog = Helper.getInstance().progressDialog(frmEventInfo.this, "Retrieving event information.");
+        progressDialog.show();
+        new Thread(()->{
+            try {
+                Thread.sleep(1000);
+                if (eventId.isEmpty()) throw new Exception("eventId is null");
 
-            VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", com.padyak.activity.frmEventInfo.this);
-            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-            if (responseJSON == null) throw new Exception("responseJSON is null");
-            JSONObject eventObject = responseJSON.getJSONObject("data");
-            is_registered = false;
-            is_done = false;
-            String eventDate = eventObject.getString("eventDate");
-            String eventTime = eventObject.getString("startTime").concat("-").concat(eventObject.getString("endTime"));
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-            LocalDate ldDate = LocalDate.parse(eventDate);
-            eventTime = formatter.format(ldDate).concat(" ").concat(eventTime);
+                VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", com.padyak.activity.frmEventInfo.this);
+                JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+                if (responseJSON == null) throw new Exception("responseJSON is null");
+                JSONObject eventObject = responseJSON.getJSONObject("data");
+                is_registered = false;
+                is_done = false;
+                eventDate = eventObject.getString("eventDate");
+                eventTime = eventObject.getString("startTime").concat("-").concat(eventObject.getString("endTime"));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+                LocalDate ldDate = LocalDate.parse(eventDate);
+                eventTime = formatter.format(ldDate).concat(" ").concat(eventTime);
 
-            JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
-            List<Participants> participantsList = new ArrayList<>();
-            for(int i = 0; i < participantJSON.length(); i++){
-                JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
-                Participants participants = new Participants();
-                participants.setUserImage(participantObject.getString("photoUrl"));
-                participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
-                participantsList.add(participants);
+                JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
+                List<Participants> participantsList = new ArrayList<>();
+                for (int i = 0; i < participantJSON.length(); i++) {
+                    JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
+                    Participants participants = new Participants();
+                    participants.setUserImage(participantObject.getString("photoUrl"));
+                    participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
+                    participantsList.add(participants);
 
-                if(participantObject.getString("id").equals(LoggedUser.getInstance().getUuid())) is_registered = true;
+                    if (participantObject.getString("id").equals(LoggedUser.getInstance().getUuid()))
+                        is_registered = true;
+                }
+                eventName = eventObject.getString("name");
+                eventPhoto = eventObject.getString("photoUrl");
+                eventDescription = eventObject.getString("eventDescription");
+                eventAward = eventObject.getString("award");
+                is_done = eventObject.getBoolean("isDone");
+                runOnUiThread(() -> {
+                    txEventInfoName.setText(eventName);
+                    txEventInfoDesc.setText(eventDescription);
+                    txEventAward.setText(eventAward);
+                    txEventInfoDate.setText(eventTime);
+                    Picasso.get().load(eventPhoto).into(imgEvent);
+
+                    if (is_registered || is_done) {
+                        textView20.setVisibility(View.VISIBLE);
+                        rvParticipants.setVisibility(View.VISIBLE);
+                        adapterParticipant = new adapterParticipant(participantsList);
+                        rvParticipants.setAdapter(adapterParticipant);
+
+                    } else {
+                        btnEventRegister.setVisibility(View.VISIBLE);
+                    }
+                    progressDialog.dismiss();
+                });
+
+            } catch (Exception err) {
+                Log.d(Helper.getInstance().log_code, "loadEventInfo: " + err.getMessage());
+                runOnUiThread(() -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(frmEventInfo, "Failed to load event information. Please try again", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            } finally {
+                runOnUiThread(() -> progressDialog.dismiss());
             }
-            eventName = eventObject.getString("name");
-            eventPhoto = eventObject.getString("photoUrl");
+        }).start();
 
-            is_done = eventObject.getBoolean("isDone");
-            txEventInfoName.setText(eventName);
-            txEventInfoDesc.setText(eventObject.getString("eventDescription"));
-            txEventAward.setText(eventObject.getString("award"));
-            txEventInfoDate.setText(eventTime);
-            Picasso.get().load(eventPhoto).into(imgEvent);
-
-            if(is_registered || is_done){
-                textView20.setVisibility(View.VISIBLE);
-                rvParticipants.setVisibility(View.VISIBLE);
-                adapterParticipant = new adapterParticipant(participantsList);
-                rvParticipants.setAdapter(adapterParticipant);
-
-            } else{
-                btnEventRegister.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception err) {
-            Log.d(Helper.getInstance().log_code, "loadEventInfo: " + err.getMessage());
-            Toast.makeText(frmEventInfo, "Failed to load event information. Please try again", Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
 
     }

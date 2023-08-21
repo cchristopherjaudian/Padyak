@@ -17,16 +17,16 @@ import com.squareup.picasso.Picasso;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class adapterEventManagement extends RecyclerView.Adapter<adapterEventManagement.viewHolder> {
     List<CalendarEvent> events;
-    List<Boolean> is_selected;
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-    public adapterEventManagement(List<CalendarEvent> events, List<Boolean> is_selected) {
+    public adapterEventManagement(List<CalendarEvent> events) {
         this.events = events;
-        this.is_selected = is_selected;
     }
 
     @NonNull
@@ -46,7 +46,14 @@ public class adapterEventManagement extends RecyclerView.Adapter<adapterEventMan
         holder.txEventDate.setText(dateNow.format(formatter).concat(" ").concat(startTime).concat("-").concat(endTime));
         Picasso.get().load(events.get(position).getEventImage()).into(holder.imgEventImage);
     }
+    public String getChecked(){
+        List<String> checkedNumbers = new ArrayList<>();
+        events.forEach(c->{
+            if(c.isIs_selected()) checkedNumbers.add(c.getEventId());
+        });
+        return String.join(",", checkedNumbers);
 
+    }
     @Override
     public int getItemCount() {
         return events.size();

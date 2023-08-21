@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -64,6 +65,8 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     LocationCallback locationCallback;
     FusedLocationProviderClient fusedLocationClient;
     public static frmRide instance;
+
+    ProgressDialog progressDialog;
     int tempCounter = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            progressDialog.dismiss();
             ActivityCompat.requestPermissions(frmRide.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
         } else{
@@ -183,26 +187,25 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
                 }
             }};
-
+            progressDialog.show();
             fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-
+                            progressDialog.dismiss();
                             if (location != null) {
-                                double _lat = location.getLatitude();
-                                double _long = location.getLongitude();
-                                startPosLat = _lat;
-                                startPosLong = _long;
-                                Log.d(Helper.getInstance().log_code, "getLocation: " + _lat  + " " + _long);
-                                LatLng myPos = new LatLng(_lat, _long);
+                                startPosLat = location.getLatitude();
+                                startPosLong = location.getLongitude();
+                                LatLng myPos = new LatLng(startPosLat, startPosLong);
                                 previousLocation = myPos;
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 16.0f));
-
-
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15.0f));
+                            } else{
+                                Toast.makeText(frmRide.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         }
                     });
+
             if(startTracking){
                 fusedLocationClient.requestLocationUpdates(locationRequest,
                         locationCallback,
@@ -234,6 +237,8 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
+        progressDialog = Helper.getInstance().progressDialog(frmRide.this, "Retrieving current location.");
+        progressDialog.show();
         getLocation(gMap);
     }
 

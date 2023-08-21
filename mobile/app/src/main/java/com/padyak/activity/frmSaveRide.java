@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -65,7 +66,7 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
     FirebaseStorage storage;
     StorageReference storageRef, rideRef;
     UploadTask uploadTask;
-
+ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,36 +99,41 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
             finish();
         });
         btnRideRegister.setOnClickListener(v -> {
-            if (bitmapRide != null) {
-                String ref = "rides/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".bmp";
-                FirebaseApp.initializeApp(this);
-                storage = FirebaseStorage.getInstance();
-                storageRef = storage.getReference();
-                rideRef = storageRef.child(ref);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmapRide.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                data = baos.toByteArray();
-                uploadTask = rideRef.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        saveRide("");
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                saveRide(uri.toString());
-                            }
-                        });
+            progressDialog = Helper.getInstance().progressDialog(frmSaveRide.this,"Saving ride details.");
+            progressDialog.show();
+            new Thread(()->{
+                if (bitmapRide != null) {
+                    String ref = "rides/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".bmp";
+                    FirebaseApp.initializeApp(this);
+                    storage = FirebaseStorage.getInstance();
+                    storageRef = storage.getReference();
+                    rideRef = storageRef.child(ref);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmapRide.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    data = baos.toByteArray();
+                    uploadTask = rideRef.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            saveRide("");
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    saveRide(uri.toString());
+                                }
+                            });
 
-                    }
-                });
-            } else {
-                saveRide("n/a");
-            }
+                        }
+                    });
+                } else {
+                    saveRide("n/a");
+                }
+            }).start();
+
         });
         btnBrowseImage.setOnClickListener(v -> {
             if (is_Capture) {
@@ -148,8 +154,12 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
     private void saveRide(String imgURL) {
         try {
             if(imgURL.isEmpty()){
-                Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_SHORT).show();
-                return;
+                runOnUiThread(()->{
+                    progressDialog.dismiss();
+                    Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_SHORT).show();
+                    return;
+                });
+
             }
             String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + startPosLat + "," + startPosLong + "&key=" + getString(R.string.maps_publicapi);
             String toLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + endPosLat + "," + endPosLong + "&key=" + getString(R.string.maps_publicapi);
@@ -183,16 +193,24 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
             JSONObject reader = new JSONObject(response);
             int responseStatus = reader.getInt("status");
             if (responseStatus == 200) {
-                Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_SHORT).show();
-                frmRide.instance.finish();
-                finish();
+                runOnUiThread(()->{
+                    progressDialog.dismiss();
+                    Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_SHORT).show();
+                    frmRide.instance.finish();
+                    finish();
+                });
             } else {
-                Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+                runOnUiThread(()->{
+                    progressDialog.dismiss();
+                    Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+                });
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.d(Helper.getInstance().log_code, "saveRide JSONException: " + e.getMessage());
-        } catch (Exception ee){
-            Log.d(Helper.getInstance().log_code, "saveRide Exception: " + ee.getMessage());
+            runOnUiThread(()->{
+                progressDialog.dismiss();
+                Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+            });
         }
     }
 

@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class CalendarEvent {
     private String eventId,eventName,eventDate,eventStart,eventEnd,eventDescription,eventAward,eventImage,eventRegistrar;
-    boolean is_done;
-    public CalendarEvent(String eventId, String eventName, String eventDate, String eventStart, String eventEnd, String eventDescription, String eventAward, String eventImage, String eventRegistrar, boolean is_done) {
+    boolean is_done,is_selected;
+    public CalendarEvent(String eventId, String eventName, String eventDate, String eventStart, String eventEnd, String eventDescription, String eventAward, String eventImage, String eventRegistrar, boolean is_done,boolean is_selected) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.eventDate = eventDate;
@@ -16,9 +16,18 @@ public class CalendarEvent {
         this.eventImage = eventImage;
         this.eventRegistrar = eventRegistrar;
         this.is_done = is_done;
+        this.is_selected = is_selected;
     }
 
     public CalendarEvent() {
+    }
+
+    public boolean isIs_selected() {
+        return is_selected;
+    }
+
+    public void setIs_selected(boolean is_selected) {
+        this.is_selected = is_selected;
     }
 
     public boolean isIs_done() {

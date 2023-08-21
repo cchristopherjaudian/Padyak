@@ -3,6 +3,7 @@ package com.padyak.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class frmEventCalendar extends AppCompatActivity {
-
+ProgressDialog progressDialog;
     CalendarView calendarView;
     Button btnViewEvent;
     TextView txSelectedDate,txCalendarEventTitle;
@@ -112,11 +113,16 @@ public class frmEventCalendar extends AppCompatActivity {
         }
     }
     private void loadCalendar() {
-
+        progressDialog = Helper.getInstance().progressDialog(frmEventCalendar.this,"Retrieving events.");
+        progressDialog.show();
 
         new Thread(() -> {
-            runOnUiThread(() -> {
-                events = new ArrayList<>();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+
+            }
+            events = new ArrayList<>();
                 calendars = new ArrayList<>();
                 calendarMap = new HashMap<>();
 
@@ -148,14 +154,18 @@ public class frmEventCalendar extends AppCompatActivity {
                         calendarEvent.setEventRegistrar(null);
                         calendarMap.put(eventObject.getString("eventDate"),calendarEvent);
                     }
-                    calendarView.setHighlightedDays(calendars);
-                    calendarView.setEvents(events);
-                    loadEvent(calendarView.getSelectedDates().get(0).getTime());
+                    runOnUiThread(()->{
+                        calendarView.setHighlightedDays(calendars);
+                        calendarView.setEvents(events);
+                        loadEvent(calendarView.getSelectedDates().get(0).getTime());
+                    });
                 } catch (JSONException e) {
                     Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
-                    Toast.makeText(this, "Failed to retrieve list of events", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(()->Toast.makeText(this, "Failed to retrieve list of events", Toast.LENGTH_SHORT).show());
+
+                } finally {
+                    runOnUiThread(()->progressDialog.dismiss());
                 }
-            });
         }).start();
     }
 }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ public class frmAdminAlert extends AppCompatActivity {
     List<MemberAlert> memberAlertList;
     com.padyak.adapter.adapterAdminAlert adapterAdminAlert;
     ImageView imgDP;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,41 +51,41 @@ public class frmAdminAlert extends AppCompatActivity {
     }
 
     public void loadAlerts(){
+        progressDialog = Helper.getInstance().progressDialog(frmAdminAlert.this,"Fetching alerts.");
+        progressDialog.show();
         new Thread(()->{
-            runOnUiThread(()->{
                 memberAlertList = new ArrayList<>();
                 VolleyHttp volleyHttp = new VolleyHttp("/?status=ACTIVE",null,"alert",frmAdminAlert.this);
                 JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-                if(responseJSON == null){
-                    Toast.makeText(this, "Failed to retrieve list of alerts. Please try again", Toast.LENGTH_SHORT).show();
-                    finish();
-                } else{
-                    JSONArray alertArray = responseJSON.optJSONArray("data");
-                    for(int i = 0; i < alertArray.length(); i++){
-                        try {
-                            JSONObject alertObject = alertArray.getJSONObject(i);
-                            JSONObject userObject = alertObject.getJSONObject("sender");
-                            MemberAlert memberAlert = new MemberAlert();
-                            memberAlert.setAlertId(alertObject.getString("id"));
-                            memberAlert.setAlertLevel(alertObject.getInt("level"));
-                            memberAlert.setUserImage(userObject.getString("photoUrl"));
-                            memberAlert.setLatitude(Double.parseDouble(alertObject.getString("latitude")));
-                            memberAlert.setLongitude(Double.parseDouble(alertObject.getString("longitude")));
-                            memberAlert.setLocationName(alertObject.getString("location"));
-                            memberAlert.setCreatedAt(alertObject.getString("createdAt"));
-                            memberAlert.setUserName(userObject.getString("firstname").concat(" ").concat(userObject.getString("lastname")));
-                            memberAlertList.add(memberAlert);
-
-                        } catch (JSONException e) {
-                            Log.d(Helper.getInstance().log_code, "loadAlerts: " + e.getMessage());
+                runOnUiThread(()->{
+                    if(responseJSON == null){
+                        Toast.makeText(this, "Failed to retrieve list of alerts. Please try again", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else{
+                        JSONArray alertArray = responseJSON.optJSONArray("data");
+                        for(int i = 0; i < alertArray.length(); i++){
+                            try {
+                                JSONObject alertObject = alertArray.getJSONObject(i);
+                                JSONObject userObject = alertObject.getJSONObject("sender");
+                                MemberAlert memberAlert = new MemberAlert();
+                                memberAlert.setAlertId(alertObject.getString("id"));
+                                memberAlert.setAlertLevel(alertObject.getInt("level"));
+                                memberAlert.setUserImage(userObject.getString("photoUrl"));
+                                memberAlert.setLatitude(Double.parseDouble(alertObject.getString("latitude")));
+                                memberAlert.setLongitude(Double.parseDouble(alertObject.getString("longitude")));
+                                memberAlert.setLocationName(alertObject.getString("location"));
+                                memberAlert.setCreatedAt(alertObject.getString("createdAt"));
+                                memberAlert.setUserName(userObject.getString("firstname").concat(" ").concat(userObject.getString("lastname")));
+                                memberAlertList.add(memberAlert);
+                            } catch (JSONException e) {
+                                Log.d(Helper.getInstance().log_code, "loadAlerts: " + e.getMessage());
+                            }
                         }
+                        adapterAdminAlert = new adapterAdminAlert(memberAlertList);
+                        rvAlertList.setAdapter(adapterAdminAlert);
+                        progressDialog.dismiss();
                     }
-                    Log.d(Helper.getInstance().log_code, "loadAlerts: " + memberAlertList);
-                    adapterAdminAlert = new adapterAdminAlert(memberAlertList);
-                    rvAlertList.setAdapter(adapterAdminAlert);
-                }
-
-            });
+                });
         }).start();
     }
 }

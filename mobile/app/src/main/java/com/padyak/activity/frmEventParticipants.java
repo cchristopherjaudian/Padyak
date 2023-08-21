@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ import com.padyak.adapter.adapterParticipant;
 import com.padyak.dto.Participants;
 import com.padyak.fragment.fragmentEvent;
 import com.padyak.utility.CustomViewPager;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
@@ -38,14 +42,12 @@ public class frmEventParticipants extends AppCompatActivity {
     TextView txEventName, txParticipantDescription;
     ImageView imgEventParticipant;
     Button btnEventCancel;
-    int tempPos = 0;
     CustomViewPager viewPager;
     SmartTabLayout viewPagerTab;
     FragmentPagerItemAdapter adapter;
     List<Participants> participantsList;
-    public static String selectedTab;
     String eventId,eventName,eventImg;
-
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,34 +78,41 @@ public class frmEventParticipants extends AppCompatActivity {
         viewPager.disableScroll(true);
 
         btnEventCancel.setOnClickListener(v -> finish());
+        loadParticipants();
 
-        new Thread(() -> {
-            runOnUiThread(this::loadParticipants);
-        }).start();
     }
 
     public void loadParticipants() {
-        try {
-            participantsList = new ArrayList<>();
-            VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", frmEventParticipants.this);
-            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-            if (responseJSON == null) throw new Exception("responseJSON is null");
-            JSONObject eventObject = responseJSON.getJSONObject("data");
-            JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
-            List<Participants> participantsList = new ArrayList<>();
-            for(int i = 0; i < participantJSON.length(); i++){
-                JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
-                Participants participants = new Participants();
-                participants.setUserImage(participantObject.getString("photoUrl"));
-                participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
-                participantsList.add(participants);
-            }
-            adapterParticipant = new adapterParticipant(participantsList);
-            rvEventInfoParticipants.setAdapter(adapterParticipant);
-        } catch (Exception e) {
-            Toast.makeText(this, "Failed to load list of participants.", Toast.LENGTH_SHORT).show();
-        }
+        progressDialog = Helper.getInstance().progressDialog(frmEventParticipants.this,"Retrieving participants.");
+        progressDialog.show();
+        new Thread(()->{
+            try {
+                participantsList = new ArrayList<>();
+                VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", frmEventParticipants.this);
+                JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+                if (responseJSON == null) throw new Exception("responseJSON is null");
+                JSONObject eventObject = responseJSON.getJSONObject("data");
+                JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
+                List<Participants> participantsList = new ArrayList<>();
+                for(int i = 0; i < participantJSON.length(); i++){
+                    JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
+                    Participants participants = new Participants();
+                    participants.setUserImage(participantObject.getString("photoUrl"));
+                    participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
+                    participantsList.add(participants);
+                }
+                runOnUiThread(()->{
+                    adapterParticipant = new adapterParticipant(participantsList);
+                    rvEventInfoParticipants.setAdapter(adapterParticipant);
+                });
 
+            } catch (Exception e) {
+                Log.d(Helper.getInstance().log_code, "loadParticipants: " + e.getMessage());
+                runOnUiThread(()-> Toast.makeText(this, "Failed to load list of participants.", Toast.LENGTH_SHORT).show());
+            } finally {
+                runOnUiThread(()-> progressDialog.dismiss());
+            }
+        }).start();
     }
 
     @Override

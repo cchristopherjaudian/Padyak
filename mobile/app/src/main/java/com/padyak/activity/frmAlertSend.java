@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -45,6 +46,7 @@ public class frmAlertSend extends AppCompatActivity {
     int alertLevel;
     public static frmAlertSend frmAlertSend;
     FusedLocationProviderClient fusedLocationClient;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,9 +78,7 @@ public class frmAlertSend extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String sendTo = etContact.getText().toString().trim();
-                new Thread(()->{
-                    runOnUiThread(()->sendAlert(sendTo));
-                }).start();
+                sendAlert(sendTo);
             }
         });
     }
@@ -90,41 +90,50 @@ public class frmAlertSend extends AppCompatActivity {
             finish();
             return;
         }
-        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(android.location.Location location) {
-                        if (location != null) {
-                            double _lat = location.getLatitude();
-                            double _long = location.getLongitude();
-                            String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + getString(R.string.maps_publicapi);
-                            VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmAlertSend.this);
-                            String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
+        progressDialog = Helper.getInstance().progressDialog(com.padyak.activity.frmAlertSend.this,"Sending alert.");
+        progressDialog.show();
+
+        new Thread(()->{
+            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(android.location.Location location) {
+                            if (location != null) {
+                                double _lat = location.getLatitude();
+                                double _long = location.getLongitude();
+                                String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + getString(R.string.maps_publicapi);
+                                VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmAlertSend.this);
+                                String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
 
 
-                            Map<String, Object> payload = new HashMap<>();
-                            payload.put("to",recipients);
-                            payload.put("level",alertLevel);
-                            payload.put("location",alertAddress);
-                            payload.put("latitude",_lat);
-                            payload.put("longitude",_long);
+                                Map<String, Object> payload = new HashMap<>();
+                                payload.put("to",recipients);
+                                payload.put("level",alertLevel);
+                                payload.put("location",alertAddress);
+                                payload.put("latitude",_lat);
+                                payload.put("longitude",_long);
 
-                            VolleyHttp volleyHttp = new VolleyHttp("",payload,"alert", com.padyak.activity.frmAlertSend.this);
-                            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-                            if(responseJSON == null){
-                                Toast.makeText(frmAlertSend, "Failed to send alert. Please try again", Toast.LENGTH_SHORT).show();
+                                VolleyHttp volleyHttp = new VolleyHttp("",payload,"alert", com.padyak.activity.frmAlertSend.this);
+                                JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+                                runOnUiThread(()->{
+                                    progressDialog.dismiss();
+                                    if(responseJSON == null){
+                                        Toast.makeText(frmAlertSend, "Failed to send alert. Please try again", Toast.LENGTH_SHORT).show();
+                                    } else{
+                                        Toast.makeText(frmAlertSend.this, "Alert sent successfully", Toast.LENGTH_SHORT).show();
+                                        frmAlertInfo.frmAlertInfo.finish();
+                                        finish();
+                                    }
+                                });
+
                             } else{
-                                Toast.makeText(frmAlertSend.this, "Alert sent successfully", Toast.LENGTH_SHORT).show();
-                                frmAlertInfo.frmAlertInfo.finish();
-                                finish();
+                                runOnUiThread(()->{
+                                    progressDialog.dismiss();
+                                    Toast.makeText(frmAlertSend.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
+                                });
                             }
-                        } else{
-                            Toast.makeText(frmAlertSend.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
-                            finish();
                         }
-                    }
-                });
-
-
+                    });
+        }).start();
     }
 }

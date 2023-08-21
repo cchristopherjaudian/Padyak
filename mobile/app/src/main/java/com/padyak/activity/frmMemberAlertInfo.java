@@ -3,6 +3,7 @@ package com.padyak.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -39,7 +40,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
     double latitude;
     double longitude;
     String memberName, locationName;
-
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,16 +113,25 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
     }
 
     public void setStatus(String status){
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("status",status);
-        VolleyHttp volleyHttp = new VolleyHttp("/".concat(alertId),payload,"alert-patch",frmMemberAlertInfo.this);
-        JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-        if(responseJSON == null){
-            Toast.makeText(this, "Failed to confirm alert. Please try again", Toast.LENGTH_SHORT).show();
-        } else{
-            Toast.makeText(this, "Alert confirmed successfully.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        progressDialog = Helper.getInstance().progressDialog(frmMemberAlertInfo.this,"Updating alert.");
+        progressDialog.show();
+        new Thread(()->{
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("status",status);
+            VolleyHttp volleyHttp = new VolleyHttp("/".concat(alertId),payload,"alert-patch",frmMemberAlertInfo.this);
+            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+            runOnUiThread(()->{
+                progressDialog.dismiss();
+                if(responseJSON == null){
+                    Toast.makeText(this, "Failed to confirm alert. Please try again", Toast.LENGTH_SHORT).show();
+                } else{
+                    Toast.makeText(this, "Alert confirmed successfully.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            });
+
+        }).start();
+
     }
 
 }
