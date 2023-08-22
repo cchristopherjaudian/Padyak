@@ -91,12 +91,13 @@ public class frmEventInfo extends AppCompatActivity {
             }
 
         });
+        loadEventInfo();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        runOnUiThread(this::loadEventInfo);
+
     }
 
     public void loadEventInfo() {

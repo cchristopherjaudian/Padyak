@@ -99,6 +99,17 @@ ProgressDialog progressDialog;
             finish();
         });
         btnRideRegister.setOnClickListener(v -> {
+
+            if(etRideCaption.getText().toString().trim().isEmpty()){
+                Toast.makeText(this, "Please provide a ride caption for this post.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(etRideTitle.getText().toString().trim().isEmpty()){
+                Toast.makeText(this, "Please provide a ride detail for this post.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
             progressDialog = Helper.getInstance().progressDialog(frmSaveRide.this,"Saving ride details.");
             progressDialog.show();
             new Thread(()->{

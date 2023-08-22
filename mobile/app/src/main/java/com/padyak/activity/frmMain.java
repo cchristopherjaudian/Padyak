@@ -229,6 +229,8 @@ public class frmMain extends AppCompatActivity {
                         coverPhotoList.add(new CoverPhoto(postImgUrl));
                         adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
                         rvCoverPhoto.setAdapter(adapterCoverPhoto);
+                    } else{
+                        textView6.setText("No recent post yet.");
                     }
                 } catch (JSONException e) {
                     Log.d(Helper.getInstance().log_code, "loadCoverPhoto JSONException: " + e.getMessage());

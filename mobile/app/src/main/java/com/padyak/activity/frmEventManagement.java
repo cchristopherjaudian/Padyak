@@ -69,6 +69,7 @@ public class frmEventManagement extends AppCompatActivity {
 
         btnDeleteEvent.setOnClickListener(v->{
             String selectedUsers = adapterEventManagement.getChecked();
+            Toast.makeText(this, "Ongoing development", Toast.LENGTH_SHORT).show();
         });
 
     }

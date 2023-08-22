@@ -13,7 +13,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
         android:paddingHorizontal="10dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/coolvetica"
-                android:text="Hey Angelo"
+                android:text="     "
                 android:textColor="@color/colorHeader"
                 android:textSize="@dimen/header_size"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/coolvetica"
-                android:text="Monday|August 7, 2023"
+                android:text="      "
                 android:textColor="@color/colorHeader"
                 android:textSize="16dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -116,7 +116,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="Angelo Carlos"
+                    android:text="   "
                     android:textColor="@color/colorHeader"
                     app:layout_constraintStart_toEndOf="@+id/cardSubProfile"
                     app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />
@@ -128,7 +128,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="sans-serif-light"
-                    android:text="Today at 5:30 | Olongapo City"
+                    android:text="   "
                     android:textColor="@color/colorSubHeader"
                     android:textSize="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +144,7 @@
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
                     android:gravity="center"
-                    android:text="Yeaaaaa Kapares Romnick in da haus yow"
+                    android:text="    "
                     android:textColor="@color/app_color"
                     android:textSize="@dimen/quote_size"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -168,7 +168,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
-                        android:text="107.4"
+                        android:text="0"
                         android:textColor="@color/colorHeader" />
 
                     <TextView
@@ -198,7 +198,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
-                        android:text="100:24:00"
+                        android:text="00:00:00"
                         android:textColor="@color/colorHeader" />
 
                     <TextView
@@ -217,7 +217,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:fontFamily="sans-serif-black"
-                    android:text="125"
+                    android:text="0"
                     android:textSize="12dp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView15"
                     app:layout_constraintStart_toEndOf="@+id/imageView15"
@@ -240,7 +240,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="15dp"
                     android:fontFamily="sans-serif-black"
-                    android:text="125"
+                    android:text="0"
                     android:textSize="12dp"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView16"
                     app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
@@ -263,7 +263,7 @@
     </ScrollView>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frame_newsfeed"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
@@ -280,7 +280,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ScrollView
         android:id="@+id/frame_home"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
@@ -296,10 +296,10 @@
 
             <ImageView
                 android:id="@+id/imageView2"
-                android:layout_width="@dimen/logo_header_size"
-                android:layout_height="@dimen/logo_header_size"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/cycling"
+                android:src="@drawable/applogo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -311,6 +311,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/coolvetica"
                 android:text="@string/app_name_caps"
+                android:visibility="gone"
                 android:textColor="@color/app_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -321,12 +322,12 @@
                 android:layout_width="@dimen/menu_size"
                 android:layout_height="@dimen/menu_size"
                 android:layout_marginStart="40dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
                 android:background="@drawable/rounded_menu"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/rlEvents"
-                app:layout_constraintTop_toBottomOf="@+id/textView7">
+                app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -343,7 +344,7 @@
                     android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/alert" />
+                    android:src="@drawable/sendalert" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -351,11 +352,11 @@
                 android:layout_width="@dimen/menu_size"
                 android:layout_height="@dimen/menu_size"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/rounded_menu"
                 app:layout_constraintEnd_toStartOf="@+id/rlAlert"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7">
+                app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -372,7 +373,7 @@
                     android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/planner" />
+                    android:src="@drawable/events" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -400,7 +401,7 @@
                     android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/hospital" />
+                    android:src="@drawable/findhospital" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -429,7 +430,7 @@
                     android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/bikerepair" />
+                    android:src="@drawable/findrepair" />
             </RelativeLayout>
 
             <RelativeLayout
