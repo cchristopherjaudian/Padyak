@@ -95,6 +95,7 @@ public class frmAccount extends AppCompatActivity {
                     inputValid = false;
                 }
             });
+            if(etCreateGender.getSelectedItemPosition() < 1) inputValid = false;
 
             if(!inputValid) return;
 

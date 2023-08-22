@@ -142,6 +142,7 @@
 
                 <EditText
                     android:id="@+id/etRideTitle"
+                    android:maxLength="30"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -171,6 +172,7 @@
 
                 <EditText
                     android:id="@+id/etRideCaption"
+                    android:maxLength="30"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"

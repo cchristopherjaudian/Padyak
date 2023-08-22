@@ -89,6 +89,7 @@
                 android:background="@drawable/et_rounded"
                 android:fontFamily="@font/coolvetica"
                 android:inputType="text"
+                android:maxLength="20"
                 android:maxLines="1"
                 android:padding="7dp"
                 app:layout_constraintEnd_toStartOf="@+id/etCreateLastName"
@@ -110,6 +111,7 @@
             <EditText
                 android:id="@+id/etCreateLastName"
                 android:tag="Last Name"
+                android:maxLength="20"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -170,6 +172,7 @@
             <EditText
                 android:id="@+id/etCreateBirthdate"
                 android:tag="Birthdate"
+                android:maxLength="10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -223,6 +226,7 @@
             <EditText
                 android:id="@+id/etCreateHeight"
                 android:tag="Height"
+                android:maxLength="10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -252,6 +256,7 @@
             <EditText
                 android:id="@+id/etCreateWeight"
                 android:tag="Weight"
+                android:maxLength="10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"

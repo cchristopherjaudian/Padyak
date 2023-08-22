@@ -56,6 +56,7 @@
 
         <EditText
             android:id="@+id/txAddEventTitle"
+            android:maxLength="50"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -101,6 +102,7 @@
 
                 <EditText
                     android:id="@+id/txAddEventDate"
+                    android:maxLength="10"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -133,6 +135,7 @@
 
                 <EditText
                     android:id="@+id/txAddEventStart"
+                    android:maxLength="10"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -165,6 +168,7 @@
 
                 <EditText
                     android:id="@+id/txAddEventEnd"
+                    android:maxLength="10"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -194,6 +198,7 @@
 
         <EditText
             android:id="@+id/txAddEventDescription"
+            android:maxLength="100"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -224,6 +229,7 @@
 
         <EditText
             android:id="@+id/txAddEventAward"
+            android:maxLength="100"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
