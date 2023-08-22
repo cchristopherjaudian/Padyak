@@ -118,7 +118,7 @@ public class frmSplash extends AppCompatActivity {
             btnGAuth.setVisibility(View.VISIBLE);
         } else {
             spinner.setVisibility(View.VISIBLE);
-            textView2.setText("Connecting. Please wait...");
+            textView2.setText("Authenticating. Please wait...");
             btnGAuth.setVisibility(View.GONE);
             validateLogin(LoggedUser.getInstance().getEmail());
         }
@@ -151,9 +151,8 @@ public class frmSplash extends AppCompatActivity {
                     }
                 } catch (ApiException e) {
                     Log.d(Helper.getInstance().log_code, "onActivityResult: " + e.getMessage());
-                } finally {
-                    spinner.setVisibility(View.INVISIBLE);
                     textView2.setText("Failed to authenticate account. Please try again");
+                    spinner.setVisibility(View.INVISIBLE);
                     btnGAuth.setVisibility(View.VISIBLE);
                 }
                 break;

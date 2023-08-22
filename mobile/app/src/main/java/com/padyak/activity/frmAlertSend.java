@@ -95,6 +95,9 @@ public class frmAlertSend extends AppCompatActivity {
         alertDialog.setTitle("Send Alert");
         alertDialog.setCancelable(false);
         alertDialog.setMessage("Are you sure you want to send this alert?");
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"No",(d,v)->{
+
+        });
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                 (d,w)->{
                     progressDialog = Helper.getInstance().progressDialog(com.padyak.activity.frmAlertSend.this,"Sending alert.");

@@ -1,6 +1,7 @@
 package com.padyak.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -73,7 +74,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
 
 
         txAlertName.setText(memberName);
-        txAlertTime.setText(getIntent().getStringExtra("date"));
+        txAlertTime.setText(getIntent().getStringExtra("date").replace("T"," ").replace("+08:00",""));
         txAlertAddress.setText(locationName);
 
         Picasso.get().load(getIntent().getStringExtra("photoUrl")).into(imgDP);
@@ -83,7 +84,18 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
 
         btnCancelAlert.setOnClickListener(v -> finish());
         btnConfirmAlert.setOnClickListener(v -> {
-            setStatus("COMPLETED");
+            AlertDialog alertDialog = new AlertDialog.Builder(frmMemberAlertInfo.this).create();
+            alertDialog.setTitle("Event Registration");
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage("Are you sure you want to confirm this alert?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
+
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Yes",(d,w)->{
+                setStatus("COMPLETED");
+            });
+            alertDialog.show();
+
         });
 
     }

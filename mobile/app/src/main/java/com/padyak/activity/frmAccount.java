@@ -1,8 +1,10 @@
 package com.padyak.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -23,6 +25,7 @@ import com.padyak.utility.VolleyHttp;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class frmAccount extends AppCompatActivity {
     EditText etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
     Spinner etCreateGender;
     Button btnUpdateAccount,btnCancelAccount;
+    boolean inputValid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,60 +87,89 @@ public class frmAccount extends AppCompatActivity {
 
         btnCancelAccount.setOnClickListener(v-> finish());
         btnUpdateAccount.setOnClickListener(v->{
-
-            Map<String, Object> params = new HashMap<>();
-            params.put(Prefs.FN_KEY,etCreateFirstName.getText().toString().trim());
-            params.put(Prefs.LN_KEY,etCreateLastName.getText().toString().trim());
-            params.put(Prefs.PHONE_KEY,etCreateContact.getText().toString().trim());
-            params.put(Prefs.EMAIL_KEY,etCreateEmail.getText().toString().trim());
-            params.put(Prefs.GENDER_KEY,etCreateGender.getSelectedItem().toString());
-            params.put(Prefs.BDAY_KEY,etCreateBirthdate.getText().toString().trim());
-            params.put(Prefs.HEIGHT_KEY,etCreateHeight.getText().toString().trim());
-            params.put(Prefs.WEIGHT_KEY,etCreateWeight.getText().toString().trim());
-            params.put(Prefs.IMG_KEY,photoURL);
-
-            VolleyHttp volleyHttp = new VolleyHttp("", params, "user", frmAccount.this);
-            String json = volleyHttp.getResponseBody(false);
-
-            try {
-
-                JSONObject reader =  new JSONObject(json);
-                int responseStatus = reader.getInt("status");
-                if(responseStatus == 200){
-                    JSONObject dataObject = reader.getJSONObject("data");
-                    JSONObject userObject = dataObject.getJSONObject("user");
-
-                    LoggedUser.getInstance().setRefreshToken(dataObject.getString("token"));
-
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.ADMIN_KEY,userObject.getBoolean(Prefs.ADMIN_KEY));
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.IMG_KEY,photoURL);
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.FN_KEY,etCreateFirstName.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.LN_KEY,etCreateLastName.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.EMAIL_KEY,etCreateEmail.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.GENDER_KEY,etCreateGender.getSelectedItem().toString());
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.BDAY_KEY,etCreateBirthdate.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.PHONE_KEY,etCreateContact.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.WEIGHT_KEY,etCreateWeight.getText().toString().trim());
-                    Prefs.getInstance().setUser(frmAccount.this,Prefs.HEIGHT_KEY,etCreateHeight.getText().toString().trim());
-
-                    Intent intent;
-                    if(userObject.getBoolean("isAdmin")){
-                        intent = new Intent(frmAccount.this, AdminMainActivity.class);
-                    } else{
-                        intent = new Intent(frmAccount.this, frmMain.class);
-                    }
-                    startActivity(intent);
-                    finish();
-                } else{
-                    Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_SHORT).show();
+            EditText[] editTexts = {etCreateEmail,etCreateFirstName,etCreateLastName,etCreateContact,etCreateHeight,etCreateWeight};
+            inputValid = true;
+            Arrays.stream(editTexts).forEach(e->{
+                if(e.getText().toString().trim().isEmpty()){
+                    Toast.makeText(this, "Please input a valid " + e.getTag().toString() + ".", Toast.LENGTH_SHORT).show();
+                    inputValid = false;
                 }
+            });
 
-            } catch (JSONException e) {
-                Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-                Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
-            }
+            if(!inputValid) return;
+
+            AlertDialog alertDialog = new AlertDialog.Builder(frmAccount.this).create();
+            alertDialog.setTitle("Send Alert");
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage("Are you sure you want to send this alert?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"No",(d,w)->{
+
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Yes",(d,w)->{
+                registerAccount();
+            });
+            alertDialog.show();
+
 
         });
 
+    }
+
+    private void registerAccount(){
+
+        ProgressDialog progressDialog = Helper.getInstance().progressDialog(frmAccount.this,"Processing request.");
+        progressDialog.show();
+        Map<String, Object> params = new HashMap<>();
+        params.put(Prefs.FN_KEY,etCreateFirstName.getText().toString().trim());
+        params.put(Prefs.LN_KEY,etCreateLastName.getText().toString().trim());
+        params.put(Prefs.PHONE_KEY,etCreateContact.getText().toString().trim());
+        params.put(Prefs.EMAIL_KEY,etCreateEmail.getText().toString().trim());
+        params.put(Prefs.GENDER_KEY,etCreateGender.getSelectedItem().toString());
+        params.put(Prefs.BDAY_KEY,etCreateBirthdate.getText().toString().trim());
+        params.put(Prefs.HEIGHT_KEY,etCreateHeight.getText().toString().trim());
+        params.put(Prefs.WEIGHT_KEY,etCreateWeight.getText().toString().trim());
+        params.put(Prefs.IMG_KEY,photoURL);
+
+        VolleyHttp volleyHttp = new VolleyHttp("", params, "user", frmAccount.this);
+        String json = volleyHttp.getResponseBody(false);
+        progressDialog.dismiss();
+        try {
+
+            JSONObject reader =  new JSONObject(json);
+            int responseStatus = reader.getInt("status");
+            if(responseStatus == 200){
+                JSONObject dataObject = reader.getJSONObject("data");
+                JSONObject userObject = dataObject.getJSONObject("user");
+
+                LoggedUser.getInstance().setRefreshToken(dataObject.getString("token"));
+
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.ADMIN_KEY,userObject.getBoolean(Prefs.ADMIN_KEY));
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.IMG_KEY,photoURL);
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.FN_KEY,etCreateFirstName.getText().toString().trim());
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.LN_KEY,etCreateLastName.getText().toString().trim());
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.EMAIL_KEY,etCreateEmail.getText().toString().trim());
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.GENDER_KEY,etCreateGender.getSelectedItem().toString());
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.BDAY_KEY,etCreateBirthdate.getText().toString().trim());
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.PHONE_KEY,etCreateContact.getText().toString().trim());
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.WEIGHT_KEY,etCreateWeight.getText().toString().trim());
+                Prefs.getInstance().setUser(frmAccount.this,Prefs.HEIGHT_KEY,etCreateHeight.getText().toString().trim());
+
+                Intent intent;
+                if(userObject.getBoolean("isAdmin")){
+                    intent = new Intent(frmAccount.this, AdminMainActivity.class);
+                } else{
+                    intent = new Intent(frmAccount.this, frmMain.class);
+                }
+                startActivity(intent);
+                finish();
+            } else{
+                Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
+            progressDialog.dismiss();
+            Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

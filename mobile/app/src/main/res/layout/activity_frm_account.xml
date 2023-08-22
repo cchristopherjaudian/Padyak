@@ -48,6 +48,7 @@
 
             <EditText
                 android:id="@+id/txAddEventTitle"
+                android:tag="Email Address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -79,6 +80,7 @@
 
             <EditText
                 android:id="@+id/etCreateFirstName"
+                android:tag="First Name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -107,6 +109,7 @@
 
             <EditText
                 android:id="@+id/etCreateLastName"
+                android:tag="Last Name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -135,6 +138,7 @@
 
             <EditText
                 android:id="@+id/etCreateContact"
+                android:tag="Contact Number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -143,6 +147,7 @@
                 android:background="@drawable/et_rounded"
                 android:fontFamily="@font/coolvetica"
                 android:inputType="phone"
+                android:maxLength="11"
                 android:maxLines="1"
                 android:padding="7dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -164,6 +169,7 @@
 
             <EditText
                 android:id="@+id/etCreateBirthdate"
+                android:tag="Birthdate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -216,6 +222,7 @@
 
             <EditText
                 android:id="@+id/etCreateHeight"
+                android:tag="Height"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -244,6 +251,7 @@
 
             <EditText
                 android:id="@+id/etCreateWeight"
+                android:tag="Weight"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
