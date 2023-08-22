@@ -2,6 +2,7 @@ package com.padyak.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -59,6 +60,7 @@ public class frmAddEvent extends AppCompatActivity {
     UploadTask uploadTask;
     ProgressDialog progressDialog;
     boolean data_inserted;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,42 +180,75 @@ public class frmAddEvent extends AppCompatActivity {
         });
 
         btnEventRegister.setOnClickListener(v -> {
-            progressDialog = Helper.getInstance().progressDialog(frmAddEvent.this, "Registering event.");
-            progressDialog.show();
-            new Thread(() -> {
-                if (bitmapEvent != null) {
-                    String ref = "events/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".jpg";
-                    FirebaseApp.initializeApp(this);
-                    storage = FirebaseStorage.getInstance();
-                    storageRef = storage.getReference();
-                    eventRef = storageRef.child(ref);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmapEvent.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    data = baos.toByteArray();
-                    uploadTask = eventRef.putBytes(data);
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            saveEvent("");
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    saveEvent(uri.toString());
-                                }
-                            });
+            if (txAddEventTitle.getText().toString().trim().isEmpty()) {
+                Toast.makeText(this, "Please input an event title", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (txAddEventDate.getText().toString().trim().isEmpty()) {
+                Toast.makeText(this, "Please input an event date", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (txAddEventAward.getText().toString().trim().isEmpty()) {
+                Toast.makeText(this, "Please input an event award", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (txAddEventDescription.getText().toString().trim().isEmpty()) {
+                Toast.makeText(this, "Please input an event description", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (txAddEventEnd.getText().toString().trim().isEmpty()) {
+                Toast.makeText(this, "Please input an event end date", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (txAddEventStart.getText().toString().trim().isEmpty()) {
+                Toast.makeText(this, "Please input an event start date", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            AlertDialog alertDialog = new AlertDialog.Builder(frmAddEvent.this).create();
+            alertDialog.setTitle("Event Registration");
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage("Are you sure you want to register this event?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
 
-                        }
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                    (d, w) -> {
+                        progressDialog = Helper.getInstance().progressDialog(frmAddEvent.this, "Registering event.");
+                        progressDialog.show();
+                        new Thread(() -> {
+                            if (bitmapEvent != null) {
+                                String ref = "events/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".jpg";
+                                FirebaseApp.initializeApp(this);
+                                storage = FirebaseStorage.getInstance();
+                                storageRef = storage.getReference();
+                                eventRef = storageRef.child(ref);
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                bitmapEvent.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                data = baos.toByteArray();
+                                uploadTask = eventRef.putBytes(data);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        saveEvent("");
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                saveEvent(uri.toString());
+                                            }
+                                        });
+
+                                    }
+                                });
+                            } else {
+                                saveEvent("n/a");
+                            }
+                        }).start();
                     });
-                } else {
-                    saveEvent("n/a");
-                }
-            }).start();
-
-
+            alertDialog.show();
         });
     }
 

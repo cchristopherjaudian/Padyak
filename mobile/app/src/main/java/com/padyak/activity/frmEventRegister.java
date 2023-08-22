@@ -2,6 +2,7 @@ package com.padyak.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -86,10 +87,19 @@ public class frmEventRegister extends AppCompatActivity {
                 Toast.makeText(this, "Please attach a screenshot of payment proof to proceed.", Toast.LENGTH_LONG).show();
                 return;
             }
-            new Thread(()->{
-                runOnUiThread(this::processRegistration);
-            }).start();
-           
+            AlertDialog alertDialog = new AlertDialog.Builder(frmEventRegister.this).create();
+            alertDialog.setTitle("Event Registration");
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage("Are you sure you want to register in this event?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                    (d,w)->{
+                        processRegistration();
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
+
+            });
+            alertDialog.show();
+
         });
     }
 

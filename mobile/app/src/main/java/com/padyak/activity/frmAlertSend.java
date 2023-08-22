@@ -1,5 +1,6 @@
 package com.padyak.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -90,50 +91,59 @@ public class frmAlertSend extends AppCompatActivity {
             finish();
             return;
         }
-        progressDialog = Helper.getInstance().progressDialog(com.padyak.activity.frmAlertSend.this,"Sending alert.");
-        progressDialog.show();
+        AlertDialog alertDialog = new AlertDialog.Builder(frmAlertSend.this).create();
+        alertDialog.setTitle("Send Alert");
+        alertDialog.setCancelable(false);
+        alertDialog.setMessage("Are you sure you want to send this alert?");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                (d,w)->{
+                    progressDialog = Helper.getInstance().progressDialog(com.padyak.activity.frmAlertSend.this,"Sending alert.");
+                    progressDialog.show();
 
-        new Thread(()->{
-            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(android.location.Location location) {
-                            if (location != null) {
-                                double _lat = location.getLatitude();
-                                double _long = location.getLongitude();
-                                String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + getString(R.string.maps_publicapi);
-                                VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmAlertSend.this);
-                                String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
+                    new Thread(()->{
+                        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
+                                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                                    @Override
+                                    public void onSuccess(android.location.Location location) {
+                                        if (location != null) {
+                                            double _lat = location.getLatitude();
+                                            double _long = location.getLongitude();
+                                            String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + getString(R.string.maps_publicapi);
+                                            VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmAlertSend.this);
+                                            String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
 
 
-                                Map<String, Object> payload = new HashMap<>();
-                                payload.put("to",recipients);
-                                payload.put("level",alertLevel);
-                                payload.put("location",alertAddress);
-                                payload.put("latitude",_lat);
-                                payload.put("longitude",_long);
+                                            Map<String, Object> payload = new HashMap<>();
+                                            payload.put("to",recipients);
+                                            payload.put("level",alertLevel);
+                                            payload.put("location",alertAddress);
+                                            payload.put("latitude",_lat);
+                                            payload.put("longitude",_long);
 
-                                VolleyHttp volleyHttp = new VolleyHttp("",payload,"alert", com.padyak.activity.frmAlertSend.this);
-                                JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-                                runOnUiThread(()->{
-                                    progressDialog.dismiss();
-                                    if(responseJSON == null){
-                                        Toast.makeText(frmAlertSend, "Failed to send alert. Please try again", Toast.LENGTH_SHORT).show();
-                                    } else{
-                                        Toast.makeText(frmAlertSend.this, "Alert sent successfully", Toast.LENGTH_SHORT).show();
-                                        frmAlertInfo.frmAlertInfo.finish();
-                                        finish();
+                                            VolleyHttp volleyHttp = new VolleyHttp("",payload,"alert", com.padyak.activity.frmAlertSend.this);
+                                            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+                                            runOnUiThread(()->{
+                                                progressDialog.dismiss();
+                                                if(responseJSON == null){
+                                                    Toast.makeText(frmAlertSend, "Failed to send alert. Please try again", Toast.LENGTH_SHORT).show();
+                                                } else{
+                                                    Toast.makeText(frmAlertSend.this, "Alert sent successfully", Toast.LENGTH_SHORT).show();
+                                                    frmAlertInfo.frmAlertInfo.finish();
+                                                    finish();
+                                                }
+                                            });
+
+                                        } else{
+                                            runOnUiThread(()->{
+                                                progressDialog.dismiss();
+                                                Toast.makeText(frmAlertSend.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
+                                            });
+                                        }
                                     }
                                 });
+                    }).start();
+                });
+        alertDialog.show();
 
-                            } else{
-                                runOnUiThread(()->{
-                                    progressDialog.dismiss();
-                                    Toast.makeText(frmAlertSend.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
-                                });
-                            }
-                        }
-                    });
-        }).start();
     }
 }

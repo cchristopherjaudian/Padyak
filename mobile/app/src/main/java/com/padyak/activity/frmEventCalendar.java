@@ -75,6 +75,7 @@ ProgressDialog progressDialog;
 
         btnViewEvent.setOnClickListener((e) -> {
             if(selectedCalendarDate.isEmpty()) return;
+            if(calendarMap.get(selectedCalendarDate) == null) return;
 
             Intent intent = new Intent(frmEventCalendar.this, frmEventInfo.class);
             Bundle bundle = new Bundle();
@@ -117,12 +118,7 @@ ProgressDialog progressDialog;
         progressDialog.show();
 
         new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-
-            }
-            events = new ArrayList<>();
+                events = new ArrayList<>();
                 calendars = new ArrayList<>();
                 calendarMap = new HashMap<>();
 

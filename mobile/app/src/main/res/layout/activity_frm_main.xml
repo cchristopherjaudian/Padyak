@@ -13,7 +13,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
         android:paddingHorizontal="10dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -263,7 +263,7 @@
     </ScrollView>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/frame_newsfeed"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"

@@ -2,10 +2,12 @@ package com.padyak.activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -95,8 +97,20 @@ ProgressDialog progressDialog;
         txDistanceValue.setText(String.format("%.3f", rideDistance));
 
         btnRideCancel.setOnClickListener(v -> {
-            frmRide.instance.finish();
-            finish();
+            AlertDialog alertDialog = new AlertDialog.Builder(frmSaveRide.this).create();
+            alertDialog.setTitle("Save Ride Details");
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage("Are you sure you want to discard this ride detail?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                    (d,w)->{
+                        frmRide.instance.finish();
+                        finish();
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
+
+            });
+            alertDialog.show();
+
         });
         btnRideRegister.setOnClickListener(v -> {
 

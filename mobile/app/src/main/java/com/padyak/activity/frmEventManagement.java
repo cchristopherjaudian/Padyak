@@ -83,43 +83,51 @@ public class frmEventManagement extends AppCompatActivity {
     public void loadEvents() {
         progressDialog = Helper.getInstance().progressDialog(frmEventManagement.this,"Retrieving events.");
         progressDialog.show();
+        new Thread(()->{
+            String params = "/?year=" + LocalDate.now().getYear() + "&month=" + Helper.getInstance().toTitleCase(Month.of(month).name());
+            VolleyHttp volleyHttp = new VolleyHttp(params,null,"event",frmEventManagement.this);
+            String response = volleyHttp.getResponseBody(true);
+            runOnUiThread(()->{
+                try {
+                    progressDialog.dismiss();
+                    JSONObject responseJSON = new JSONObject(response);
+                    int responseCode = responseJSON.getInt("status");
+                    if(responseCode != 200) throw new JSONException("Response Code: " + responseCode);
+                    JSONArray eventArray = responseJSON.optJSONArray("data");
+                    List<Boolean> is_selected = new ArrayList<>();
+                    calendarEvents = new ArrayList<>();
+                    for(int i = 0; i < eventArray.length(); i++){
+                        JSONObject eventObject = eventArray.getJSONObject(i);
+                        CalendarEvent calendarEvent = new CalendarEvent();
+                        calendarEvent.setEventId(eventObject.getString("id"));
+                        calendarEvent.setEventName(eventObject.getString("name"));
+                        calendarEvent.setEventAward(eventObject.getString("award"));
+                        calendarEvent.setEventDate(eventObject.getString("eventDate"));
+                        calendarEvent.setEventImage(eventObject.getString("photoUrl"));
+                        calendarEvent.setEventDescription(eventObject.getString("eventDescription"));
+                        calendarEvent.setEventStart(eventObject.getString("startTime"));
+                        calendarEvent.setEventEnd(eventObject.getString("endTime"));
+                        calendarEvent.setIs_done(false);
+                        calendarEvent.setEventRegistrar(null);
+                        calendarEvent.setIs_selected(false);
+                        calendarEvents.add(calendarEvent);
+                    }
+                    runOnUiThread(()->{
+                        adapterEventManagement = new adapterEventManagement(calendarEvents);
+                        rvEventMonth.setAdapter(adapterEventManagement);
+                    });
 
-        String params = "/?year=" + LocalDate.now().getYear() + "&month=" + Helper.getInstance().toTitleCase(Month.of(month).name());
-        VolleyHttp volleyHttp = new VolleyHttp(params,null,"event",frmEventManagement.this);
-        String response = volleyHttp.getResponseBody(true);
-        runOnUiThread(()->{
-            try {
-                progressDialog.dismiss();
-                JSONObject responseJSON = new JSONObject(response);
-                int responseCode = responseJSON.getInt("status");
-                if(responseCode != 200) throw new JSONException("Response Code: " + responseCode);
-                JSONArray eventArray = responseJSON.optJSONArray("data");
-                List<Boolean> is_selected = new ArrayList<>();
-                calendarEvents = new ArrayList<>();
-                for(int i = 0; i < eventArray.length(); i++){
-                    JSONObject eventObject = eventArray.getJSONObject(i);
-                    CalendarEvent calendarEvent = new CalendarEvent();
-                    calendarEvent.setEventId(eventObject.getString("id"));
-                    calendarEvent.setEventName(eventObject.getString("name"));
-                    calendarEvent.setEventAward(eventObject.getString("award"));
-                    calendarEvent.setEventDate(eventObject.getString("eventDate"));
-                    calendarEvent.setEventImage(eventObject.getString("photoUrl"));
-                    calendarEvent.setEventDescription(eventObject.getString("eventDescription"));
-                    calendarEvent.setEventStart(eventObject.getString("startTime"));
-                    calendarEvent.setEventEnd(eventObject.getString("endTime"));
-                    calendarEvent.setIs_done(false);
-                    calendarEvent.setEventRegistrar(null);
-                    calendarEvent.setIs_selected(false);
-                    calendarEvents.add(calendarEvent);
+                } catch (JSONException e) {
+                    Log.d(Helper.getInstance().log_code, "loadEvents: " + e.getMessage());
+                    runOnUiThread(()->{
+                        Toast.makeText(this, "Failed to load events. Please try again", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+
                 }
-                adapterEventManagement = new adapterEventManagement(calendarEvents);
-                rvEventMonth.setAdapter(adapterEventManagement);
-            } catch (JSONException e) {
-                Log.d(Helper.getInstance().log_code, "loadEvents: " + e.getMessage());
-                Toast.makeText(this, "Failed to load events. Please try again", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+            });
+        }).start();
+
 
     }
 }
