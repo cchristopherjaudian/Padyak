@@ -95,7 +95,7 @@ class EventService implements IEventService {
       };
       if (!event) throw new NotFoundError("Event not found.");
 
-      event.isDone = this.getEventValidity("2023-08-23T22:20:54+08:00");
+      event.isDone = this.getEventValidity(event.endTime);
 
       const startTime = this._dateUtils.getMomentInstance(event.startTime);
       const endTime = this._dateUtils.getMomentInstance(event.endTime);
@@ -125,7 +125,7 @@ class EventService implements IEventService {
   private getEventValidity(eventDate: string) {
     return this._dateUtils
       .getMomentInstance(new Date())
-      .isAfter(new Date(eventDate));
+      .isSameOrAfter(new Date(eventDate));
   }
 
   public async deleteEvents(ids: string[]) {
