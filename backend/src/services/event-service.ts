@@ -1,4 +1,3 @@
-import moment from "moment";
 import { IEvent, IRegisteredUser } from "../database/models/event";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
 import DateUtils from "../lib/date";
@@ -95,15 +94,31 @@ class EventService implements IEventService {
         isNow: boolean;
       };
       if (!event) throw new NotFoundError("Event not found.");
-      event.isDone = this.getEventValidity(event.endTime);
-      event.isNow = this._dateUtils
-        .getMomentInstance(
-          this._dateUtils
-            .getMomentInstance(new Date())
-            .tz("Asia/Manila")
-            .toISOString()
-        )
-        .isBetween(event.startTime, event.endTime, "day", "[]");
+
+      event.isDone = this.getEventValidity("2023-08-23T22:20:54+08:00");
+
+      const startTime = this._dateUtils.getMomentInstance(
+        "2023-08-23T21:00:54+08:00"
+      );
+      const endTime = this._dateUtils.getMomentInstance(
+        "2023-08-23T22:04:54+08:00"
+      );
+      const current = this._dateUtils.getMomentInstance().tz("Asia/Manila");
+
+      console.log(
+        "current.isSameOrAfter(startTime)",
+        current.isSameOrAfter(startTime)
+      );
+      console.log(
+        "current.isSameOrBefore(endTime))",
+        current.isSameOrBefore(endTime)
+      );
+
+      console.log("current", current);
+      console.log("startTime", startTime);
+      console.log("endTime", endTime);
+      event.isNow =
+        current.isSameOrAfter(startTime) && current.isSameOrBefore(endTime);
 
       return event as IEvent;
     } catch (error) {
@@ -115,6 +130,20 @@ class EventService implements IEventService {
     return this._dateUtils
       .getMomentInstance(new Date())
       .isAfter(new Date(eventDate));
+  }
+
+  public async deleteEvents(ids: string[]) {
+    try {
+      const deletedEvents = await Promise.all(
+        ids.map(async (id) => {
+          return await this._repository.deleteEvent(id);
+        })
+      );
+
+      return deletedEvents;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async getEvents(query: TEventListQuery) {

@@ -76,6 +76,14 @@ class Firestore implements IFirestore {
     }
   }
 
+  public async delete(): Promise<void> {
+    try {
+      await this.getDb().collection(this._colName).doc(this._docId).delete();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public async getAll<T>() {
     const refs = await this.getDb().collection(this._colName).get();
     const mappedRef = refs.docs.map((k) => k.data());

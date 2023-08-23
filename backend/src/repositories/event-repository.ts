@@ -72,14 +72,31 @@ class EventRepository {
   }
 
   public async getByEventDate(date: string) {
-    const event = await this._firestore
-      .getDb()
-      .collection(this._colName)
-      .where("eventDate", "==", date)
-      .get();
-    return event.docs.length === 0
-      ? []
-      : (event.docs.map((evt) => evt.data()) as IEvent[]);
+    try {
+      const event = await this._firestore
+        .getDb()
+        .collection(this._colName)
+        .where("eventDate", "==", date)
+        .get();
+      return event.docs.length === 0
+        ? []
+        : (event.docs.map((evt) => evt.data()) as IEvent[]);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async deleteEvent(id: string) {
+    try {
+      await this._firestore
+        .setCollectionName(this._colName)
+        .setDocId(id)
+        .delete();
+
+      return id;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async getEventsCount(year: string) {
