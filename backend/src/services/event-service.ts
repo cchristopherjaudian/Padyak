@@ -78,13 +78,31 @@ class EventService implements IEventService {
     }
   }
 
+  public async getCurrentEvent() {
+    return await this._repository.getByEventDate(
+      this._dateUtils
+        .getMomentInstance(new Date())
+        .tz("Asia/Manila")
+        .format("YYYY-MM-DD")
+    );
+  }
+
   public async getEvent(id: string) {
     try {
       const event = (await this._repository.findEventById(id)) as IEvent & {
         isDone: boolean;
+        isNow: boolean;
       };
       if (!event) throw new NotFoundError("Event not found.");
-      event.isDone = this.getEventValidity(event.eventDate);
+
+      event.isDone = this.getEventValidity(event.endTime);
+
+      const startTime = this._dateUtils.getMomentInstance(event.startTime);
+      const endTime = this._dateUtils.getMomentInstance(event.endTime);
+      const current = this._dateUtils.getMomentInstance().tz("Asia/Manila");
+      event.isNow =
+        current.isSameOrAfter(startTime) && current.isSameOrBefore(endTime);
+
       return event as IEvent;
     } catch (error) {
       throw error;
@@ -94,7 +112,21 @@ class EventService implements IEventService {
   private getEventValidity(eventDate: string) {
     return this._dateUtils
       .getMomentInstance(new Date())
-      .isAfter(new Date(eventDate));
+      .isSameOrAfter(new Date(eventDate));
+  }
+
+  public async deleteEvents(ids: string) {
+    try {
+      const deletedEvents = await Promise.all(
+        ids.split(",").map(async (id) => {
+          return await this._repository.deleteEvent(id);
+        })
+      );
+
+      return deletedEvents;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async getEvents(query: TEventListQuery) {

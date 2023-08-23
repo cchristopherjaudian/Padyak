@@ -40,10 +40,15 @@ const registerEventSchema = Joi.object({
   createdAt: Joi.string().optional().default(date.getIsoDate(new Date())),
 });
 
+const deleteEventsSchema = Joi.object({
+  ids: Joi.string().required(),
+});
+
 export {
   createEventSchema,
   getYearlyEventSchema,
   updateEventSchema,
   registerEventSchema,
   getEventsSchema,
+  deleteEventsSchema,
 };
