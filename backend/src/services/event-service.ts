@@ -82,9 +82,13 @@ class EventService implements IEventService {
     try {
       const event = (await this._repository.findEventById(id)) as IEvent & {
         isDone: boolean;
+        isNow: boolean;
       };
       if (!event) throw new NotFoundError("Event not found.");
       event.isDone = this.getEventValidity(event.eventDate);
+      event.isNow = this._dateUtils
+        .getMomentInstance(new Date().toISOString())
+        .isSame(this._dateUtils.getMomentInstance(event.eventDate));
       return event as IEvent;
     } catch (error) {
       throw error;
