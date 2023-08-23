@@ -100,19 +100,6 @@ class EventService implements IEventService {
       const startTime = this._dateUtils.getMomentInstance(event.startTime);
       const endTime = this._dateUtils.getMomentInstance(event.endTime);
       const current = this._dateUtils.getMomentInstance().tz("Asia/Manila");
-
-      console.log(
-        "current.isSameOrAfter(startTime)",
-        current.isSameOrAfter(startTime)
-      );
-      console.log(
-        "current.isSameOrBefore(endTime))",
-        current.isSameOrBefore(endTime)
-      );
-
-      console.log("current", current);
-      console.log("startTime", startTime);
-      console.log("endTime", endTime);
       event.isNow =
         current.isSameOrAfter(startTime) && current.isSameOrBefore(endTime);
 
