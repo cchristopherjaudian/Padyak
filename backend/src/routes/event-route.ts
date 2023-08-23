@@ -4,6 +4,7 @@ import requestSchemaValidate from "../middlewares/joi-middleware";
 import TokenMiddleware from "../middlewares/token-middleware";
 import {
   createEventSchema,
+  deleteEventsSchema,
   getEventsSchema,
   getYearlyEventSchema,
   registerEventSchema,
@@ -38,6 +39,15 @@ router.get(
     requestSchemaValidate(getEventsSchema),
   ],
   eventController.getEvents
+);
+
+router.delete(
+  "/",
+  [
+    tokenMiddleware.adminValidate as any,
+    requestSchemaValidate(deleteEventsSchema),
+  ],
+  eventController.deleteEvents
 );
 
 router.get(

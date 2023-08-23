@@ -161,6 +161,25 @@ const getCurrentEvent = async (
   }
 };
 
+const deleteEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const event = await eventInstance.deleteEvents(req.body.ids);
+
+    responseObject.createResponse(
+      res,
+      httpStatus.OK,
+      ResponseCodes.DATA_MODIFIED,
+      event
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   createEvent,
   getYearlyEvents,
@@ -169,4 +188,5 @@ export default {
   updateEvent,
   registerEvent,
   getCurrentEvent,
+  deleteEvents,
 };

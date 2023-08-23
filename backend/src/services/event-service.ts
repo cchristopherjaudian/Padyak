@@ -115,10 +115,10 @@ class EventService implements IEventService {
       .isSameOrAfter(new Date(eventDate));
   }
 
-  public async deleteEvents(ids: string[]) {
+  public async deleteEvents(ids: string) {
     try {
       const deletedEvents = await Promise.all(
-        ids.map(async (id) => {
+        ids.split(",").map(async (id) => {
           return await this._repository.deleteEvent(id);
         })
       );
