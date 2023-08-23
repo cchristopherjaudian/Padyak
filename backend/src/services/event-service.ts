@@ -1,3 +1,4 @@
+import moment from "moment";
 import { IEvent, IRegisteredUser } from "../database/models/event";
 import { NotFoundError } from "../lib/custom-errors/class-errors";
 import DateUtils from "../lib/date";
@@ -76,6 +77,15 @@ class EventService implements IEventService {
     } catch (error) {
       throw error;
     }
+  }
+
+  public async getCurrentEvent() {
+    return await this._repository.getByEventDate(
+      this._dateUtils
+        .getMomentInstance(new Date())
+        .tz("Asia/Manila")
+        .format("YYYY-MM-DD")
+    );
   }
 
   public async getEvent(id: string) {

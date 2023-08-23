@@ -71,6 +71,17 @@ class EventRepository {
       .findById(id)) as IEvent;
   }
 
+  public async getByEventDate(date: string) {
+    const event = await this._firestore
+      .getDb()
+      .collection(this._colName)
+      .where("eventDate", "==", date)
+      .get();
+    return event.docs.length === 0
+      ? []
+      : (event.docs.map((evt) => evt.data()) as IEvent[]);
+  }
+
   public async getEventsCount(year: string) {
     const events: Record<string, number>[] = [];
     console.log("year", year);

@@ -41,6 +41,12 @@ router.get(
 );
 
 router.get(
+  "/now",
+  [tokenMiddleware.endUserValidate as any],
+  eventController.getCurrentEvent
+);
+
+router.get(
   "/:eventId",
   [tokenMiddleware.endUserValidate as any],
   eventController.getEvent
