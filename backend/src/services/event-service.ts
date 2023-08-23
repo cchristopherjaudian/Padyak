@@ -97,12 +97,8 @@ class EventService implements IEventService {
 
       event.isDone = this.getEventValidity("2023-08-23T22:20:54+08:00");
 
-      const startTime = this._dateUtils.getMomentInstance(
-        "2023-08-23T21:00:54+08:00"
-      );
-      const endTime = this._dateUtils.getMomentInstance(
-        "2023-08-23T22:04:54+08:00"
-      );
+      const startTime = this._dateUtils.getMomentInstance(event.startTime);
+      const endTime = this._dateUtils.getMomentInstance(event.endTime);
       const current = this._dateUtils.getMomentInstance().tz("Asia/Manila");
 
       console.log(
