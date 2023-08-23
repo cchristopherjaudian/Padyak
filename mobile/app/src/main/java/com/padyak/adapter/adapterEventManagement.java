@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
 import com.padyak.dto.CalendarEvent;
+import com.padyak.utility.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
@@ -41,8 +42,8 @@ public class adapterEventManagement extends RecyclerView.Adapter<adapterEventMan
     public void onBindViewHolder(@NonNull adapterEventManagement.viewHolder holder, int position) {
         holder.txEventTitle.setText(events.get(position).getEventName());
         LocalDate dateNow = LocalDate.parse(events.get(position).getEventDate());
-        String startTime = events.get(position).getEventStart();
-        String endTime = events.get(position).getEventEnd();
+        String startTime = Helper.getInstance().ISOtoTime(events.get(position).getEventStart()).replace("+08:00","");
+        String endTime = Helper.getInstance().ISOtoTime(events.get(position).getEventEnd()).replace("+08:00","");
         holder.txEventDate.setText(dateNow.format(formatter).concat(" ").concat(startTime).concat("-").concat(endTime));
         Picasso.get().load(events.get(position).getEventImage()).into(holder.imgEventImage);
     }

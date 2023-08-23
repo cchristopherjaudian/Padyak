@@ -45,6 +45,10 @@ public class Helper {
         int yearNum = 1900 +  date.getYear();
         return String.format("%s %02d, %d", Month.of(monthNum).toString(),dayNum,yearNum);
     }
+    public String ISOtoTime(String s){
+        if(!s.contains("T")) return s;
+        return s.substring(s.indexOf("T")+1);
+    }
     public String toTitleCase(String input) {
         StringBuilder titleCase = new StringBuilder();
         boolean nextTitleCase = true;

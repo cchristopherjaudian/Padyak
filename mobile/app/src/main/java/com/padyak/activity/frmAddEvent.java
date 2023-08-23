@@ -60,6 +60,7 @@ public class frmAddEvent extends AppCompatActivity {
     UploadTask uploadTask;
     ProgressDialog progressDialog;
     boolean data_inserted;
+    String startTime,endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,20 +129,25 @@ public class frmAddEvent extends AppCompatActivity {
             mTimePicker = new CustomTimePicker(frmAddEvent.this, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    if (catDate.equals(txAddEventStart.getText().toString().trim())) {
-                        if (selectedHour < hour) {
-                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (selectedHour == hour && selectedMinute <= minute) {
-                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
+                    startTime = String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + ":00";
                     String timeSuffix = "";
                     timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
                     selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
                     txAddEventStart.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
+//                    if (catDate.equals(txAddEventStart.getText().toString().trim())) {
+//                        if (selectedHour < hour) {
+//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                        if (selectedHour == hour && selectedMinute <= minute) {
+//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                    }
+//                    String timeSuffix = "";
+//                    timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
+//                    selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
+//                    txAddEventStart.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
 
                 }
             }, hour, minute, false);
@@ -159,20 +165,25 @@ public class frmAddEvent extends AppCompatActivity {
             mTimePicker = new CustomTimePicker(frmAddEvent.this, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    if (catDate.equals(txAddEventEnd.getText().toString().trim())) {
-                        if (selectedHour < hour) {
-                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (selectedHour == hour && selectedMinute <= minute) {
-                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
+                    endTime = String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + ":00";
                     String timeSuffix = "";
                     timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
                     selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
                     txAddEventEnd.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
+//                    if (catDate.equals(txAddEventEnd.getText().toString().trim())) {
+//                        if (selectedHour < hour) {
+//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                        if (selectedHour == hour && selectedMinute <= minute) {
+//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                    }
+//                    String timeSuffix = "";
+//                    timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
+//                    selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
+//                    txAddEventEnd.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
 
                 }
             }, hour, minute, false);
@@ -213,6 +224,8 @@ public class frmAddEvent extends AppCompatActivity {
             });
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                     (d, w) -> {
+                        startTime = txAddEventDate.getText().toString().trim().concat("T").concat(startTime).concat("+08:00");
+                        endTime = txAddEventDate.getText().toString().trim().concat("T").concat(endTime).concat("+08:00");
                         progressDialog = Helper.getInstance().progressDialog(frmAddEvent.this, "Registering event.");
                         progressDialog.show();
                         new Thread(() -> {
@@ -269,8 +282,8 @@ public class frmAddEvent extends AppCompatActivity {
             String eventDescription = txAddEventDescription.getText().toString().trim();
             String eventAward = txAddEventAward.getText().toString().trim();
 
-            String eventStart = txAddEventStart.getText().toString().trim();
-            String eventEnd = txAddEventEnd.getText().toString().trim();
+            String eventStart = startTime; //txAddEventStart.getText().toString().trim();
+            String eventEnd = endTime; //txAddEventEnd.getText().toString().trim();
 
             Map<String, Object> payload = new HashMap<>();
             payload.put("month", monthName);
