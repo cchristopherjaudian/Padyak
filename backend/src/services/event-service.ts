@@ -95,10 +95,16 @@ class EventService implements IEventService {
         isNow: boolean;
       };
       if (!event) throw new NotFoundError("Event not found.");
-      event.isDone = this.getEventValidity(event.eventDate);
+      event.isDone = this.getEventValidity(event.endTime);
       event.isNow = this._dateUtils
-        .getMomentInstance(new Date().toISOString())
-        .isSame(this._dateUtils.getMomentInstance(event.eventDate));
+        .getMomentInstance(
+          this._dateUtils
+            .getMomentInstance(new Date())
+            .tz("Asia/Manila")
+            .toISOString()
+        )
+        .isBetween(event.startTime, event.endTime, "day", "[]");
+
       return event as IEvent;
     } catch (error) {
       throw error;

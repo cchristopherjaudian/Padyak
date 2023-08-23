@@ -17,8 +17,8 @@ class DateUtils {
       .format();
   }
 
-  public getMomentInstance(date: Date | string, format = "YYYY-MM-DD") {
-    return moment(date, format);
+  public getMomentInstance(date: Date | string) {
+    return moment(date);
   }
 }
 
