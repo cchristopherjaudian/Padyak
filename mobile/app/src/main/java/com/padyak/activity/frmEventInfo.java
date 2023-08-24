@@ -78,6 +78,7 @@ public class frmEventInfo extends AppCompatActivity {
             Intent intent = new Intent(com.padyak.activity.frmEventInfo.this,frmParticipate.class);
             Bundle bundle = new Bundle();
             bundle.putString("eventId",eventId);
+            bundle.putString("eventName",eventName);
             intent.putExtras(bundle);
             startActivity(intent);
         });
