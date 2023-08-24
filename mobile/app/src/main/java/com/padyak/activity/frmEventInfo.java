@@ -36,11 +36,11 @@ public class frmEventInfo extends AppCompatActivity {
 
     ImageView imgEvent;
     String eventId;
-    Button btnEventRegister, btnEventCancel;
+    Button btnEventRegister, btnEventCancel, btnEventParticipate;
     public static frmEventInfo frmEventInfo;
     CalendarEvent calendarEvent;
 
-    boolean is_done, is_registered;
+    boolean is_done, is_registered, is_ongoing;
     String eventName, eventPhoto;
     TextView txEventInfoName, txEventInfoDesc, txEventInfoDate, txEventAward, textView20;
     RecyclerView rvParticipants;
@@ -72,7 +72,15 @@ public class frmEventInfo extends AppCompatActivity {
         txEventAward = findViewById(R.id.txEventAward);
         btnEventRegister = findViewById(R.id.btnEventRegister);
         btnEventCancel = findViewById(R.id.btnEventCancel);
+        btnEventParticipate = findViewById(R.id.btnEventParticipate);
 
+        btnEventParticipate.setOnClickListener(v -> {
+            Intent intent = new Intent(com.padyak.activity.frmEventInfo.this,frmParticipate.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("eventId",eventId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        });
         btnEventCancel.setOnClickListener(v -> finish());
 
         btnEventRegister.setOnClickListener((e) -> {
@@ -103,19 +111,21 @@ public class frmEventInfo extends AppCompatActivity {
     public void loadEventInfo() {
         progressDialog = Helper.getInstance().progressDialog(frmEventInfo.this, "Retrieving event information.");
         progressDialog.show();
-        new Thread(()->{
+        new Thread(() -> {
             try {
-                Thread.sleep(1000);
+
                 if (eventId.isEmpty()) throw new Exception("eventId is null");
 
                 VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", com.padyak.activity.frmEventInfo.this);
                 JSONObject responseJSON = volleyHttp.getJsonResponse(true);
                 if (responseJSON == null) throw new Exception("responseJSON is null");
                 JSONObject eventObject = responseJSON.getJSONObject("data");
+                String startTime = Helper.getInstance().ISOtoTime(eventObject.getString("startTime")).replace("+08:00","");
+                String endTime = Helper.getInstance().ISOtoTime(eventObject.getString("endTime")).replace("+08:00","");
                 is_registered = false;
                 is_done = false;
                 eventDate = eventObject.getString("eventDate");
-                eventTime = eventObject.getString("startTime").concat("-").concat(eventObject.getString("endTime"));
+                eventTime = startTime.concat(" - ").concat(endTime);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
                 LocalDate ldDate = LocalDate.parse(eventDate);
                 eventTime = formatter.format(ldDate).concat(" ").concat(eventTime);
@@ -137,6 +147,7 @@ public class frmEventInfo extends AppCompatActivity {
                 eventDescription = eventObject.getString("eventDescription");
                 eventAward = eventObject.getString("award");
                 is_done = eventObject.getBoolean("isDone");
+                is_ongoing = eventObject.getBoolean("isNow");
                 runOnUiThread(() -> {
                     txEventInfoName.setText(eventName);
                     txEventInfoDesc.setText(eventDescription);
@@ -144,15 +155,25 @@ public class frmEventInfo extends AppCompatActivity {
                     txEventInfoDate.setText(eventTime);
                     Picasso.get().load(eventPhoto).into(imgEvent);
 
-                    if (is_registered || is_done) {
+                    if(is_registered){
                         textView20.setVisibility(View.VISIBLE);
                         rvParticipants.setVisibility(View.VISIBLE);
                         adapterParticipant = new adapterParticipant(participantsList);
                         rvParticipants.setAdapter(adapterParticipant);
-
+                    }
+                    if (is_registered && is_ongoing){
+                        btnEventRegister.setVisibility(View.GONE);
+                        btnEventParticipate.setVisibility(View.VISIBLE);
+                    } else if (is_registered || is_done) {
+                        btnEventRegister.setVisibility(View.GONE);
+                        btnEventParticipate.setVisibility(View.GONE);
                     } else {
                         btnEventRegister.setVisibility(View.VISIBLE);
+                        btnEventParticipate.setVisibility(View.GONE);
                     }
+
+
+
                     progressDialog.dismiss();
                 });
 
@@ -167,7 +188,6 @@ public class frmEventInfo extends AppCompatActivity {
                 runOnUiThread(() -> progressDialog.dismiss());
             }
         }).start();
-
 
 
     }

@@ -22,12 +22,11 @@
         android:theme="@style/Theme.Padyak"
         tools:targetApi="31">
         <activity
-            android:name=".activity.frmPermission"
+            android:name=".activity.frmParticipate"
             android:configChanges="screenSize|screenLayout"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
-        </activity>
         <activity
             android:name=".activity.frmSaveRide"
             android:configChanges="screenSize|screenLayout"
@@ -37,7 +36,7 @@
             android:name=".activity.frmRide"
             android:configChanges="screenSize|screenLayout"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.frmAccount"
             android:configChanges="screenSize|screenLayout"
@@ -60,7 +59,7 @@
             android:name=".activity.frmAddEvent"
             android:configChanges="screenSize|screenLayout"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.frmStartTrack"
             android:configChanges="screenSize|screenLayout"
