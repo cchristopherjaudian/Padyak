@@ -9,11 +9,16 @@ import UserAlertsRepository, {
   TUserSendAlert,
 } from "../repositories/user-alerts-repository";
 
+export interface ISmsAlert {
+  send: (to: string, body: string) => Promise<string>;
+}
+
 export interface IAlertService {
   getAlert: (level: number) => Promise<IAlert>;
   sendAlert: (
+    sms: ISmsAlert,
     payload: Pick<TUserSendAlert, "to"> & { message: string }
-  ) => Promise<Pick<TUserSendAlert, "to"> & { message: string }>;
+  ) => Record<string, any>;
 }
 
 class UserAlerts {
@@ -47,7 +52,7 @@ class UserAlerts {
     }
   }
 
-  public async sendAlert(payload: TRawSendAlert) {
+  public async sendAlert(sms: ISmsAlert, payload: TRawSendAlert) {
     try {
       const alert = await this._alert.getAlert(payload.level);
       const message = `${this.baseMessage(payload)}, ${alert.message} ${
@@ -66,7 +71,7 @@ class UserAlerts {
       });
 
       await this._repository.create(mappedUserAlert);
-      const alerted = await this._alert.sendAlert({
+      const alerted = await this._alert.sendAlert(sms, {
         to: payload.to.split(","),
         message: message,
       });
@@ -80,6 +85,7 @@ class UserAlerts {
 
 class AlertService implements IAlertService {
   private _repository = new AlertRepository();
+  private _sms: ISmsAlert;
 
   public async getAlert(level: number) {
     try {
@@ -92,9 +98,18 @@ class AlertService implements IAlertService {
   }
 
   public async sendAlert(
+    sms: ISmsAlert,
     payload: Pick<TUserSendAlert, "to"> & { message: string }
   ) {
     try {
+      const toUsers = payload.to;
+      const sent = await Promise.all(
+        toUsers.map(async (user) => {
+          return await sms.send(user, payload.message);
+        })
+      );
+
+      console.log("sent", sent);
       return {
         ...payload,
       };
