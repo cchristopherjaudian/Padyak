@@ -1,5 +1,6 @@
 package com.padyak.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +30,9 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class frmEventManagement extends AppCompatActivity {
     TextView frmEventMonth;
@@ -69,7 +72,37 @@ public class frmEventManagement extends AppCompatActivity {
 
         btnDeleteEvent.setOnClickListener(v->{
             String selectedUsers = adapterEventManagement.getChecked();
-            Toast.makeText(this, "Ongoing development", Toast.LENGTH_SHORT).show();
+            if(selectedUsers.isEmpty()) return;
+
+            AlertDialog alertDialog = new AlertDialog.Builder(frmEventManagement.this).create();
+            alertDialog.setTitle("Event Management");
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage("Are you sure you want to delete the selected event(s)?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"No",(d,w)->{
+
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Yes",(d,w)->{
+                progressDialog = Helper.getInstance().progressDialog(frmEventManagement.this,"Deleting event(s)");
+                progressDialog.show();
+                new Thread(()->{
+                    Map<String, Object> payload = new HashMap<>();
+                    payload.put("ids",selectedUsers);
+
+                    VolleyHttp volleyHttp = new VolleyHttp("",payload,"event-delete",frmEventManagement.this);
+                    JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+                    runOnUiThread(()->{
+                        progressDialog.dismiss();
+                        if(responseJSON == null){
+                            Toast.makeText(this, "Failed to delete event(s). Please try again.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        adapterEventManagement.updateEventList();
+                    });
+                }).start();
+            });
+            alertDialog.show();
+
+
         });
 
     }

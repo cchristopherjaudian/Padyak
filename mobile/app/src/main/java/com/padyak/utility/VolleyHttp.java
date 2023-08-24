@@ -74,6 +74,9 @@ public class VolleyHttp {
                     if(params != null && type.contains("PATCH")){
                         conn.setRequestMethod("PATCH");
                         conn.setDoOutput(true);
+                    } else if(params != null && type.contains("DELETE")){
+                        conn.setRequestMethod("DELETE");
+                        conn.setDoOutput(true);
                     } else if(params != null) {
                         conn.setRequestMethod("POST");
                         conn.setDoOutput(true);
@@ -146,6 +149,9 @@ public class VolleyHttp {
                     if(auth) conn.setRequestProperty("Authorization",LoggedUser.getInstance().getRefreshToken());
                     if(params != null && type.contains("PATCH")){
                         conn.setRequestMethod("PATCH");
+                        conn.setDoOutput(true);
+                    }else if(params != null && type.contains("DELETE")){
+                        conn.setRequestMethod("DELETE");
                         conn.setDoOutput(true);
                     } else if(params != null) {
                         conn.setRequestMethod("POST");
