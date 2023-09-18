@@ -100,7 +100,7 @@ public class VolleyHttp {
                         wr.write(data);
                         wr.flush();
                     }
-
+                    Log.d(Helper.getInstance().log_code, "doInBackground: " + conn.getRequestMethod());
                     int responseCode=conn.getResponseCode();
                     if(responseCode != 200) throw new Exception("Response Code: " + responseCode);
                     Log.d(Helper.getInstance().log_code, "Response Code Volley: " + responseCode);
