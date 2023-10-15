@@ -1,14 +1,14 @@
-import express from "express";
-import { userController } from "../controllers";
-import requestSchemaValidate from "../middlewares/joi-middleware";
-import { createAdminSchema } from "../lib/joi-schemas/admin-schema";
+import express from 'express';
+import { userController } from '../controllers';
+import requestSchemaValidate from '../middlewares/joi-middleware';
+import { createAdminSchema } from '../lib/joi-schemas/admin-schema';
 
 const router = express.Router();
 
 router.post(
-  "/",
-  [requestSchemaValidate(createAdminSchema)],
-  userController.createUser
+    '/sso/auth',
+    [requestSchemaValidate(createAdminSchema)],
+    userController.authSso
 );
 
 export default router;

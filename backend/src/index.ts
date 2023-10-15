@@ -1,7 +1,7 @@
-import express from "express";
-import routes from "./routes/index";
-import functions from "./lib/cloud-functions";
-import RouteMiddleware from "./middlewares/route-middleware";
+import express from 'express';
+import routes from './routes/index';
+import functions from './lib/cloud-functions';
+import RouteMiddleware from './middlewares/route-middleware';
 
 const app = express();
 const errorMiddlewares = new RouteMiddleware();
