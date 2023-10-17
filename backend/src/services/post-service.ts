@@ -1,28 +1,26 @@
-import { IComments, IPost } from '../database/models/post';
+import { IComments, ILikes, IPost } from '../database/models/post';
+import { IUserModel } from '../database/models/user';
 import { NotFoundError } from '../lib/custom-errors/class-errors';
 import PostMapper from '../lib/mappers/post-mapper';
 import PostLikesRepository, {
     TPostsQuery,
 } from '../repositories/post-repository';
+import UserRepository from '../repositories/user-repository';
 
 const dbInstance = new PostLikesRepository();
 
 type TAddLikes = {
     postId?: string;
-    uid: string;
-    photoUrl: string;
-    displayName: string;
+    userId: string;
     id: string;
 };
 
 type TAddComment = {
     id: string;
-    uid: string;
+    userId: string;
     postId?: string;
     comment: string;
     createdAt: string;
-    photoUrl: string;
-    displayName: string;
 };
 
 class Likes {
@@ -34,14 +32,14 @@ class Likes {
             if (!post) throw new NotFoundError();
 
             const hasLiked = post.likes?.find(
-                (like) => like.uid === payload.uid
+                (like) => like.userId === payload.userId
             );
             if (!hasLiked) {
                 delete payload.postId;
                 post.likes?.push(payload);
             } else {
                 const removedLike = post.likes?.filter(
-                    (like) => like.uid !== payload.uid
+                    (like) => like.userId !== payload.userId
                 );
                 post.likes = removedLike;
             }
@@ -90,7 +88,60 @@ class PostService {
     }
 
     public async getPosts(query: TPostsQuery) {
-        return await dbInstance.getPostsList(query);
+        const posts = await dbInstance.getPostsList(query);
+        if (posts.length === 0) return posts;
+
+        const user = new UserRepository();
+        const mappedPosts = await Promise.all(
+            posts.map(async (post) => {
+                const author = await user.getUserById(post.author.id);
+
+                post.author = {
+                    id: author.id,
+                    firstname: author.firstname as string,
+                    lastname: author.lastname as string,
+                    photoUrl: author.photoUrl as string,
+                } as IUserModel;
+
+                if (post!.likes!.length > 0) {
+                    const likes = await Promise.all(
+                        post.likes?.map(async (like) => {
+                            const likedBy = await user.getUserById(
+                                like?.userId as string
+                            );
+                            return {
+                                id: like.id,
+                                photoUrl: likedBy.photoUrl,
+                                displayName: `${likedBy.firstname} ${likedBy.lastname}`,
+                            };
+                        }) as []
+                    );
+
+                    post.likes = likes as any;
+                }
+
+                if (post.comments!.length > 0) {
+                    const comments = await Promise.all(
+                        post.comments?.map(async (like) => {
+                            const commentedBy = await user.getUserById(
+                                like?.userId as string
+                            );
+                            return {
+                                id: like.id,
+                                photoUrl: commentedBy.photoUrl,
+                                displayName: `${commentedBy.firstname} ${commentedBy.lastname}`,
+                            };
+                        }) as []
+                    );
+
+                    post.comments = comments as any;
+                }
+
+                return post;
+            })
+        );
+
+        return mappedPosts;
     }
 
     public async addLikes(payload: TAddLikes) {

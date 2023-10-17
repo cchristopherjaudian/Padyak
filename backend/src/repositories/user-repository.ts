@@ -18,6 +18,15 @@ class UserRepository {
         }
     }
 
+    public async getUserById(id: string): Promise<IUserModel> {
+        const user = await this._firestore
+            .getDb()
+            .collection('users')
+            .where('id', '==', id)
+            .get();
+        return (user.docs[0]?.data() as IUserModel) || null;
+    }
+
     public async findUserByEmail(email: string, source: AuthSource) {
         try {
             const user = await this._firestore
