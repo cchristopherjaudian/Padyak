@@ -4,8 +4,10 @@ import requestSchemaValidate from '../middlewares/joi-middleware';
 import {
     createUserSchema,
     getUserByEmailSchma,
-    inappAuthSchema,
+    inappAuthSignupSchema,
     updateUserSchema,
+    inappAuthLoginSchema,
+    createInappProfileSchema,
 } from '../lib/joi-schemas/cyclist-schema';
 import TokenMiddleware from '../middlewares/token-middleware';
 
@@ -20,13 +22,13 @@ router.post(
 
 router.post(
     '/inapp/signup',
-    [requestSchemaValidate(inappAuthSchema)],
+    [requestSchemaValidate(inappAuthSignupSchema)],
     userController.inappSignup
 );
 
 router.post(
-    '/inapp/login',
-    [requestSchemaValidate(inappAuthSchema)],
+    '/inapp/signin',
+    [requestSchemaValidate(inappAuthLoginSchema)],
     userController.inappLogin
 );
 
@@ -43,12 +45,12 @@ router.get(
 );
 
 router.patch(
-    '/',
+    '/inapp/profile',
     [
         tokenMiddleware.endUserValidate as any,
-        requestSchemaValidate(updateUserSchema),
+        requestSchemaValidate(createInappProfileSchema),
     ],
-    userController.updateUser
+    userController.createInappProfile
 );
 
 export default router;

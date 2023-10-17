@@ -25,3 +25,17 @@ export type TInappAuth = {
     password: string;
     source: AuthSource;
 };
+
+export type TCreateInappProfile = {
+    id: string;
+    firstname: string;
+    lastname: string;
+    emailAddress: string;
+    gender: string;
+    birthday: string;
+    height: string;
+    weight: string;
+    isAdmin: boolean;
+    photoUrl: string;
+    source: AuthSource;
+};

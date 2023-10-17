@@ -1,19 +1,25 @@
 import bcrypt from 'bcrypt';
-import { IUserModel, TInappAuth } from '../database/models/user';
+import {
+    AuthSource,
+    IUserModel,
+    TCreateInappProfile,
+    TInappAuth,
+} from '../database/models/user';
 import JsonWebToken from './token-service';
 import UserRepository, { TUpdateUser } from '../repositories/user-repository';
 import UserMapper from '../lib/mappers/user-mapper';
 import {
     BadRequestError,
     NotFoundError,
+    ResourceConflictError,
 } from '../lib/custom-errors/class-errors';
 
 class UserService {
     private _repository = new UserRepository();
 
-    public async getUserSsoEmail(email: string) {
+    public async getUserSsoEmail(email: string, source: AuthSource) {
         try {
-            const user = await this._repository.findUserByEmail(email);
+            const user = await this._repository.findUserByEmail(email, source);
 
             if (!user) {
                 throw new NotFoundError('User does not exists.');
@@ -40,6 +46,16 @@ class UserService {
             throw error;
         }
     }
+
+    public async createInappProfile(payload: TCreateInappProfile) {
+        const hasEmail = await this._repository.findUserByEmail(
+            payload.emailAddress,
+            payload.source
+        );
+        if (hasEmail) throw new ResourceConflictError('Email already exists.');
+
+        return this._repository.update(payload);
+    }
 }
 
 class UserAuthService {
@@ -48,7 +64,10 @@ class UserAuthService {
     private _mapper = new UserMapper();
 
     public async signupInapp(payload: TInappAuth) {
-        const isExists = await this._repo.checkInappUser(payload.contactNumber);
+        const isExists = await this._repo.getUserByContact(
+            payload.contactNumber,
+            payload.source
+        );
         if (isExists) throw new NotFoundError('User already exists.');
         payload.password = await bcrypt.hashSync(payload.password, 10);
         const newUser = await this._repo.create(
@@ -70,8 +89,11 @@ class UserAuthService {
     }
 
     public async login(payload: TInappAuth) {
-        const user = await this._repo.checkInappUser(payload.contactNumber);
-        if (!user || user.source === 'SSO') {
+        const user = await this._repo.getUserByContact(
+            payload.contactNumber,
+            payload.source
+        );
+        if (!user) {
             throw new BadRequestError('Wrong username or password.');
         }
 
@@ -89,10 +111,10 @@ class UserAuthService {
         });
         return {
             token,
+            hasProfile: user?.firstname ? true : false,
             user: {
                 contactNumber: payload.contactNumber,
                 source: payload.source,
-                hasProfile: user?.firstname ? true : false,
             },
         };
     }
@@ -100,7 +122,8 @@ class UserAuthService {
     public async authSso(payload: IUserModel): Promise<Record<string, any>> {
         try {
             const hasAccount = await this._repo.findUserByEmail(
-                payload.emailAddress
+                payload.emailAddress,
+                payload.source
             );
             if (!hasAccount) {
                 const mappedPayload = this._mapper.createUser(payload);

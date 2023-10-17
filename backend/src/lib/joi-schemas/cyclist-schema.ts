@@ -18,9 +18,29 @@ const createUserSchema = Joi.object({
     isAdmin: Joi.boolean().optional().default(false),
 });
 
-const inappAuthSchema = Joi.object({
-    contactNumber: Joi.string().required(),
-    password: Joi.string().required(),
+const inappAuthSignupSchema = Joi.object({
+    contactNumber: Joi.string().trim().min(11).max(11).required(),
+    password: Joi.string()
+        .pattern(/^[A-Z]/, 'Password should start with a capital letter')
+        .pattern(
+            /(?=.*\d)/,
+            'Password should contain atleast contain 1 numeric value'
+        )
+        .pattern(
+            /(?=.*[@#$!%*?&])/,
+            'Password should atleast contain 1 special character'
+        )
+        .pattern(
+            /[A-Za-z\d@$!%*?&]{7,}/,
+            'Password should be 8 characters length'
+        )
+        .trim()
+        .required(),
+});
+
+const inappAuthLoginSchema = Joi.object({
+    contactNumber: Joi.string().trim().min(11).max(11).required(),
+    password: Joi.string().trim().required(),
 });
 
 const getUserByEmailSchma = Joi.object({
@@ -41,9 +61,24 @@ const updateUserSchema = Joi.object({
     weight: Joi.string().optional(),
 });
 
+const createInappProfileSchema = Joi.object({
+    firstname: Joi.string().required(),
+    photoUrl: Joi.string().required(),
+    lastname: Joi.string().required(),
+    emailAddress: Joi.string().email().required(),
+    gender: Joi.string()
+        .valid(...genderDictionary)
+        .required(),
+    birthday: Joi.string().required(),
+    height: Joi.string().required(),
+    weight: Joi.string().required(),
+});
+
 export {
     createUserSchema,
     getUserByEmailSchma,
     updateUserSchema,
-    inappAuthSchema,
+    inappAuthSignupSchema,
+    inappAuthLoginSchema,
+    createInappProfileSchema,
 };

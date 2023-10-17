@@ -1,5 +1,5 @@
 import Firstore from '../database/firestore';
-import { IUserModel } from '../database/models/user';
+import { AuthSource, IUserModel } from '../database/models/user';
 
 export type TUpdateUser = Omit<Partial<IUserModel>, 'createdAt'>;
 class UserRepository {
@@ -18,7 +18,7 @@ class UserRepository {
         }
     }
 
-    public async findUserByEmail(email: string, source = 'SSO') {
+    public async findUserByEmail(email: string, source: AuthSource) {
         try {
             const user = await this._firestore
                 .getDb()
@@ -33,12 +33,13 @@ class UserRepository {
         }
     }
 
-    public async checkInappUser(contact: string) {
+    public async getUserByContact(contact: string, source: AuthSource) {
         try {
             const user = await this._firestore
                 .getDb()
                 .collection('users')
                 .where('contactNumber', '==', contact)
+                .where('source', '==', source)
                 .get();
 
             return (user.docs[0]?.data() as IUserModel) || null;

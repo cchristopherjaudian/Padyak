@@ -4,6 +4,7 @@ import { UserAuthService, UserService } from '../services/user-service';
 import ResponseObject from '../lib/response-object';
 import ResponseCodes from '../commons/response-codes';
 import { IRequestWithUser } from '../middlewares/token-middleware';
+import { AuthSource } from '../database/models/user';
 
 const userInstance = new UserService();
 const userAuthInstance = new UserAuthService();
@@ -43,8 +44,31 @@ const inappLogin = async (req: Request, res: Response, next: NextFunction) => {
         responseObject.createResponse(
             res,
             httpStatus.OK,
-            ResponseCodes.DATA_RETRIEVED,
+            ResponseCodes.AUTHENTICATED,
             authenticated
+        );
+    } catch (error) {
+        next(error);
+    }
+};
+
+const createInappProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const request = req as IRequestWithUser;
+        const profile = await userInstance.createInappProfile({
+            ...req.body,
+            id: request.user.id,
+            source: request.user.source,
+        });
+        responseObject.createResponse(
+            res,
+            httpStatus.OK,
+            ResponseCodes.DATA_MODIFIED,
+            profile!
         );
     } catch (error) {
         next(error);
@@ -58,7 +82,8 @@ const getUserByEmail = async (
 ) => {
     try {
         const user = await userInstance.getUserSsoEmail(
-            req.query.emailAddress as string
+            req.query.emailAddress as string,
+            AuthSource.SSO
         );
 
         responseObject.createResponse(
@@ -83,7 +108,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
         responseObject.createResponse(
             res,
             httpStatus.OK,
-            ResponseCodes.DATA_RETRIEVED,
+            ResponseCodes.DATA_MODIFIED,
             user!
         );
     } catch (error) {
@@ -98,7 +123,7 @@ const getUserList = async (req: Request, res: Response, next: NextFunction) => {
         responseObject.createResponse(
             res,
             httpStatus.OK,
-            ResponseCodes.DATA_RETRIEVED,
+            ResponseCodes.LIST_RETRIEVED,
             users
         );
     } catch (error) {
@@ -113,4 +138,5 @@ export default {
     getUserList,
     inappSignup,
     inappLogin,
+    createInappProfile,
 };
