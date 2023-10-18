@@ -5,14 +5,15 @@ import ResponseCodes from '../commons/response-codes';
 import PostService from '../services/post-service';
 import { IRequestWithUser } from '../middlewares/token-middleware';
 import { TPostsQuery } from '../repositories/post-repository';
+import { catchAsync } from '../lib/catch-async';
 
 const postInstance = new PostService();
 const responseObject = new ResponseObject();
 
-const createPost = async (req: Request, res: Response, next: NextFunction) => {
-    const request = req as IRequestWithUser;
-    const { id } = request.user;
-    try {
+const createPost = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const request = req as IRequestWithUser;
+        const { id } = request.user;
         const newPost = await postInstance.createPost({
             ...req.body,
             author: {
@@ -26,13 +27,11 @@ const createPost = async (req: Request, res: Response, next: NextFunction) => {
             ResponseCodes.DATA_CREATED,
             newPost
         );
-    } catch (error) {
-        next(error);
     }
-};
+);
 
-const getPosts = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+const getPosts = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
         const posts = await postInstance.getPosts(req.query as TPostsQuery);
 
         responseObject.createResponse(
@@ -41,13 +40,11 @@ const getPosts = async (req: Request, res: Response, next: NextFunction) => {
             ResponseCodes.LIST_RETRIEVED,
             posts
         );
-    } catch (error) {
-        next(error);
     }
-};
+);
 
-const updatePost = async (req: Request, res: Response, next: NextFunction) => {
-    try {
+const updatePost = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
         const posts = await postInstance.updatePost({
             ...req.body,
             id: req.params.postId,
@@ -59,14 +56,12 @@ const updatePost = async (req: Request, res: Response, next: NextFunction) => {
             ResponseCodes.DATA_MODIFIED,
             posts
         );
-    } catch (error) {
-        next(error);
     }
-};
+);
 
-const addLikes = async (req: Request, res: Response, next: NextFunction) => {
-    const request = req as IRequestWithUser;
-    try {
+const addLikes = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const request = req as IRequestWithUser;
         const posts = await postInstance.addLikes({
             ...req.body,
             userId: request.user.id,
@@ -78,14 +73,12 @@ const addLikes = async (req: Request, res: Response, next: NextFunction) => {
             ResponseCodes.DATA_MODIFIED,
             posts
         );
-    } catch (error) {
-        next(error);
     }
-};
+);
 
-const addComment = async (req: Request, res: Response, next: NextFunction) => {
-    const request = req as IRequestWithUser;
-    try {
+const addComment = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const request = req as IRequestWithUser;
         const posts = await postInstance.addComment({
             ...req.body,
             userId: request.user.id,
@@ -97,9 +90,7 @@ const addComment = async (req: Request, res: Response, next: NextFunction) => {
             ResponseCodes.DATA_MODIFIED,
             posts
         );
-    } catch (error) {
-        next(error);
     }
-};
+);
 
 export default { createPost, getPosts, updatePost, addLikes, addComment };
