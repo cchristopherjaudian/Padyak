@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rounded_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/coolvetica"
+        android:gravity="center"
+        android:text="User's Uploaded File"
+        android:textColor="#000"
+        android:textSize="@dimen/form_header_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView9"
+        android:layout_width="@dimen/dp_circle_size"
+        android:layout_height="@dimen/dp_circle_size"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:elevation="10dp"
+        app:cardCornerRadius="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+        <ImageView
+            android:id="@+id/imgAdminProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/dp" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/txUserNameUploaded"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/coolvetica"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:text="Ricardo Madlangtuta"
+        android:textColor="#000"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/cardView9"
+        app:layout_constraintTop_toTopOf="@+id/cardView9" />
+
+    <ImageView
+        android:id="@+id/imgUploaded"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnUploadConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txUserNameUploaded" />
+    <Button
+        android:id="@+id/btnUploadConfirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_main_button"
+        android:fontFamily="@font/coolvetica"
+        android:text="Confirm"
+        android:textColor="#FFF"
+        app:layout_constraintBottom_toTopOf="@+id/btnUploadDelete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnUploadDelete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_white_button"
+        android:fontFamily="@font/coolvetica"
+        android:text="Delete"
+        android:textColor="@color/ok_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

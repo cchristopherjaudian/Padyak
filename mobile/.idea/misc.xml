@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_payment_validation.xml" value="0.24635416666666668" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_validation_menu.xml" value="0.25" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/fragment_user_uploaded.xml" value="0.264" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
