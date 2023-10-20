@@ -36,9 +36,8 @@ public class frmEventInfo extends AppCompatActivity {
 
     ImageView imgEvent;
     String eventId;
-    Button btnEventRegister, btnEventCancel, btnEventParticipate;
+    Button btnEventRegister, btnEventParticipate,btnViewPayment;
     public static frmEventInfo frmEventInfo;
-    CalendarEvent calendarEvent;
 
     boolean is_done, is_registered, is_ongoing;
     String eventName, eventPhoto;
@@ -71,9 +70,8 @@ public class frmEventInfo extends AppCompatActivity {
         txEventInfoDate = findViewById(R.id.txEventInfoDate);
         txEventAward = findViewById(R.id.txEventAward);
         btnEventRegister = findViewById(R.id.btnEventRegister);
-        btnEventCancel = findViewById(R.id.btnEventCancel);
         btnEventParticipate = findViewById(R.id.btnEventParticipate);
-
+        btnViewPayment = findViewById(R.id.btnViewPayment);
         btnEventParticipate.setOnClickListener(v -> {
             Intent intent = new Intent(com.padyak.activity.frmEventInfo.this,frmParticipate.class);
             Bundle bundle = new Bundle();
@@ -82,8 +80,17 @@ public class frmEventInfo extends AppCompatActivity {
             intent.putExtras(bundle);
             startActivity(intent);
         });
-        btnEventCancel.setOnClickListener(v -> finish());
+        btnViewPayment.setOnClickListener(v->{
+            Intent intent = new Intent(frmEventInfo.this, frmEventParticipants.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("id",eventId);
+            bundle.putString("name",eventName);
+            bundle.putString("img",eventPhoto);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            finish();
 
+        });
         btnEventRegister.setOnClickListener((e) -> {
 
             if (is_done) {
@@ -131,18 +138,18 @@ public class frmEventInfo extends AppCompatActivity {
                 LocalDate ldDate = LocalDate.parse(eventDate);
                 eventTime = formatter.format(ldDate).concat(" ").concat(eventTime);
 
-                JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
-                List<Participants> participantsList = new ArrayList<>();
-                for (int i = 0; i < participantJSON.length(); i++) {
-                    JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
-                    Participants participants = new Participants();
-                    participants.setUserImage(participantObject.getString("photoUrl"));
-                    participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
-                    participantsList.add(participants);
-
-                    if (participantObject.getString("id").equals(LoggedUser.getInstance().getUuid()))
-                        is_registered = true;
-                }
+//                JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
+//                List<Participants> participantsList = new ArrayList<>();
+//                for (int i = 0; i < participantJSON.length(); i++) {
+//                    JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
+//                    Participants participants = new Participants();
+//                    participants.setUserImage(participantObject.getString("photoUrl"));
+//                    participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
+//                    participantsList.add(participants);
+//
+//                    if (participantObject.getString("id").equals(LoggedUser.getInstance().getUuid()))
+//                        is_registered = true;
+//                }
                 eventName = eventObject.getString("name");
                 eventPhoto = eventObject.getString("photoUrl");
                 eventDescription = eventObject.getString("eventDescription");
@@ -157,10 +164,11 @@ public class frmEventInfo extends AppCompatActivity {
                     Picasso.get().load(eventPhoto).into(imgEvent);
 
                     if(is_registered){
+                        btnViewPayment.setVisibility(View.VISIBLE);
                         textView20.setVisibility(View.VISIBLE);
-                        rvParticipants.setVisibility(View.VISIBLE);
-                        adapterParticipant = new adapterParticipant(participantsList);
-                        rvParticipants.setAdapter(adapterParticipant);
+//                        rvParticipants.setVisibility(View.VISIBLE);
+//                        adapterParticipant = new adapterParticipant(participantsList);
+//                        rvParticipants.setAdapter(adapterParticipant);
                     }
                     if (is_registered && is_ongoing){
                         btnEventRegister.setVisibility(View.GONE);
@@ -171,6 +179,7 @@ public class frmEventInfo extends AppCompatActivity {
                     } else {
                         btnEventRegister.setVisibility(View.VISIBLE);
                         btnEventParticipate.setVisibility(View.GONE);
+                        btnViewPayment.setVisibility(View.GONE);
                     }
 
 

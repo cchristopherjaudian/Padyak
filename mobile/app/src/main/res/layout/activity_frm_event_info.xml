@@ -154,18 +154,35 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_affirmative_button"
             android:fontFamily="@font/coolvetica"
             android:text="Register"
             android:textColor="#FFF"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/btnEventCancel"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/btnEventCancel"
+            android:id="@+id/btnEventParticipate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/rounded_affirmative_button"
+            android:fontFamily="@font/coolvetica"
+            android:text="Participate"
+            android:textColor="#FFF"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/btnViewPayment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnViewPayment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -173,26 +190,12 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/rounded_white_button"
             android:fontFamily="@font/coolvetica"
-            android:text="Close"
-            android:textColor="@color/ok_color"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnEventParticipate"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="View Payment"
 
-        <Button
-            android:id="@+id/btnEventParticipate"
-            android:layout_width="0dp"
-            android:visibility="gone"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/rounded_affirmative_button"
-            android:fontFamily="@font/coolvetica"
-            android:text="Participate"
-            android:textColor="#FFF"
+            android:textColor="@color/ok_color"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnEventCancel" />
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
