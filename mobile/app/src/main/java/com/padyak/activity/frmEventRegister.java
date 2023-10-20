@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,9 +12,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.padyak.R;
+import com.padyak.fragment.fragmentUserUploaded;
+import com.padyak.fragment.fragmentViewQR;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -38,8 +43,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class frmEventRegister extends AppCompatActivity {
+    String[] gender = {"-Please select a payment method-", "GCash", "Over the Counter"};
+    ArrayAdapter<String> aaPayment;
+    Spinner spinnerPayment;
     Button btnEventRegister, btnEventCancel,btnRegisterPayment;
-    TextView txEventName,txProofPayment;
+    TextView txEventName,txProofPayment,txViewQR;
     ImageView imgEventRegister;
     CheckBox checkBox;
     Bitmap bitmapPayment;
@@ -53,7 +61,7 @@ public class frmEventRegister extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_register);
-
+        spinnerPayment = findViewById(R.id.spinnerPayment);
         btnRegisterPayment = findViewById(R.id.btnRegisterPayment);
         btnEventRegister = findViewById(R.id.btnEventRegister);
         btnEventCancel = findViewById(R.id.btnEventCancel);
@@ -61,16 +69,27 @@ public class frmEventRegister extends AppCompatActivity {
 
         txProofPayment = findViewById(R.id.txProofPayment);
         txEventName = findViewById(R.id.txEventName);
+        txViewQR = findViewById(R.id.txViewQR);
         imgEventRegister = findViewById(R.id.imgEventRegister);
 
         eventId = getIntent().getStringExtra("id");
         eventName= getIntent().getStringExtra("name");
         eventImg= getIntent().getStringExtra("photoUrl");
 
+        aaPayment = new ArrayAdapter<String>(frmEventRegister.this, R.layout.sp_format, gender);
+        aaPayment.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPayment.setAdapter(aaPayment);
+
         txEventName.setText(eventName);
         Picasso.get().load(eventImg).into(imgEventRegister);
 
         btnEventCancel.setOnClickListener(v -> finish());
+        txViewQR.setOnClickListener(v->{
+            FragmentManager fm = getSupportFragmentManager();
+            fragmentViewQR editNameDialogFragment = fragmentViewQR.newInstance("PaymentQR");
+            editNameDialogFragment.setCancelable(false);
+            editNameDialogFragment.show(fm, "PaymentQR");
+        });
         btnRegisterPayment.setOnClickListener(v->{
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -147,15 +166,16 @@ public class frmEventRegister extends AppCompatActivity {
             if(responseJSON == null){
                 Toast.makeText(this, "Failed to process request. Please try again.", Toast.LENGTH_SHORT).show();
             } else{
-                Intent intent = new Intent(frmEventRegister.this, frmEventParticipants.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("id",eventId);
-                bundle.putString("name",eventName);
-                bundle.putString("img",eventImg);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                frmEventInfo.frmEventInfo.finish();
-                finish();
+                AlertDialog alertDialog = new AlertDialog.Builder(frmEventRegister.this).create();
+                alertDialog.setTitle("Event Registration");
+                alertDialog.setCancelable(false);
+                alertDialog.setMessage("You have successfully registered in this event. Press OK to continue");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                        (d,w)->{
+                            finish();
+                        });
+                alertDialog.show();
+
             }
         });
 
