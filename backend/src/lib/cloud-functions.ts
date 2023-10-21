@@ -1,9 +1,11 @@
-import { initializeApp, getApps } from 'firebase-admin/app';
 import { ResetValue } from 'firebase-functions/lib/common/options';
 import { Expression } from 'firebase-functions/params';
-import { SupportedRegion, MemoryOption } from 'firebase-functions/v2';
+import {
+    SupportedRegion,
+    MemoryOption,
+    setGlobalOptions,
+} from 'firebase-functions/v2';
 import * as cf from 'firebase-functions/v2/https';
-import { setGlobalOptions } from 'firebase-functions/v2';
 
 export type THttpsFunction = cf.HttpsFunction;
 

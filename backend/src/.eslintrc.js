@@ -4,6 +4,7 @@ module.exports = {
         es6: true,
         node: true,
     },
+
     extends: [
         'eslint:recommended',
         'plugin:import/errors',
@@ -24,6 +25,8 @@ module.exports = {
     ],
     plugins: ['@typescript-eslint', 'import'],
     rules: {
+        'max-len': 'off',
+        'space-before-function-paren': 'off',
         'quote-props': ['error', 'as-needed'],
         '@typescript-eslint/no-explicit-any': 'off',
         indent: 'off',

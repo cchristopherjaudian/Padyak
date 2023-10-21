@@ -1,4 +1,4 @@
-import type { Response, Request, NextFunction } from 'express';
+import type { Response, Request } from 'express';
 import httpStatus from 'http-status';
 import ResponseObject from '../lib/response-object';
 import ResponseCodes from '../commons/response-codes';
@@ -12,53 +12,47 @@ const alertService = new AlertService();
 const userAlertsService = new UserAlerts(alertService);
 const smsInstance = VonageSMS.getInstance();
 
-const sendAlert = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const request = req as IRequestWithUser;
-        const { id, firstname, lastname, photoUrl } = request.user;
-        const alert = await userAlertsService.sendAlert(smsInstance, {
-            ...req.body,
-            uid: request.user.id,
-            displayName: `${request.user.firstname} ${request.user.firstname}`,
-            sender: { id, firstname, lastname, photoUrl },
-        });
+const sendAlert = catchAsync(async (req: Request, res: Response) => {
+    const request = req as IRequestWithUser;
+    const { id, firstname, lastname, photoUrl } = request.user;
+    const alert = await userAlertsService.sendAlert(smsInstance, {
+        ...req.body,
+        uid: request.user.id,
+        displayName: `${request.user.firstname} ${request.user.firstname}`,
+        sender: { id, firstname, lastname, photoUrl },
+    });
 
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.DATA_CREATED,
-            alert
-        );
-    }
-);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_CREATED,
+        alert
+    );
+});
 
-const updateAlertStatus = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const alert = await userAlertsService.updateStatus({
-            ...req.body,
-            id: req.params.alertId,
-        });
+const updateAlertStatus = catchAsync(async (req: Request, res: Response) => {
+    const alert = await userAlertsService.updateStatus({
+        ...req.body,
+        id: req.params.alertId,
+    });
 
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.DATA_MODIFIED,
-            alert
-        );
-    }
-);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_MODIFIED,
+        alert
+    );
+});
 
-const getUserAlerts = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const alerts = await userAlertsService.getUserAlerts(req.query);
+const getUserAlerts = catchAsync(async (req: Request, res: Response) => {
+    const alerts = await userAlertsService.getUserAlerts(req.query);
 
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.LIST_RETRIEVED,
-            alerts
-        );
-    }
-);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.LIST_RETRIEVED,
+        alerts
+    );
+});
 
 export default { sendAlert, updateAlertStatus, getUserAlerts };

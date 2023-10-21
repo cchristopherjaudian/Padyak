@@ -1,4 +1,4 @@
-import { IComments, ILikes, IPost } from '../database/models/post';
+import { IComments, IPost } from '../database/models/post';
 import { IUserModel } from '../database/models/user';
 import { NotFoundError } from '../lib/custom-errors/class-errors';
 import PostMapper from '../lib/mappers/post-mapper';

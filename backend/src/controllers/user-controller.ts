@@ -1,4 +1,4 @@
-import type { Response, Request, NextFunction } from 'express';
+import type { Response, Request } from 'express';
 import httpStatus from 'http-status';
 import { UserAuthService, UserService } from '../services/user-service';
 import ResponseObject from '../lib/response-object';
@@ -11,104 +11,90 @@ const userInstance = new UserService();
 const userAuthInstance = new UserAuthService();
 const responseObject = new ResponseObject();
 
-const authSso = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const authenticated = await userAuthInstance.authSso(req.body);
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.DATA_CREATED,
-            authenticated
-        );
-    }
-);
+const authSso = catchAsync(async (req: Request, res: Response) => {
+    const authenticated = await userAuthInstance.authSso(req.body);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_CREATED,
+        authenticated
+    );
+});
 
-const inappSignup = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const authenticated = await userAuthInstance.signupInapp(req.body);
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.DATA_CREATED,
-            authenticated
-        );
-    }
-);
+const inappSignup = catchAsync(async (req: Request, res: Response) => {
+    const authenticated = await userAuthInstance.signupInapp(req.body);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_CREATED,
+        authenticated
+    );
+});
 
-const inappLogin = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const authenticated = await userAuthInstance.login(req.body);
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.AUTHENTICATED,
-            authenticated
-        );
-    }
-);
+const inappLogin = catchAsync(async (req: Request, res: Response) => {
+    const authenticated = await userAuthInstance.login(req.body);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.AUTHENTICATED,
+        authenticated
+    );
+});
 
-const createInappProfile = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const request = req as IRequestWithUser;
-        const profile = await userInstance.createInappProfile({
-            ...req.body,
-            id: request.user.id,
-            source: request.user.source,
-        });
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.DATA_MODIFIED,
-            profile!
-        );
-    }
-);
+const createInappProfile = catchAsync(async (req: Request, res: Response) => {
+    const request = req as IRequestWithUser;
+    const profile = await userInstance.createInappProfile({
+        ...req.body,
+        id: request.user.id,
+        source: request.user.source,
+    });
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_MODIFIED,
+        profile!
+    );
+});
 
-const getUserByEmail = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const user = await userInstance.getUserSsoEmail(
-            req.query.emailAddress as string,
-            AuthSource.SSO
-        );
+const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
+    const user = await userInstance.getUserSsoEmail(
+        req.query.emailAddress as string,
+        AuthSource.SSO
+    );
 
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.DATA_RETRIEVED,
-            user
-        );
-    }
-);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_RETRIEVED,
+        user
+    );
+});
 
-const updateUser = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const request = req as IRequestWithUser;
-        const user = await userInstance.updateUser({
-            ...req.body,
-            id: request.user.id,
-        });
+const updateUser = catchAsync(async (req: Request, res: Response) => {
+    const request = req as IRequestWithUser;
+    const user = await userInstance.updateUser({
+        ...req.body,
+        id: request.user.id,
+    });
 
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.DATA_MODIFIED,
-            user!
-        );
-    }
-);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_MODIFIED,
+        user!
+    );
+});
 
-const getUserList = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const users = await userInstance.getUsers();
+const getUserList = catchAsync(async (req: Request, res: Response) => {
+    const users = await userInstance.getUsers();
 
-        responseObject.createResponse(
-            res,
-            httpStatus.OK,
-            ResponseCodes.LIST_RETRIEVED,
-            users
-        );
-    }
-);
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.LIST_RETRIEVED,
+        users
+    );
+});
 
 export default {
     authSso,

@@ -5,7 +5,6 @@ import {
     createUserSchema,
     getUserByEmailSchma,
     inappAuthSignupSchema,
-    updateUserSchema,
     inappAuthLoginSchema,
     createInappProfileSchema,
 } from '../lib/joi-schemas/cyclist-schema';

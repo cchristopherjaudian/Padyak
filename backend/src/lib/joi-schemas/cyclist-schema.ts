@@ -16,6 +16,10 @@ const createUserSchema = Joi.object({
     height: Joi.string().required(),
     weight: Joi.string().required(),
     isAdmin: Joi.boolean().optional().default(false),
+    source: Joi.string()
+        .trim()
+        .valid(...Object.values(AuthSource))
+        .required(),
 });
 
 const inappAuthSignupSchema = Joi.object({
@@ -41,6 +45,10 @@ const inappAuthSignupSchema = Joi.object({
 const inappAuthLoginSchema = Joi.object({
     contactNumber: Joi.string().trim().min(11).max(11).required(),
     password: Joi.string().trim().required(),
+    source: Joi.string()
+        .trim()
+        .valid(...Object.values(AuthSource))
+        .required(),
 });
 
 const getUserByEmailSchma = Joi.object({
@@ -72,6 +80,10 @@ const createInappProfileSchema = Joi.object({
     birthday: Joi.string().required(),
     height: Joi.string().required(),
     weight: Joi.string().required(),
+    source: Joi.string()
+        .trim()
+        .valid(...Object.values(AuthSource))
+        .required(),
 });
 
 export {

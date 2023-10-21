@@ -1,22 +1,38 @@
-import { IBaseModel } from "./model";
-import { IUserModel } from "./user";
+import { IBaseModel } from './model';
+import { IUserModel } from './user';
+
+export enum EventPaymentStatus {
+    PAID = 'PAID',
+    UNPAID = 'UNPAID',
+}
+
+export enum EventPaymentTypes {
+    OTC = 'OTC',
+    GCASH = 'GCASH',
+}
 
 export interface IRegisteredUser {
-  paymentUrl: string;
-  createdAt: string;
-  user: Pick<IUserModel, "photoUrl" | "id" | "firstname" | "lastname">;
+    status: EventPaymentStatus;
+    paymentUrl: string;
+    createdAt: string;
+    user: Pick<IUserModel, 'id'>;
 }
 
 export interface IEvent extends IBaseModel {
-  month: string;
-  year: string;
-  eventDate: string;
-  name: string;
-  photoUrl: string;
-  startTime: string;
-  endTime: string;
-  eventDescription: string;
-  award: string;
-  registeredUser?: IRegisteredUser[];
-  author: Pick<IUserModel, "photoUrl" | "firstname" | "lastname" | "id">;
+    month: string;
+    year: string;
+    eventDate: string;
+    name: string;
+    photoUrl: string;
+    startTime: string;
+    endTime: string;
+    eventDescription: string;
+    award: string;
+    registeredUser?: IRegisteredUser[];
+    author: Pick<IUserModel, 'photoUrl' | 'firstname' | 'lastname' | 'id'>;
 }
+
+export type TPaymentStatusValidate = {
+    eventId: string;
+    userId: string;
+};
