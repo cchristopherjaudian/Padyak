@@ -22,17 +22,33 @@
         android:theme="@style/Theme.Padyak"
         tools:targetApi="31">
         <activity
-            android:name=".frmStarted"
+            android:name=".activity.SsoLoginActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false" />
+        <activity
+            android:name=".activity.NewPasswordActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VerificationActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ForgotPasswordActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false" />
+        <activity
+            android:name=".activity.NewLoginActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false" />
+        <activity
+            android:name=".activity.frmStarted"
+            android:configChanges="screenSize|screenLayout"
             android:exported="false" />
         <activity
             android:name=".activity.ValidationMenuActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:configChanges="screenSize|screenLayout"
+            android:exported="true"/>
         <activity
             android:name=".activity.PaymentValidationActivity"
             android:exported="false" />
@@ -168,7 +184,12 @@
             android:name=".activity.frmSplash"
             android:configChanges="screenSize|screenLayout"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

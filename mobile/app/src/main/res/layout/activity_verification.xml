@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/rounded_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.VerificationActivity">
+
+    <TextView
+        android:id="@+id/textView53"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/coolvetica"
+        android:text="Verification"
+        android:textColor="@color/app_color"
+        android:textSize="26dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView18"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/otp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView53" />
+
+    <TextView
+
+        android:id="@+id/textView54"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/coolvetica"
+        android:text="PADYAK SECURE"
+        android:textColor="@color/app_color"
+        android:textSize="26dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView18" />
+
+    <TextView
+        android:id="@+id/textView51"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/coolvetica"
+        android:text="Verification code has been sent to "
+        android:textColor="#252525"
+        android:textSize="21dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView54" />
+    <TextView
+        android:id="@+id/textView52"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/coolvetica"
+        android:text="+63 921 123 4567"
+        android:textSize="22dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView51" />
+
+    <EditText
+        android:id="@+id/txOtp1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/et_rounded"
+        android:fontFamily="@font/coolvetica"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="7dp"
+        android:tag="Mobile Number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+
+    <EditText
+        android:id="@+id/txOtp2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/et_rounded"
+        android:fontFamily="@font/coolvetica"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="7dp"
+        android:tag="Mobile Number"
+        app:layout_constraintEnd_toStartOf="@+id/txOtp3"
+        app:layout_constraintStart_toEndOf="@+id/txOtp1"
+        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+
+    <EditText
+        android:id="@+id/txOtp3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/et_rounded"
+        android:fontFamily="@font/coolvetica"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="7dp"
+        android:tag="Mobile Number"
+        app:layout_constraintEnd_toStartOf="@+id/txOtp4"
+        app:layout_constraintStart_toEndOf="@+id/txOtp2"
+        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+
+    <EditText
+        android:id="@+id/txOtp4"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="60dp"
+        android:background="@drawable/et_rounded"
+        android:fontFamily="@font/coolvetica"
+        android:inputType="number"
+        android:maxLines="1"
+        android:padding="7dp"
+        android:tag="Mobile Number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+
+    <TextView
+        android:id="@+id/textView55"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/coolvetica"
+        android:text="Didn't receive the OTP?"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="@+id/txOtp1"
+        app:layout_constraintTop_toBottomOf="@+id/txOtp2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/coolvetica"
+        android:text="RESEND"
+        android:textColor="#FFF"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="@+id/txOtp4"
+        app:layout_constraintTop_toBottomOf="@+id/txOtp4" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_main_button"
+        android:text="VERIFY"
+        android:textColor="#FFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

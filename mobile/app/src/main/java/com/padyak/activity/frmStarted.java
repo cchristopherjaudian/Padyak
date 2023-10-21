@@ -27,6 +27,8 @@ public class frmStarted extends AppCompatActivity {
             frameGetStarted.setVisibility(View.GONE);
             frameTerms.setVisibility(View.VISIBLE);
         });
+        btnAgree.setOnClickListener(v->{
 
+        });
     }
 }
