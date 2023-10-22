@@ -40,10 +40,7 @@ router.get(
 
 router.get(
     '/sso/auth',
-    [
-        requestSchemaValidate(getInappUserProfile),
-        tokenMiddleware.endUserValidate as any,
-    ],
+    [requestSchemaValidate(getInappUserProfile)],
     userController.getInappAuth
 );
 
