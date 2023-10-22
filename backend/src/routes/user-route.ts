@@ -38,6 +38,12 @@ router.get(
 );
 
 router.get(
+    '/sso/auth/profile',
+    [tokenMiddleware.endUserValidate as any],
+    userController.getUserProfile
+);
+
+router.get(
     '/',
     [tokenMiddleware.endUserValidate as any],
     userController.getUserList

@@ -30,6 +30,19 @@ class UserService {
         }
     }
 
+    public async getUsersProfile(id: string) {
+        try {
+            const user = await this._repository.getUserById(id);
+
+            if (!user) {
+                throw new NotFoundError('User does not exists.');
+            }
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     public async getUsers() {
         try {
             return await this._repository.list();

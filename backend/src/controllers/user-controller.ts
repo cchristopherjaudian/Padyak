@@ -70,6 +70,18 @@ const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
     );
 });
 
+const getUserProfile = catchAsync(async (req: Request, res: Response) => {
+    const request = req as IRequestWithUser;
+    const user = await userInstance.getUsersProfile(request.user.id);
+
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_RETRIEVED,
+        user
+    );
+});
+
 const updateUser = catchAsync(async (req: Request, res: Response) => {
     const request = req as IRequestWithUser;
     const user = await userInstance.updateUser({
@@ -104,4 +116,5 @@ export default {
     inappSignup,
     inappLogin,
     createInappProfile,
+    getUserProfile,
 };

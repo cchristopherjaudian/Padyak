@@ -40,6 +40,10 @@ const inappAuthSignupSchema = Joi.object({
         )
         .trim()
         .required(),
+    source: Joi.string()
+        .trim()
+        .valid(...Object.values(AuthSource))
+        .required(),
 });
 
 const inappAuthLoginSchema = Joi.object({
