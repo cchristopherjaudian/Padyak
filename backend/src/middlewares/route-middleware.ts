@@ -22,7 +22,8 @@ class RouteMiddleware {
     public errorResponse = (
         error: TNormalizedError,
         _req: Request,
-        res: Response
+        res: Response,
+        _: NextFunction
     ) => {
         const status = error.status || httpStatus.INTERNAL_SERVER_ERROR;
         const statusCode =
