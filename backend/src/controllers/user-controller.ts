@@ -57,7 +57,7 @@ const createInappProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
-    const user = await userInstance.getUserSsoEmail(
+    const user = await userAuthInstance.getUserSsoEmail(
         req.query.emailAddress as string,
         AuthSource.SSO
     );
@@ -70,9 +70,8 @@ const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
     );
 });
 
-const getUserProfile = catchAsync(async (req: Request, res: Response) => {
-    const request = req as IRequestWithUser;
-    const user = await userInstance.getUsersProfile(request.user.id);
+const getInappAuth = catchAsync(async (req: Request, res: Response) => {
+    const user = await userAuthInstance.getInappAuth(req?.query);
 
     responseObject.createResponse(
         res,
@@ -116,5 +115,5 @@ export default {
     inappSignup,
     inappLogin,
     createInappProfile,
-    getUserProfile,
+    getInappAuth,
 };

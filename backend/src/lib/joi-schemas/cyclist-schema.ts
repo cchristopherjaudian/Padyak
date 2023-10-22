@@ -59,6 +59,11 @@ const getUserByEmailSchma = Joi.object({
     emailAddress: Joi.string().email().required(),
 });
 
+const getInappUserProfile = Joi.object({
+    contact: Joi.string().trim().min(11).max(11).required(),
+    password: Joi.string().trim().required(),
+});
+
 const updateUserSchema = Joi.object({
     firstname: Joi.string().optional(),
     photoUrl: Joi.string().optional(),
@@ -97,4 +102,5 @@ export {
     inappAuthSignupSchema,
     inappAuthLoginSchema,
     createInappProfileSchema,
+    getInappUserProfile,
 };

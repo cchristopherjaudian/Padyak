@@ -9,6 +9,7 @@ import JsonWebToken from './token-service';
 import UserRepository, { TUpdateUser } from '../repositories/user-repository';
 import UserMapper from '../lib/mappers/user-mapper';
 import {
+    AuthenticationError,
     BadRequestError,
     NotFoundError,
     ResourceConflictError,
@@ -16,32 +17,6 @@ import {
 
 class UserService {
     private _repository = new UserRepository();
-
-    public async getUserSsoEmail(email: string, source: AuthSource) {
-        try {
-            const user = await this._repository.findUserByEmail(email, source);
-
-            if (!user) {
-                throw new NotFoundError('User does not exists.');
-            }
-            return user;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    public async getUsersProfile(id: string) {
-        try {
-            const user = await this._repository.getUserById(id);
-
-            if (!user) {
-                throw new NotFoundError('User does not exists.');
-            }
-            return user;
-        } catch (error) {
-            throw error;
-        }
-    }
 
     public async getUsers() {
         try {
@@ -75,6 +50,54 @@ class UserAuthService {
     private _repo = new UserRepository();
     private _jwt = new JsonWebToken();
     private _mapper = new UserMapper();
+
+    public async getUserSsoEmail(email: string, source: AuthSource) {
+        try {
+            const user = await this._repo.findUserByEmail(email, source);
+
+            if (!user) throw new NotFoundError('User does not exists.');
+
+            const token = await this._jwt.sign({
+                id: user.id,
+                source: user.source,
+            });
+
+            return {
+                user,
+                token,
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    public async getInappAuth(payload: Record<string, unknown>) {
+        try {
+            console.log('payload', payload);
+            const user = await this._repo.getInappUser(
+                payload.contact as string
+            );
+
+            if (!user) throw new NotFoundError('User does not exists.');
+
+            const isMatched = await bcrypt.compareSync(
+                payload.password as string,
+                user.password as string
+            );
+            if (!isMatched) {
+                throw new AuthenticationError('Wrong contact or password');
+            }
+
+            const token = await this._jwt.sign({
+                id: user.id,
+                source: user.source,
+            });
+
+            return { user, token };
+        } catch (error) {
+            throw error;
+        }
+    }
 
     public async signupInapp(payload: TInappAuth) {
         const isExists = await this._repo.getUserByContact(

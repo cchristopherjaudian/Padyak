@@ -7,6 +7,7 @@ import {
     inappAuthSignupSchema,
     inappAuthLoginSchema,
     createInappProfileSchema,
+    getInappUserProfile,
 } from '../lib/joi-schemas/cyclist-schema';
 import TokenMiddleware from '../middlewares/token-middleware';
 
@@ -38,9 +39,12 @@ router.get(
 );
 
 router.get(
-    '/sso/auth/profile',
-    [tokenMiddleware.endUserValidate as any],
-    userController.getUserProfile
+    '/sso/auth',
+    [
+        requestSchemaValidate(getInappUserProfile),
+        tokenMiddleware.endUserValidate as any,
+    ],
+    userController.getInappAuth
 );
 
 router.get(

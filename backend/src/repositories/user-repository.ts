@@ -27,6 +27,17 @@ class UserRepository {
         return (user.docs[0]?.data() as IUserModel) || null;
     }
 
+    public async getInappUser(contact: string): Promise<IUserModel> {
+        const user = await this._firestore
+            .getDb()
+            .collection('users')
+            .where('contactNumber', '==', contact)
+            .where('source', '==', 'IN_APP')
+            .get();
+
+        return (user.docs[0]?.data() as IUserModel) || null;
+    }
+
     public async findUserByEmail(email: string, source: AuthSource) {
         try {
             const user = await this._firestore
