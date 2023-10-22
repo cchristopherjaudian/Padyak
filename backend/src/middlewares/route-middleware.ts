@@ -18,7 +18,7 @@ class RouteMiddleware {
         res.status(httpStatus.NOT_FOUND);
         next(error);
     };
-
+    // eslint-disable-typescript-eslint/no-unused-vars
     public errorResponse = (
         error: TNormalizedError,
         _req: Request,

@@ -25,6 +25,15 @@ module.exports = {
     ],
     plugins: ['@typescript-eslint', 'import'],
     rules: {
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': [
+            'warn', // or "error"
+            {
+                argsIgnorePattern: '^_',
+                varsIgnorePattern: '^_',
+                caughtErrorsIgnorePattern: '^_',
+            },
+        ],
         'max-len': 'off',
         'space-before-function-paren': 'off',
         'quote-props': ['error', 'as-needed'],
