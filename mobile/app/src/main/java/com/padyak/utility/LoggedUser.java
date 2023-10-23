@@ -5,6 +5,7 @@ import java.util.Objects;
 public class LoggedUser {
     private boolean is_admin;
     private String uuid;
+    private String password;
     private String imgUrl;
     private String firstName;
     private String lastName;
@@ -15,6 +16,7 @@ public class LoggedUser {
     private String weight;
     private String height;
     private String refreshToken;
+    private String auth;
 
     public static LoggedUser loggedUser;
 
@@ -25,9 +27,10 @@ public class LoggedUser {
     public LoggedUser() {
     }
 
-    public LoggedUser(boolean is_admin, String uuid, String imgUrl, String firstName, String lastName, String email, String gender, String birthDate, String phoneNumber, String weight, String height) {
+    public LoggedUser(boolean is_admin, String uuid, String password, String imgUrl, String firstName, String lastName, String email, String gender, String birthDate, String phoneNumber, String weight, String height, String refreshToken, String auth) {
         this.is_admin = is_admin;
         this.uuid = uuid;
+        this.password = password;
         this.imgUrl = imgUrl;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -37,6 +40,32 @@ public class LoggedUser {
         this.phoneNumber = phoneNumber;
         this.weight = weight;
         this.height = height;
+        this.refreshToken = refreshToken;
+        this.auth = auth;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public static LoggedUser getLoggedUser() {
+        return loggedUser;
+    }
+
+    public static void setLoggedUser(LoggedUser loggedUser) {
+        LoggedUser.loggedUser = loggedUser;
+    }
+
+    public String getAuth() {
+        return auth;
+    }
+
+    public void setAuth(String auth) {
+        this.auth = auth;
     }
 
     public String getRefreshToken() {
@@ -153,6 +182,7 @@ public class LoggedUser {
         return "LoggedUser{" +
                 "is_admin=" + is_admin +
                 ", uuid='" + uuid + '\'' +
+                ", password='" + password + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -163,6 +193,7 @@ public class LoggedUser {
                 ", weight='" + weight + '\'' +
                 ", height='" + height + '\'' +
                 ", refreshToken='" + refreshToken + '\'' +
+                ", auth='" + auth + '\'' +
                 '}';
     }
 }

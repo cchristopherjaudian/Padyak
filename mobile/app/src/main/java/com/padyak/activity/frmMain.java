@@ -1,6 +1,7 @@
 package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -56,7 +57,7 @@ import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
 public class frmMain extends AppCompatActivity {
-
+    CardView cardProfile;
     SmoothBottomBar bottomBar;
     ScrollView frame_home, frame_profile;
     ConstraintLayout frame_newsfeed;
@@ -78,7 +79,7 @@ public class frmMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_main);
         frmMain = this;
-
+        cardProfile = findViewById(R.id.cardProfile);
         txProfileDay = findViewById(R.id.txProfileDay);
         imgProfileDP = findViewById(R.id.imgProfileDP);
         imgMainProfileDP = findViewById(R.id.imgMainProfileDP);
@@ -152,6 +153,10 @@ public class frmMain extends AppCompatActivity {
                 frame_newsfeed.setVisibility(View.GONE);
             }
             return false;
+        });
+        cardProfile.setOnClickListener(v->{
+            Intent intent = new Intent(com.padyak.activity.frmMain.this,ProfileActivity.class);
+            startActivity(intent);
         });
         rlEvents.setOnClickListener(v -> {
             intent = new Intent(frmMain.this, frmEventCalendar.class);
