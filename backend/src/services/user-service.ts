@@ -28,6 +28,9 @@ class UserService {
 
     public async updateUser(payload: TUpdateUser) {
         try {
+            if (payload?.password) {
+                payload.password = await bcrypt.hashSync(payload.password, 10);
+            }
             const updatedUser = await this._repository.update(payload);
             return updatedUser;
         } catch (error) {
