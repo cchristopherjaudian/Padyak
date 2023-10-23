@@ -46,8 +46,8 @@ public class frmEventRegister extends AppCompatActivity {
     String[] gender = {"-Please select a payment method-", "GCash", "Over the Counter"};
     ArrayAdapter<String> aaPayment;
     Spinner spinnerPayment;
-    Button btnEventRegister, btnEventCancel,btnRegisterPayment;
-    TextView txEventName,txProofPayment,txViewQR;
+    Button btnEventRegister, btnEventCancel, btnRegisterPayment;
+    TextView txEventName, txProofPayment, txViewQR;
     ImageView imgEventRegister;
     CheckBox checkBox;
     Bitmap bitmapPayment;
@@ -55,8 +55,10 @@ public class frmEventRegister extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef, eventRef;
     UploadTask uploadTask;
-    String eventId,eventName,eventImg;
+    String eventId, eventName, eventImg;
+    String paymentType;
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +75,8 @@ public class frmEventRegister extends AppCompatActivity {
         imgEventRegister = findViewById(R.id.imgEventRegister);
 
         eventId = getIntent().getStringExtra("id");
-        eventName= getIntent().getStringExtra("name");
-        eventImg= getIntent().getStringExtra("photoUrl");
+        eventName = getIntent().getStringExtra("name");
+        eventImg = getIntent().getStringExtra("photoUrl");
 
         aaPayment = new ArrayAdapter<String>(frmEventRegister.this, R.layout.sp_format, gender);
         aaPayment.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -84,13 +86,13 @@ public class frmEventRegister extends AppCompatActivity {
         Picasso.get().load(eventImg).into(imgEventRegister);
 
         btnEventCancel.setOnClickListener(v -> finish());
-        txViewQR.setOnClickListener(v->{
+        txViewQR.setOnClickListener(v -> {
             FragmentManager fm = getSupportFragmentManager();
             fragmentViewQR editNameDialogFragment = fragmentViewQR.newInstance("PaymentQR");
             editNameDialogFragment.setCancelable(false);
             editNameDialogFragment.show(fm, "PaymentQR");
         });
-        btnRegisterPayment.setOnClickListener(v->{
+        btnRegisterPayment.setOnClickListener(v -> {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
@@ -98,20 +100,26 @@ public class frmEventRegister extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), 814);
         });
         btnEventRegister.setOnClickListener(v -> {
-            if(!checkBox.isChecked()){
+            if (!checkBox.isChecked()) {
                 Toast.makeText(this, "Please tick the waiver agreement to proceed.", Toast.LENGTH_LONG).show();
                 return;
             }
-            if(bitmapPayment == null){
+            if (bitmapPayment == null) {
                 Toast.makeText(this, "Please attach a screenshot of payment proof to proceed.", Toast.LENGTH_LONG).show();
                 return;
             }
+            if (spinnerPayment.getSelectedItemPosition() < 1) {
+                Toast.makeText(this, "Please select a payment method.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            paymentType = spinnerPayment.getSelectedItemPosition() == 1 ? "GCASH" : "OTC";
             AlertDialog alertDialog = new AlertDialog.Builder(frmEventRegister.this).create();
             alertDialog.setTitle("Event Registration");
             alertDialog.setCancelable(false);
             alertDialog.setMessage("Are you sure you want to register in this event?");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
-                    (d,w)->{
+                    (d, w) -> {
                         processRegistration();
                     });
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
@@ -123,10 +131,10 @@ public class frmEventRegister extends AppCompatActivity {
     }
 
 
-    public void processRegistration(){
-        progressDialog = Helper.getInstance().progressDialog(frmEventRegister.this,"Processing registration.");
+    public void processRegistration() {
+        progressDialog = Helper.getInstance().progressDialog(frmEventRegister.this, "Processing registration.");
         progressDialog.show();
-        new Thread(()->{
+        new Thread(() -> {
             String ref = "payment/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".jpg";
             FirebaseApp.initializeApp(this);
             storage = FirebaseStorage.getInstance();
@@ -155,23 +163,27 @@ public class frmEventRegister extends AppCompatActivity {
             });
         }).start();
     }
-    private void savePayment(String imgURI){
+
+    private void savePayment(String imgURI) {
         Map<String, Object> payload = new HashMap<>();
         payload.put("paymentUrl", imgURI);
+        payload.put("paymentType", paymentType);
 
-        VolleyHttp volleyHttp = new VolleyHttp("/cyclist/".concat(eventId),payload,"event-patch",frmEventRegister.this);
+        VolleyHttp volleyHttp = new VolleyHttp("/cyclist/".concat(eventId), payload, "event-patch", frmEventRegister.this);
         JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             progressDialog.dismiss();
-            if(responseJSON == null){
+            if (responseJSON == null) {
                 Toast.makeText(this, "Failed to process request. Please try again.", Toast.LENGTH_SHORT).show();
-            } else{
+            } else {
                 AlertDialog alertDialog = new AlertDialog.Builder(frmEventRegister.this).create();
                 alertDialog.setTitle("Event Registration");
                 alertDialog.setCancelable(false);
                 alertDialog.setMessage("You have successfully registered in this event. Press OK to continue");
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                        (d,w)->{
+                        (d, w) -> {
+                            if (null != frmEventInfo.frmEventInfo)
+                                frmEventInfo.frmEventInfo.finish();
                             finish();
                         });
                 alertDialog.show();
@@ -180,6 +192,7 @@ public class frmEventRegister extends AppCompatActivity {
         });
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

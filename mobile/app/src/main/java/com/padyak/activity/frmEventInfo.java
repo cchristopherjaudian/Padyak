@@ -137,25 +137,19 @@ public class frmEventInfo extends AppCompatActivity {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
                 LocalDate ldDate = LocalDate.parse(eventDate);
                 eventTime = formatter.format(ldDate).concat(" ").concat(eventTime);
-
-//                JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
-//                List<Participants> participantsList = new ArrayList<>();
-//                for (int i = 0; i < participantJSON.length(); i++) {
-//                    JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
-//                    Participants participants = new Participants();
-//                    participants.setUserImage(participantObject.getString("photoUrl"));
-//                    participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
-//                    participantsList.add(participants);
-//
-//                    if (participantObject.getString("id").equals(LoggedUser.getInstance().getUuid()))
-//                        is_registered = true;
-//                }
                 eventName = eventObject.getString("name");
                 eventPhoto = eventObject.getString("photoUrl");
                 eventDescription = eventObject.getString("eventDescription");
                 eventAward = eventObject.getString("award");
                 is_done = eventObject.getBoolean("isDone");
                 is_ongoing = eventObject.getBoolean("isNow");
+                JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
+
+                for (int i = 0; i < participantJSON.length(); i++) {
+                    JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
+                    if (participantObject.getString("id").equals(LoggedUser.getInstance().getUuid()))
+                        is_registered = true;
+                }
                 runOnUiThread(() -> {
                     txEventInfoName.setText(eventName);
                     txEventInfoDesc.setText(eventDescription);
@@ -166,9 +160,6 @@ public class frmEventInfo extends AppCompatActivity {
                     if(is_registered){
                         btnViewPayment.setVisibility(View.VISIBLE);
                         textView20.setVisibility(View.VISIBLE);
-//                        rvParticipants.setVisibility(View.VISIBLE);
-//                        adapterParticipant = new adapterParticipant(participantsList);
-//                        rvParticipants.setAdapter(adapterParticipant);
                     }
                     if (is_registered && is_ongoing){
                         btnEventRegister.setVisibility(View.GONE);
