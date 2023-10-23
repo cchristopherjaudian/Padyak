@@ -61,7 +61,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView54" />
     <TextView
-        android:id="@+id/textView52"
+        android:id="@+id/txMobileNumberCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -76,9 +76,11 @@
 
     <EditText
         android:id="@+id/txOtp1"
+        android:gravity="center"
+        android:maxLength="1"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/et_rounded"
         android:fontFamily="@font/coolvetica"
@@ -87,15 +89,17 @@
         android:padding="7dp"
         android:tag="Mobile Number"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+        app:layout_constraintTop_toBottomOf="@+id/txMobileNumberCode" />
 
     <EditText
         android:id="@+id/txOtp2"
+        android:gravity="center"
+        android:maxLength="1"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/et_rounded"
         android:fontFamily="@font/coolvetica"
         android:inputType="number"
@@ -104,15 +108,17 @@
         android:tag="Mobile Number"
         app:layout_constraintEnd_toStartOf="@+id/txOtp3"
         app:layout_constraintStart_toEndOf="@+id/txOtp1"
-        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+        app:layout_constraintTop_toBottomOf="@+id/txMobileNumberCode" />
 
     <EditText
         android:id="@+id/txOtp3"
+        android:gravity="center"
+        android:maxLength="1"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/et_rounded"
         android:fontFamily="@font/coolvetica"
         android:inputType="number"
@@ -121,14 +127,16 @@
         android:tag="Mobile Number"
         app:layout_constraintEnd_toStartOf="@+id/txOtp4"
         app:layout_constraintStart_toEndOf="@+id/txOtp2"
-        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+        app:layout_constraintTop_toBottomOf="@+id/txMobileNumberCode" />
 
     <EditText
         android:id="@+id/txOtp4"
+        android:gravity="center"
+        android:maxLength="1"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/et_rounded"
         android:fontFamily="@font/coolvetica"
         android:inputType="number"
@@ -136,7 +144,7 @@
         android:padding="7dp"
         android:tag="Mobile Number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView52" />
+        app:layout_constraintTop_toBottomOf="@+id/txMobileNumberCode" />
 
     <TextView
         android:id="@+id/textView55"
@@ -150,6 +158,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txOtp2" />
 
     <TextView
+        android:id="@+id/txResend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -160,6 +169,7 @@
         app:layout_constraintEnd_toEndOf="@+id/txOtp4"
         app:layout_constraintTop_toBottomOf="@+id/txOtp4" />
     <Button
+        android:id="@+id/btnVerify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

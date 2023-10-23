@@ -43,7 +43,8 @@ public class adapterPaymentValidation extends RecyclerView.Adapter<adapterPaymen
     @Override
     public void onBindViewHolder(@NonNull adapterPaymentValidation.viewHolder holder, int position) {
         holder.txRowName.setText(participants.get(position).getUserName());
-        //Picasso.get().load(participants.get(position).getUserImage()).into(holder.imgParticipant);
+        holder.txPaymentStatus.setText(participants.get(position).getPaymentStatus());
+        Picasso.get().load(participants.get(position).getUserImage()).into(holder.imgParticipant);
     }
 
     @Override
@@ -51,17 +52,17 @@ public class adapterPaymentValidation extends RecyclerView.Adapter<adapterPaymen
         return participants.size();
     }
     public class viewHolder extends RecyclerView.ViewHolder {
-        TextView txRowName;
+        TextView txRowName,txPaymentStatus;
         ImageView imgParticipant;
         private FragmentManager fm;
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             txRowName = itemView.findViewById(R.id.txRowName);
             imgParticipant = itemView.findViewById(R.id.imgParticipant);
-
+            txPaymentStatus = itemView.findViewById(R.id.txPaymentStatus);
             itemView.setOnClickListener(v->{
                 PaymentValidationActivity paymentValidationActivity = PaymentValidationActivity.me;
-                paymentValidationActivity.showUserUploaded();
+                paymentValidationActivity.showUserUploaded(participants.get(getAdapterPosition()).getUserName(),participants.get(getAdapterPosition()).getUserImage(),participants.get(getAdapterPosition()).getUserId());
             });
         }
     }

@@ -43,21 +43,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:fontFamily="@font/coolvetica"
         android:text="Angelo Carlos"
         android:textColor="#FFF"
         app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
-        app:layout_constraintEnd_toStartOf="@+id/txRowDistance"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardSubProfile"
         app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />
 
     <TextView
-        android:id="@+id/txRowDistance"
+        android:id="@+id/txPaymentStatus"
+        android:text="PAID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
-        android:fontFamily="sans-serif-light"
-        android:textSize="10dp"
+        android:fontFamily="@font/coolvetica"
+        android:textSize="12dp"
+        android:textColor="@color/app_color"
         app:layout_constraintBottom_toBottomOf="@+id/cardSubProfile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cardSubProfile" />

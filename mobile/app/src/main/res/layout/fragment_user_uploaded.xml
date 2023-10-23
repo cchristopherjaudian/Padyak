@@ -34,7 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView12">
 
         <ImageView
-            android:id="@+id/imgAdminProfile"
+            android:id="@+id/imgUser"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY"
@@ -60,8 +60,8 @@
 
     <ImageView
         android:id="@+id/imgUploaded"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
@@ -95,7 +95,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/rounded_white_button"
         android:fontFamily="@font/coolvetica"
-        android:text="Delete"
+        android:text="Back"
         android:textColor="@color/ok_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

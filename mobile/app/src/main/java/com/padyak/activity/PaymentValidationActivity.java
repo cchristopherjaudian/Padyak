@@ -5,12 +5,23 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.padyak.R;
 import com.padyak.adapter.adapterPaymentValidation;
 import com.padyak.dto.UserValidation;
 import com.padyak.fragment.fragmentUserUploaded;
+import com.padyak.utility.Helper;
+import com.padyak.utility.LoggedUser;
+import com.padyak.utility.VolleyHttp;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,28 +31,50 @@ public class PaymentValidationActivity extends AppCompatActivity {
     RecyclerView rvValidation;
     LinearLayoutManager linearLayoutManager;
     com.padyak.adapter.adapterPaymentValidation adapterPaymentValidation;
-
+    String eventId;
+    Button btnEventCancel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_validation);
         me = this;
+        eventId = getIntent().getStringExtra("eventId");
         rvValidation = findViewById(R.id.rvValidation);
+        btnEventCancel = findViewById(R.id.btnEventCancel);
+
+        btnEventCancel.setOnClickListener(v-> finish());
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         rvValidation.setLayoutManager(linearLayoutManager);
         loadValidations();
     }
     public void loadValidations(){
-        List<UserValidation> participants = new ArrayList<>();
-        participants.add(new UserValidation("Ricardo","","",""));
-        adapterPaymentValidation = new adapterPaymentValidation(participants);
+        ProgressDialog progressDialog = Helper.getInstance().progressDialog(PaymentValidationActivity.this, "Retrieving participants.");
+        progressDialog.show();
+        try {
 
-        rvValidation.setAdapter(adapterPaymentValidation);
+            VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", PaymentValidationActivity.this);
+            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+            if (responseJSON == null) throw new Exception("responseJSON is null");
+            JSONObject eventObject = responseJSON.getJSONObject("data");
+            JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
+            List<UserValidation> participants = new ArrayList<>();
+            for (int i = 0; i < participantJSON.length(); i++) {
+                String paymentStatus = participantJSON.getJSONObject(i).getString("status");
+                JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
+                participants.add(new UserValidation(participantObject.getString("id"),participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")),participantObject.getString("photoUrl"),paymentStatus));
+            }
+            adapterPaymentValidation = new adapterPaymentValidation(participants);
+            rvValidation.setAdapter(adapterPaymentValidation);
+        } catch (Exception err){
+            Log.d(Helper.getInstance().log_code, "loadValidations: " + err.getMessage());
+        } finally {
+            progressDialog.dismiss();
+        }
     }
-    public void showUserUploaded(){
+    public void showUserUploaded(String username, String photoUrl,String userId){
         FragmentManager fm = getSupportFragmentManager();
-        fragmentUserUploaded editNameDialogFragment = fragmentUserUploaded.newInstance("UserUpload");
+        fragmentUserUploaded editNameDialogFragment = fragmentUserUploaded.newInstance("UserUpload",username,photoUrl,userId,eventId);
         editNameDialogFragment.show(fm, "UserUpload");
     }
 }
