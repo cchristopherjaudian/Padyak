@@ -8,6 +8,7 @@ import {
     inappAuthLoginSchema,
     createInappProfileSchema,
     getInappUserProfile,
+    updateUserSchema,
 } from '../lib/joi-schemas/cyclist-schema';
 import TokenMiddleware from '../middlewares/token-middleware';
 
@@ -57,6 +58,15 @@ router.patch(
         requestSchemaValidate(createInappProfileSchema),
     ],
     userController.createInappProfile
+);
+
+router.patch(
+    '/',
+    [
+        tokenMiddleware.endUserValidate as any,
+        requestSchemaValidate(updateUserSchema),
+    ],
+    userController.updateUser
 );
 
 export default router;
