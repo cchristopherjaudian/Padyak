@@ -32,6 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txMainProfileName" />
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardAdminProfile"
         app:layout_constraintBottom_toBottomOf="@+id/txProfileDay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txMainProfileName"
@@ -125,7 +126,7 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_menu"
-        app:layout_constraintEnd_toStartOf="@+id/ryValidation"
+        app:layout_constraintEnd_toStartOf="@+id/rlValidation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rlEvents">
 
@@ -148,7 +149,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/ryValidation"
+        android:id="@+id/rlValidation"
         android:layout_width="@dimen/menu_size"
         android:layout_height="@dimen/menu_size"
         android:layout_marginStart="40dp"

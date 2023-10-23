@@ -3,17 +3,25 @@ package com.padyak.dto;
 import java.util.Objects;
 
 public class UserValidation {
-    private String userName,userImage;
-    private String paymentId, paymentUrl;
+    private String userName, userImage, userId;
+    private String paymentStatus;
 
     public UserValidation() {
     }
 
-    public UserValidation(String userName, String userImage, String paymentId, String paymentUrl) {
+    public UserValidation(String userId, String userName, String userImage, String paymentStatus) {
         this.userName = userName;
         this.userImage = userImage;
-        this.paymentId = paymentId;
-        this.paymentUrl = paymentUrl;
+        this.userId = userId;
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
@@ -32,20 +40,12 @@ public class UserValidation {
         this.userImage = userImage;
     }
 
-    public String getPaymentId() {
-        return paymentId;
+    public String getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public String getPaymentUrl() {
-        return paymentUrl;
-    }
-
-    public void setPaymentUrl(String paymentUrl) {
-        this.paymentUrl = paymentUrl;
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     @Override
@@ -53,12 +53,12 @@ public class UserValidation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserValidation that = (UserValidation) o;
-        return Objects.equals(userName, that.userName) && Objects.equals(userImage, that.userImage) && Objects.equals(paymentId, that.paymentId) && Objects.equals(paymentUrl, that.paymentUrl);
+        return Objects.equals(userName, that.userName) && Objects.equals(userImage, that.userImage) && Objects.equals(paymentStatus, that.paymentStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, userImage, paymentId, paymentUrl);
+        return Objects.hash(userName, userImage, paymentStatus);
     }
 
     @Override
@@ -66,8 +66,7 @@ public class UserValidation {
         return "UserValidation{" +
                 "userName='" + userName + '\'' +
                 ", userImage='" + userImage + '\'' +
-                ", paymentId='" + paymentId + '\'' +
-                ", paymentUrl='" + paymentUrl + '\'' +
+                ", paymentStatus='" + paymentStatus + '\'' +
                 '}';
     }
 }
