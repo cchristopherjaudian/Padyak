@@ -22,4 +22,8 @@ const createAdminSchema = Joi.object({
         .required(),
 });
 
-export { createAdminSchema };
+const createAdminStorage = Joi.object({
+    url: Joi.string().trim().required(),
+});
+
+export { createAdminSchema, createAdminStorage };
