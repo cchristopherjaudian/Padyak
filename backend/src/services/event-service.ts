@@ -126,6 +126,9 @@ class EventService implements IEventService {
                         return {
                             status: user.status,
                             createdAt: user.createdAt,
+                            eventId: user.eventId,
+                            paymentUrl: user.paymentUrl,
+                            paymentType: user.paymentType,
                             user: {
                                 id: userData.id,
                                 firstname: userData.firstname,

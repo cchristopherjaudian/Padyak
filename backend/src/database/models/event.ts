@@ -14,6 +14,8 @@ export enum EventPaymentTypes {
 export interface IRegisteredUser {
     status: EventPaymentStatus;
     paymentUrl: string;
+    eventId: string;
+    paymentType: EventPaymentTypes;
     createdAt: string;
     user: Pick<IUserModel, 'id'>;
 }
