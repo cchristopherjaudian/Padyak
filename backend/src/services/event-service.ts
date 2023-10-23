@@ -181,12 +181,12 @@ class EventService implements IEventService {
         }
 
         const eventUser = event.registeredUser!.findIndex(
-            (obj) => obj.user.id == payload.userId
+            (obj) => obj.user?.id === payload.userId
         );
 
         event.registeredUser![eventUser as number].status = payload.status;
 
-        await this.update(event);
+        await this._repository.update(event);
         return event.registeredUser![eventUser];
     }
 

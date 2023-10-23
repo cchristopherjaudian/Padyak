@@ -67,6 +67,7 @@ const getEvent = catchAsync(async (req: Request, res: Response) => {
 const validatePaymentStatus = catchAsync(
     async (req: Request, res: Response) => {
         const request = req as IRequestWithUser;
+
         const payment = await eventInstance.paymentStatusValidate({
             eventId: req.params.eventId,
             userId: request.user.id,
