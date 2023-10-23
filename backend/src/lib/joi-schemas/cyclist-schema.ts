@@ -94,6 +94,26 @@ const updateUserSchema = Joi.object({
     weight: Joi.string().optional(),
 });
 
+const forgotPasswordSchema = Joi.object({
+    contactNumber: Joi.string().min(11).max(11).optional(),
+    password: Joi.string()
+        .pattern(/^[A-Z]/, 'Password should start with a capital letter')
+        .pattern(
+            /(?=.*\d)/,
+            'Password should contain atleast contain 1 numeric value'
+        )
+        .pattern(
+            /(?=.*[@#$!%*?&])/,
+            'Password should atleast contain 1 special character'
+        )
+        .pattern(
+            /[A-Za-z\d@$!%*?&]{7,}/,
+            'Password should be 8 characters length'
+        )
+        .trim()
+        .optional(),
+});
+
 const createInappProfileSchema = Joi.object({
     firstname: Joi.string().required(),
     photoUrl: Joi.string().required(),
@@ -119,4 +139,5 @@ export {
     inappAuthLoginSchema,
     createInappProfileSchema,
     getInappUserProfile,
+    forgotPasswordSchema,
 };

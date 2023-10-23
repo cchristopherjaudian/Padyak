@@ -2,6 +2,9 @@ import Firstore from '../database/firestore';
 import { AuthSource, IUserModel } from '../database/models/user';
 
 export type TUpdateUser = Omit<Partial<IUserModel>, 'createdAt'>;
+
+export type TForgotPasssword = Pick<TUpdateUser, 'contactNumber' | 'password'>;
+
 class UserRepository {
     private _colName = 'users';
     private _firestore = Firstore.getInstance();

@@ -6,7 +6,10 @@ import {
     TInappAuth,
 } from '../database/models/user';
 import JsonWebToken from './token-service';
-import UserRepository, { TUpdateUser } from '../repositories/user-repository';
+import UserRepository, {
+    TForgotPasssword,
+    TUpdateUser,
+} from '../repositories/user-repository';
 import UserMapper from '../lib/mappers/user-mapper';
 import {
     AuthenticationError,
@@ -32,6 +35,26 @@ class UserService {
                 payload.password = await bcrypt.hashSync(payload.password, 10);
             }
             const updatedUser = await this._repository.update(payload);
+            return updatedUser;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    public async forgotPassword(payload: TForgotPasssword) {
+        try {
+            const user = await this._repository.getUserByContact(
+                payload.contactNumber as string,
+                AuthSource.IN_APP
+            );
+            if (payload?.password) {
+                payload.password = await bcrypt.hashSync(payload.password, 10);
+            }
+
+            const updatedUser = await this._repository.update({
+                ...user,
+                ...payload,
+            });
             return updatedUser;
         } catch (error) {
             throw error;

@@ -96,6 +96,17 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
     );
 });
 
+const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+    const user = await userInstance.forgotPassword(req.body);
+
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_MODIFIED,
+        user!
+    );
+});
+
 const getUserList = catchAsync(async (req: Request, res: Response) => {
     const users = await userInstance.getUsers();
 
@@ -116,4 +127,5 @@ export default {
     inappLogin,
     createInappProfile,
     getInappAuth,
+    forgotPassword,
 };

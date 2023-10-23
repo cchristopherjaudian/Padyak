@@ -9,6 +9,7 @@ import {
     createInappProfileSchema,
     getInappUserProfile,
     updateUserSchema,
+    forgotPasswordSchema,
 } from '../lib/joi-schemas/cyclist-schema';
 import TokenMiddleware from '../middlewares/token-middleware';
 
@@ -67,6 +68,12 @@ router.patch(
         requestSchemaValidate(updateUserSchema),
     ],
     userController.updateUser
+);
+
+router.patch(
+    '/forgot',
+    [requestSchemaValidate(forgotPasswordSchema)],
+    userController.forgotPassword
 );
 
 export default router;
