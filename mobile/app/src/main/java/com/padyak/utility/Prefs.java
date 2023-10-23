@@ -9,6 +9,7 @@ public class Prefs {
     private String spTag = "padyak";
 
     public final static String ADMIN_KEY = "isAdmin";
+    public final static String PASSWORD_KEY = "password";
     public final static String ID_KEY = "id";
     public final static String IMG_KEY = "photoUrl";
     public final static String FN_KEY = "firstname";
@@ -19,6 +20,7 @@ public class Prefs {
     public final static String PHONE_KEY = "contactNumber";
     public final static String WEIGHT_KEY = "weight";
     public final static String HEIGHT_KEY = "height";
+    public final static String AUTH = "auth";
 
 
 
@@ -34,7 +36,7 @@ public class Prefs {
         try {
             SharedPreferences sharedPreferences = c.getSharedPreferences(spTag, Context.MODE_PRIVATE);
             if(sharedPreferences == null) throw new Exception("");
-            LoggedUser.getInstance().setIs_admin(sharedPreferences.getBoolean(ADMIN_KEY, false));
+            //LoggedUser.getInstance().setIs_admin(sharedPreferences.getBoolean(ADMIN_KEY, false));
             LoggedUser.getInstance().setUuid(sharedPreferences.getString(ID_KEY, ""));
             LoggedUser.getInstance().setImgUrl(sharedPreferences.getString(IMG_KEY, ""));
             LoggedUser.getInstance().setFirstName(sharedPreferences.getString(FN_KEY, ""));
@@ -45,8 +47,12 @@ public class Prefs {
             LoggedUser.getInstance().setPhoneNumber(sharedPreferences.getString(PHONE_KEY, ""));
             LoggedUser.getInstance().setWeight(sharedPreferences.getString(WEIGHT_KEY, ""));
             LoggedUser.getInstance().setHeight(sharedPreferences.getString(HEIGHT_KEY, ""));
+            LoggedUser.getInstance().setAuth(sharedPreferences.getString(AUTH, ""));
+            LoggedUser.getInstance().setPassword(sharedPreferences.getString(PASSWORD_KEY, ""));
+            Log.d(Helper.getInstance().log_code, "getUser: " + LoggedUser.getInstance().toString());
             return true;
         } catch (Exception err) {
+            Log.d(Helper.getInstance().log_code, "getUser: " + err.getMessage());
             return false;
         }
     }

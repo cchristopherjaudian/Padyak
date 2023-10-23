@@ -1,6 +1,7 @@
 package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,21 +27,23 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 
 public class AdminMainActivity extends AppCompatActivity {
-
-    RelativeLayout rlEvents, rlAlert, rlTrack;
+    CardView cardAdminProfile;
+    RelativeLayout rlEvents, rlAlert, rlTrack,rlValidation;
     TextView txMainProfileName, txProfileDay;
     ImageView imgAdminProfile;
     ProgressDialog progressDialog;
     Intent intent;
-
+    public static AdminMainActivity adminMainActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
+        adminMainActivity = this;
         rlEvents = findViewById(R.id.rlEvents);
         rlAlert = findViewById(R.id.rlAlert);
         rlTrack = findViewById(R.id.rlTrack);
-
+        rlValidation = findViewById(R.id.rlValidation);
+        cardAdminProfile = findViewById(R.id.cardAdminProfile);
         txMainProfileName = findViewById(R.id.txMainProfileName);
         txProfileDay = findViewById(R.id.txProfileDay);
         imgAdminProfile = findViewById(R.id.imgAdminProfile);
@@ -51,7 +54,10 @@ public class AdminMainActivity extends AppCompatActivity {
         String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
         txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
-
+        cardAdminProfile.setOnClickListener(v->{
+            Intent intent = new Intent(AdminMainActivity.this,ProfileActivity.class);
+            startActivity(intent);
+        });
         rlEvents.setOnClickListener(v -> {
             intent = new Intent(AdminMainActivity.this, frmEventCrud.class);
             startActivity(intent);
@@ -95,6 +101,10 @@ public class AdminMainActivity extends AppCompatActivity {
             }).start();
 
 
+        });
+        rlValidation.setOnClickListener(v->{
+            intent = new Intent(AdminMainActivity.this,ValidationMenuActivity.class);
+            startActivity(intent);
         });
     }
 

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_color"
+    tools:context=".activity.InappRegistrationActivity">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/coolvetica"
+        android:text="Create New Account"
+        android:textColor="#FFF"
+        android:textSize="@dimen/form_header_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_bg"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txCreateEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Email Address"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/txAddEventTitle"
+                android:tag="Email Address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/et_rounded"
+                android:enabled="false"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="7dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txCreateEmail" />
+
+            <TextView
+
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="First Name"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txAddEventTitle" />
+
+            <EditText
+                android:id="@+id/etCreateFirstName"
+                android:tag="First Name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="text"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:padding="7dp"
+                app:layout_constraintEnd_toStartOf="@+id/etCreateLastName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/textView35"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Last Name"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="@+id/etCreateLastName"
+                app:layout_constraintTop_toBottomOf="@+id/txAddEventTitle" />
+
+            <EditText
+                android:id="@+id/etCreateLastName"
+                android:tag="Last Name"
+                android:maxLength="20"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="7dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/etCreateFirstName"
+                app:layout_constraintTop_toBottomOf="@+id/textView35" />
+
+            <TextView
+                android:id="@+id/txCreateContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Contact Number"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etCreateFirstName" />
+
+            <EditText
+                android:id="@+id/etCreateContact"
+                android:tag="Contact Number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:maxLines="1"
+                android:padding="7dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txCreateContact" />
+
+            <TextView
+                android:id="@+id/textView41"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Birthdate"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etCreateContact" />
+
+            <EditText
+                android:id="@+id/etCreateBirthdate"
+                android:tag="Birthdate"
+                android:maxLength="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="7dp"
+                app:layout_constraintEnd_toEndOf="@+id/etCreateHeight"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView41" />
+
+            <TextView
+                android:id="@+id/textView42"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Gender"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="@+id/etCreateGender"
+                app:layout_constraintTop_toBottomOf="@+id/etCreateContact" />
+
+            <Spinner
+                android:id="@+id/etCreateGender"
+                android:textSize="18dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                app:layout_constraintBottom_toBottomOf="@+id/etCreateBirthdate"
+                app:layout_constraintEnd_toEndOf="@+id/etCreateWeight"
+                app:layout_constraintStart_toStartOf="@+id/etCreateWeight"
+                app:layout_constraintTop_toTopOf="@+id/etCreateBirthdate" />
+
+            <TextView
+                android:id="@+id/textView43"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Height"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etCreateBirthdate" />
+
+            <EditText
+                android:id="@+id/etCreateHeight"
+                android:tag="Height"
+                android:maxLength="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="7dp"
+                app:layout_constraintEnd_toStartOf="@+id/etCreateWeight"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView43" />
+
+            <TextView
+                android:id="@+id/textView44"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Weight"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="@+id/etCreateWeight"
+                app:layout_constraintTop_toBottomOf="@+id/etCreateBirthdate" />
+
+            <EditText
+                android:id="@+id/etCreateWeight"
+                android:tag="Weight"
+                android:maxLength="10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="7dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/etCreateHeight"
+                app:layout_constraintTop_toBottomOf="@+id/textView43" />
+
+            <TextView
+                android:id="@+id/txPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/coolvetica"
+                android:text="Password"
+                android:textColor="#000"
+                android:textSize="@dimen/subheader_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etCreateHeight" />
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:padding="7dp"
+                android:tag="Password"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txPassword" />
+
+            <Button
+                android:id="@+id/btnUpdateAccount"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_size"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_main_button"
+                android:text="Create Account"
+                android:textColor="#FFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+
+            <Button
+                android:id="@+id/btnCancelAccount"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_size"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_white_button"
+                android:text="Cancel"
+                android:textColor="@color/ok_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnUpdateAccount" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

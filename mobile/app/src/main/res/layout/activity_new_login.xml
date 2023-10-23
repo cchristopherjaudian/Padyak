@@ -93,7 +93,7 @@
             android:layout_marginEnd="40dp"
             android:background="@drawable/et_rounded"
             android:fontFamily="@font/coolvetica"
-            android:inputType="password"
+            android:inputType="textPassword"
             android:maxLines="1"
             android:padding="7dp"
             android:tag="Password"

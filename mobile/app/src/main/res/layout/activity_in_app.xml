@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_color"
-    tools:context=".activity.NewPasswordActivity">
+    tools:context=".activity.InAppActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -25,7 +25,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/coolvetica"
-            android:text="New Password"
+            android:text="Create New Account"
             android:textColor="@color/app_color"
             android:textSize="26dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,11 +33,11 @@
 
         <ImageView
             android:id="@+id/imageView18"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="50dp"
+            android:layout_width="160dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="20dp"
             android:scaleType="fitXY"
-            android:src="@drawable/newpassword"
+            android:src="@drawable/applogo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -47,22 +47,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/coolvetica"
-            android:text="Please enter your new password"
+            android:text="Mobile Number"
             android:textColor="#252525"
             android:textSize="21dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView18" />
+        <EditText
+            android:id="@+id/txMobileNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/et_rounded"
+            android:fontFamily="@font/coolvetica"
+            android:inputType="number"
+            android:padding="7dp"
+            android:tag="Mobile Number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView51" />
+
+        <TextView
+            android:id="@+id/textView56"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="New Password"
+            android:textColor="#252525"
+            android:textSize="21dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txMobileNumber" />
 
         <EditText
             android:id="@+id/txNewPassword"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/et_rounded"
             android:fontFamily="@font/coolvetica"
@@ -71,14 +97,27 @@
             android:tag="New Password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView51" />
+            app:layout_constraintTop_toBottomOf="@+id/textView56" />
+
+        <TextView
+            android:id="@+id/textView58"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="Confirm Password"
+            android:textColor="#252525"
+            android:textSize="21dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txNewPassword" />
 
         <EditText
             android:id="@+id/txConfirmPassword"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/et_rounded"
             android:fontFamily="@font/coolvetica"
@@ -88,16 +127,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txNewPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/textView58" />
 
         <Button
+            android:id="@+id/btnCreateInApp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_main_button"
-            android:text="UPDATE"
+            android:text="CREATE"
             android:textColor="#FFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
