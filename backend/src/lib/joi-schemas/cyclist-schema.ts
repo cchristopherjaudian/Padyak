@@ -67,6 +67,22 @@ const getInappUserProfile = Joi.object({
 const updateUserSchema = Joi.object({
     firstname: Joi.string().optional(),
     photoUrl: Joi.string().optional(),
+    password: Joi.string()
+        .pattern(/^[A-Z]/, 'Password should start with a capital letter')
+        .pattern(
+            /(?=.*\d)/,
+            'Password should contain atleast contain 1 numeric value'
+        )
+        .pattern(
+            /(?=.*[@#$!%*?&])/,
+            'Password should atleast contain 1 special character'
+        )
+        .pattern(
+            /[A-Za-z\d@$!%*?&]{7,}/,
+            'Password should be 8 characters length'
+        )
+        .trim()
+        .optional(),
     lastname: Joi.string().optional(),
     emailAddress: Joi.string().email().optional(),
     contactNumber: Joi.string().min(11).max(11).optional(),
