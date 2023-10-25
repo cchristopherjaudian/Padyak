@@ -94,16 +94,18 @@ class PostService {
         const user = new UserRepository();
         const mappedPosts = await Promise.all(
             posts.map(async (post) => {
-                const author = await user.getUserById(post.author.id);
-
-                post.author = {
-                    id: author.id,
-                    firstname: author.firstname as string,
-                    lastname: author.lastname as string,
-                    photoUrl: author.photoUrl as string,
-                } as IUserModel;
+                const author = await user.getUserById(post?.author?.id);
+                if (author) {
+                    post.author = {
+                        id: author.id,
+                        firstname: author.firstname as string,
+                        lastname: author.lastname as string,
+                        photoUrl: author.photoUrl as string,
+                    } as IUserModel;
+                }
 
                 if (post!.likes!.length > 0) {
+                    console.log('has likes');
                     const likes = await Promise.all(
                         post.likes?.map(async (like) => {
                             const likedBy = await user.getUserById(
@@ -136,7 +138,6 @@ class PostService {
 
                     post.comments = comments as any;
                 }
-
                 return post;
             })
         );
