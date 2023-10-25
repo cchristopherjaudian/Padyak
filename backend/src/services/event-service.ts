@@ -110,6 +110,9 @@ class EventService implements IEventService {
             if (!event) throw new NotFoundError('Event not found.');
 
             const author = await this._user.getUserById(event.author.id);
+            if (!author) {
+                throw new NotFoundError('Author does not exits.');
+            }
             event.author = {
                 id: author.id,
                 firstname: author.firstname,
@@ -123,6 +126,11 @@ class EventService implements IEventService {
                         const userData = await this._user.getUserById(
                             user.user.id
                         );
+                        if (!userData) {
+                            throw new NotFoundError(
+                                'Registered user does not exits.'
+                            );
+                        }
                         return {
                             status: user.status,
                             createdAt: user.createdAt,
@@ -216,12 +224,56 @@ class EventService implements IEventService {
     public async getEvents(query: TEventListQuery) {
         try {
             const events = await this._repository.getEventList(query);
-            const mappedEvents = events.map((event) => {
-                return {
-                    ...event,
-                    isDone: this.getEventValidity(event.eventDate),
-                };
-            });
+            if (events.length === 0) return events;
+
+            const mappedEvents = await Promise.all(
+                events.map(async (event) => {
+                    const author = await this._user.getUserById(
+                        event.author.id
+                    );
+                    if (!author) {
+                        throw new NotFoundError('Author does not exits.');
+                    }
+                    event.author = {
+                        id: author.id,
+                        firstname: author.firstname,
+                        lastname: author.lastname,
+                        photoUrl: author.photoUrl,
+                    };
+
+                    if (event!.registeredUser!.length > 0) {
+                        event.registeredUser = await Promise.all(
+                            event.registeredUser?.map(async (user) => {
+                                const userData = await this._user.getUserById(
+                                    user.user.id
+                                );
+                                if (!userData) {
+                                    throw new NotFoundError(
+                                        'Registered user does not exits.'
+                                    );
+                                }
+                                return {
+                                    status: user.status,
+                                    createdAt: user.createdAt,
+                                    eventId: user.eventId,
+                                    paymentUrl: user.paymentUrl,
+                                    paymentType: user.paymentType,
+                                    user: {
+                                        id: userData.id,
+                                        firstname: userData.firstname,
+                                        lastname: userData.lastname,
+                                        photoUrl: userData.photoUrl,
+                                    },
+                                };
+                            }) as []
+                        );
+                    }
+                    return {
+                        ...event,
+                        isDone: this.getEventValidity(event.eventDate),
+                    };
+                })
+            );
             return mappedEvents;
         } catch (error) {
             throw error;

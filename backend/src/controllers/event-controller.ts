@@ -98,15 +98,11 @@ const updatePaymentStatus = catchAsync(async (req: Request, res: Response) => {
 
 const updateEvent = catchAsync(async (req: Request, res: Response) => {
     const request = req as IRequestWithUser;
-    const { photoUrl, firstname, lastname } = request.user;
+    const { id } = request.user;
     const event = await eventInstance.update({
         id: req.params.eventId,
         ...req.body,
-        author: {
-            photoUrl,
-            firstname,
-            lastname,
-        },
+        author: { id },
     });
 
     responseObject.createResponse(
