@@ -191,16 +191,20 @@ class EventService implements IEventService {
             throw new BadRequestError('No registered users.');
         }
 
-        const eventUser = event.registeredUser!.findIndex(
+        const eventUserIndex = event.registeredUser!.findIndex(
             (obj) => obj.user?.id === payload.userId
         );
-
-        event.registeredUser![eventUser as number].status = payload.status;
+        const currentUser = event.registeredUser![eventUserIndex];
         if (payload.status === EventPaymentStatus.REJECTED) {
-            event.registeredUser![eventUser as number].paymentUrl = '';
+            event.registeredUser = event.registeredUser?.filter(
+                (registered) => registered.user.id !== payload.userId
+            );
+        } else {
+            event.registeredUser![eventUserIndex as number].status =
+                payload.status;
         }
         await this._repository.update(event);
-        return event.registeredUser![eventUser];
+        return currentUser;
     }
 
     private getEventValidity(eventDate: string) {
