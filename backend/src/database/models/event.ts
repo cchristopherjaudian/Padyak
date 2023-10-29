@@ -4,6 +4,7 @@ import { IUserModel } from './user';
 export enum EventPaymentStatus {
     PAID = 'PAID',
     UNPAID = 'UNPAID',
+    REJECTED = 'REJECTED',
 }
 
 export enum EventPaymentTypes {

@@ -196,7 +196,9 @@ class EventService implements IEventService {
         );
 
         event.registeredUser![eventUser as number].status = payload.status;
-
+        if (payload.status === EventPaymentStatus.REJECTED) {
+            event.registeredUser![eventUser as number].paymentUrl = '';
+        }
         await this._repository.update(event);
         return event.registeredUser![eventUser];
     }
