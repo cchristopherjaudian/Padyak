@@ -150,7 +150,7 @@ public class frmAlertGroup extends AppCompatActivity {
 
                             Map<String, Object> payload = new HashMap<>();
                             payload.put("to",recipients);
-                            payload.put("level",alertLevel);
+                            payload.put("level",alertLevel-1);
                             payload.put("location",alertAddress);
                             payload.put("latitude",_lat);
                             payload.put("longitude",_long);

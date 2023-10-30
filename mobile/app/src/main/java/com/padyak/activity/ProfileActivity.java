@@ -40,6 +40,12 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         txLoggedUser.setText(LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()));
         Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgLoggedProfile);
     }

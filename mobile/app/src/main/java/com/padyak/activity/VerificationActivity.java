@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ public class VerificationActivity extends AppCompatActivity {
 
     TextView txMobileNumberCode,txResend;
     EditText txOtp1,txOtp2,txOtp3,txOtp4;
+
     Button btnVerify;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +54,19 @@ public class VerificationActivity extends AppCompatActivity {
         txOtp2 = findViewById(R.id.txOtp2);
         txOtp3 = findViewById(R.id.txOtp3);
         txOtp4 = findViewById(R.id.txOtp4);
-
-        txMobileNumberCode.setText(mobileNumber);
+        txOtp1.setOnKeyListener((view, i, keyEvent) -> {
+            txOtp2.requestFocus();
+            return false;
+        });
+        txOtp2.setOnKeyListener((view, i, keyEvent) -> {
+            txOtp3.requestFocus();
+            return false;
+        });
+        txOtp3.setOnKeyListener((view, i, keyEvent) -> {
+            txOtp4.requestFocus();
+            return false;
+        });
+                txMobileNumberCode.setText(mobileNumber);
 
         btnVerify.setOnClickListener(v->{
             if(is_registration){

@@ -1,10 +1,12 @@
 package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -32,16 +34,22 @@ public class frmAdminAlert extends AppCompatActivity {
     com.padyak.adapter.adapterAdminAlert adapterAdminAlert;
     ImageView imgDP;
     ProgressDialog progressDialog;
+    CardView cardView4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_admin_alert);
+        cardView4 = findViewById(R.id.cardView4);
         imgDP = findViewById(R.id.imgDP);
         Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgDP);
         rvAlertList = findViewById(R.id.rvAlertList);
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvAlertList.setLayoutManager(linearLayoutManager);
+        cardView4.setOnClickListener(v->{
+            Intent intent = new Intent(this,ProfileActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override

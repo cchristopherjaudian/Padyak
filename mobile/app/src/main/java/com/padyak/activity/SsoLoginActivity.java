@@ -8,10 +8,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +49,7 @@ public class SsoLoginActivity extends AppCompatActivity {
     EditText txMobileNumber, txMobilePassword;
     String mobileNumber, mobilePassword;
     ProgressDialog progressDialog;
-    SignInButton btnGAuth;
+    ImageView imgShowPassword;
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
     private static final int REQ_ONE_TAP = 2;
@@ -58,6 +60,7 @@ public class SsoLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sso_login);
         sso = this;
 
+        imgShowPassword = findViewById(R.id.imgShowPassword);
         btnNewLogin = findViewById(R.id.btnNewLogin);
         btnSSO = findViewById(R.id.btnSSO);
 
@@ -90,6 +93,8 @@ public class SsoLoginActivity extends AppCompatActivity {
             authInApp(mobileNumber, mobilePassword);
         });
         btnSSO.setOnClickListener(v -> {
+
+            btnSSO.setEnabled(false);
             oneTapClient.beginSignIn(signInRequest)
                     .addOnSuccessListener(SsoLoginActivity.this, new OnSuccessListener<BeginSignInResult>() {
                         @Override
@@ -107,7 +112,8 @@ public class SsoLoginActivity extends AppCompatActivity {
                     .addOnFailureListener(SsoLoginActivity.this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            btnGAuth.setVisibility(View.VISIBLE);
+                            btnSSO.setEnabled(true);
+                            Toast.makeText(SsoLoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         });
@@ -124,6 +130,13 @@ public class SsoLoginActivity extends AppCompatActivity {
             b.putBoolean("forgot",true);
             intent.putExtras(b);
             startActivity(intent);
+        });
+        imgShowPassword.setOnClickListener(v->{
+            if(txMobilePassword.getInputType() == 129){
+                txMobilePassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            } else{
+                txMobilePassword.setInputType(129);
+            }
         });
         Prefs.getInstance().getUser(this);
         Log.d(Helper.getInstance().log_code, "SP LoggedUser: " + LoggedUser.getInstance().toString());
@@ -173,6 +186,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                             JSONObject userObject = dataObject.getJSONObject("user");
                             String refToken = dataObject.getString("token");
                             LoggedUser.getInstance().setRefreshToken(refToken);
+                            Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY,userObject.getString("photoUrl"));
                             Intent intent;
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.PASSWORD_KEY,password);
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.FN_KEY, userObject.getString(Prefs.FN_KEY));
@@ -280,6 +294,8 @@ public class SsoLoginActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.d(Helper.getInstance().log_code, "checkEmail: " + e.getMessage());
+        } finally {
+            btnSSO.setEnabled(true);
         }
     }
 
@@ -313,8 +329,14 @@ public class SsoLoginActivity extends AppCompatActivity {
                     String refToken = dataObject.getString("token");
                     LoggedUser.getInstance().setRefreshToken(refToken);
                     Log.d(Helper.getInstance().log_code, "validateLogin: " + LoggedUser.getInstance().toString());
+                    Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY,userObject.getString("photoUrl"));
                     if(userObject.has("isAdmin")){
-                        intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
+                        if(!userObject.getBoolean("isAdmin")){
+                            intent = new Intent(SsoLoginActivity.this, frmMain.class);
+                        } else{
+                            intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
+                        }
+
                     } else{
                         intent = new Intent(SsoLoginActivity.this, frmMain.class);
                     }

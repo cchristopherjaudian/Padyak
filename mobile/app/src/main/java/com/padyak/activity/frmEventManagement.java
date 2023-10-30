@@ -2,6 +2,7 @@ package com.padyak.activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,10 +45,12 @@ public class frmEventManagement extends AppCompatActivity {
     List<CalendarEvent> calendarEvents;
     Button btnAddEvent, btnDeleteEvent;
     ProgressDialog progressDialog;
+    CardView cardView4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_management);
+        cardView4 = findViewById(R.id.cardView4);
         frmEventMonth = findViewById(R.id.frmEventMonth);
         btnDeleteEvent = findViewById(R.id.btnDeleteEvent);
         btnAddEvent = findViewById(R.id.btnAddEvent);
@@ -60,7 +63,10 @@ public class frmEventManagement extends AppCompatActivity {
 
         month = getIntent().getIntExtra("month", 0);
         frmEventMonth.setText(Month.of(month).name());
-
+        cardView4.setOnClickListener(v->{
+            Intent intent = new Intent(this,ProfileActivity.class);
+            startActivity(intent);
+        });
         btnAddEvent.setOnClickListener(v->{
             Intent intent = new Intent(frmEventManagement.this,frmAddEvent.class);
             Bundle bundle = new Bundle();

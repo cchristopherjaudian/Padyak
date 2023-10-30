@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -27,6 +28,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.padyak.R;
+import com.padyak.adapter.adapterCoverPhoto;
+import com.padyak.dto.CoverPhoto;
 import com.padyak.fragment.fragmentUserUploaded;
 import com.padyak.fragment.fragmentViewQR;
 import com.padyak.utility.Helper;
@@ -34,11 +37,14 @@ import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +64,7 @@ public class frmEventRegister extends AppCompatActivity {
     String eventId, eventName, eventImg;
     String paymentType;
     ProgressDialog progressDialog;
+    String paymentQR = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +95,7 @@ public class frmEventRegister extends AppCompatActivity {
         btnEventCancel.setOnClickListener(v -> finish());
         txViewQR.setOnClickListener(v -> {
             FragmentManager fm = getSupportFragmentManager();
-            fragmentViewQR editNameDialogFragment = fragmentViewQR.newInstance("PaymentQR");
+            fragmentViewQR editNameDialogFragment = fragmentViewQR.newInstance("PaymentQR",paymentQR);
             editNameDialogFragment.setCancelable(false);
             editNameDialogFragment.show(fm, "PaymentQR");
         });
@@ -128,8 +135,32 @@ public class frmEventRegister extends AppCompatActivity {
             alertDialog.show();
 
         });
+        loadQR();
     }
 
+    public void loadQR() {
+        progressDialog = Helper.getInstance().progressDialog(frmEventRegister.this, "Retrieving payment info.");
+        progressDialog.show();
+        new Thread(() -> {
+            VolleyHttp volleyHttp = new VolleyHttp("/storage/LATEST", null, "admin", frmEventRegister.this);
+            String response = volleyHttp.getResponseBody(true);
+            runOnUiThread(() -> {
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    int responseCode = jsonResponse.getInt("status");
+                    if (responseCode != 200) throw new Exception("Response Code " + responseCode);
+                    JSONObject urlObject = jsonResponse.getJSONObject("data");
+                    paymentQR = urlObject.getString("url");
+                } catch (JSONException e) {
+                    Log.d(Helper.getInstance().log_code, "loadCoverPhoto JSONException: " + e.getMessage());
+                } catch (Exception ee) {
+                    Log.d(Helper.getInstance().log_code, "loadCoverPhoto Exception: " + ee.getMessage());
+                } finally {
+                    progressDialog.dismiss();
+                }
+            });
+        }).start();
+    }
 
     public void processRegistration() {
         progressDialog = Helper.getInstance().progressDialog(frmEventRegister.this, "Processing registration.");

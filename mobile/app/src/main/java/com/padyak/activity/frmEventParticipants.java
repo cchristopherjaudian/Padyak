@@ -19,7 +19,9 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.padyak.R;
 import com.padyak.adapter.adapterParticipant;
+import com.padyak.adapter.adapterPaymentValidation;
 import com.padyak.dto.Participants;
+import com.padyak.dto.UserValidation;
 import com.padyak.fragment.fragmentEvent;
 import com.padyak.utility.CustomViewPager;
 import com.padyak.utility.Helper;
@@ -35,7 +37,7 @@ import java.util.List;
 
 
 public class frmEventParticipants extends AppCompatActivity {
-
+    com.padyak.adapter.adapterPaymentValidation adapterPaymentValidation;
     RecyclerView rvEventInfoParticipants;
     LinearLayoutManager linearLayoutManager;
     com.padyak.adapter.adapterParticipant adapterParticipant;
@@ -87,23 +89,22 @@ public class frmEventParticipants extends AppCompatActivity {
         progressDialog.show();
         new Thread(()->{
             try {
-                participantsList = new ArrayList<>();
+                List<UserValidation> participants = new ArrayList<>();
                 VolleyHttp volleyHttp = new VolleyHttp("/".concat(eventId), null, "event", frmEventParticipants.this);
                 JSONObject responseJSON = volleyHttp.getJsonResponse(true);
                 if (responseJSON == null) throw new Exception("responseJSON is null");
                 JSONObject eventObject = responseJSON.getJSONObject("data");
                 JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
-                List<Participants> participantsList = new ArrayList<>();
-                for(int i = 0; i < participantJSON.length(); i++){
+
+                for (int i = 0; i < participantJSON.length(); i++) {
+                    String paymentStatus = participantJSON.getJSONObject(i).getString("status");
+                    String paymentURL = participantJSON.getJSONObject(i).getString("paymentUrl");
                     JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
-                    Participants participants = new Participants();
-                    participants.setUserImage(participantObject.getString("photoUrl"));
-                    participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
-                    participantsList.add(participants);
+                    participants.add(new UserValidation(participantObject.getString("id"),participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")),participantObject.getString("photoUrl"),paymentStatus,paymentURL));
                 }
                 runOnUiThread(()->{
-                    adapterParticipant = new adapterParticipant(participantsList);
-                    rvEventInfoParticipants.setAdapter(adapterParticipant);
+                    adapterPaymentValidation = new adapterPaymentValidation(participants);
+                    rvEventInfoParticipants.setAdapter(adapterPaymentValidation);
                 });
 
             } catch (Exception e) {

@@ -102,7 +102,7 @@ public class VolleyHttp {
                     }
                     Log.d(Helper.getInstance().log_code, "doInBackground: " + conn.getRequestMethod());
                     int responseCode=conn.getResponseCode();
-                    if(responseCode != 200) throw new Exception("Response Code: " + responseCode);
+                    if(responseCode != 200) throw new Exception(String.valueOf(responseCode));
                     Log.d(Helper.getInstance().log_code, "Response Code Volley: " + responseCode);
 
                     BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -119,7 +119,7 @@ public class VolleyHttp {
                     return content;
                 } catch (Exception e) {
                     Log.d(Helper.getInstance().log_code, "exception: " + e.getMessage());
-                    return "";
+                    return e.getMessage();
                 }
             }
             @Override

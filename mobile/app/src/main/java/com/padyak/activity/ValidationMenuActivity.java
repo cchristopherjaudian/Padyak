@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -19,11 +21,18 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.padyak.R;
+import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
+import com.padyak.utility.VolleyHttp;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ValidationMenuActivity extends AppCompatActivity {
     Button btnValidatePayment,btnUploadQR;
@@ -32,6 +41,8 @@ public class ValidationMenuActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageRef, eventRef;
     UploadTask uploadTask;
+    ProgressDialog progressDialog;
+    boolean data_inserted = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +71,8 @@ public class ValidationMenuActivity extends AppCompatActivity {
         if (requestCode == 814 && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             try {
+                progressDialog = Helper.getInstance().progressDialog(ValidationMenuActivity.this, "Uploading QR to storage.");
+                progressDialog.show();
                 bitmapPayment = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
                 String ref = "qr/GCash.jpg";
                 FirebaseApp.initializeApp(this);
@@ -70,6 +83,7 @@ public class ValidationMenuActivity extends AppCompatActivity {
                 bitmapPayment.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] dataIntent = baos.toByteArray();
                 uploadTask = eventRef.putBytes(dataIntent);
+                progressDialog.dismiss();
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -81,6 +95,7 @@ public class ValidationMenuActivity extends AppCompatActivity {
                         taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                uploadQR(uri.toString());
                                 Toast.makeText(ValidationMenuActivity.this, "Payment QR uploaded successfully", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -92,6 +107,36 @@ public class ValidationMenuActivity extends AppCompatActivity {
                 Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show();
             }
         }
+
+    }
+
+    public void uploadQR(String imgURI){
+        progressDialog = Helper.getInstance().progressDialog(ValidationMenuActivity.this, "Retrieving QR link.");
+        progressDialog.show();
+        data_inserted = false;
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("url", imgURI);
+
+        new Thread(()->{
+            VolleyHttp volleyHttp = new VolleyHttp("/storage", payload, "admin", ValidationMenuActivity.this);
+            String response = volleyHttp.getResponseBody(true);
+
+            try {
+                JSONObject responseJSON = new JSONObject(response);
+                int responseCode = responseJSON.getInt("status");
+                if (responseCode == 200) data_inserted = true;
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onCreate: JSON " + e.getMessage());
+            }
+            runOnUiThread(() -> {
+                progressDialog.dismiss();
+                if (data_inserted) {
+                    Toast.makeText(this, "Payment QR uploaded successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Failed to upload QR. Please try again", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).start();
 
     }
 }

@@ -3,9 +3,42 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_admin_main.xml" value="0.24947916666666667" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_event_payment.xml" value="0.17239583333333333" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_forgot_password.xml" value="0.264" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_account.xml" value="0.24256410256410257" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_admin_alert.xml" value="0.25" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_alert_info.xml" value="0.25" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_alert_send.xml" value="0.24947916666666667" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_event_calendar.xml" value="0.24947916666666667" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_event_crud.xml" value="0.1078125" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_event_info.xml" value="0.24635416666666668" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_event_management.xml" value="0.25" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_event_participants.xml" value="0.24947916666666667" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_event_register.xml" value="0.2" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_login.xml" value="0.23802083333333332" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_main.xml" value="0.4" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_participate.xml" value="0.24947916666666667" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_register.xml" value="0.24635416666666668" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_ride.xml" value="0.23802083333333332" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_save_ride.xml" value="0.1078125" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_splash.xml" value="0.1078125" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_frm_started.xml" value="0.24947916666666667" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_in_app.xml" value="0.264" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_inapp_registration.xml" value="0.264" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_new_login.xml" value="0.18777292576419213" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_new_password.xml" value="0.2" />
         <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_payment_validation.xml" value="0.24635416666666668" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_profile.xml" value="0.264" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_sso_login.xml" value="0.264" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_update_profile.xml" value="0.4" />
         <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_validation_menu.xml" value="0.25" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/activity_verification.xml" value="0.264" />
         <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/fragment_user_uploaded.xml" value="0.264" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/fragment_view_qr.xml" value="0.176" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/row_event_management.xml" value="0.25" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/row_event_validation.xml" value="0.25" />
+        <entry key="..\:/Systems/Mobile/Padyak/mobile/app/src/main/res/layout/row_validation.xml" value="0.4" />
       </map>
     </option>
   </component>

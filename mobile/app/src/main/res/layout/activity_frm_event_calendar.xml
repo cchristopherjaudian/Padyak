@@ -13,6 +13,7 @@
         android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardProfile"
             android:layout_width="@dimen/dp_size"
             android:layout_height="@dimen/dp_size"
             android:layout_marginTop="10dp"

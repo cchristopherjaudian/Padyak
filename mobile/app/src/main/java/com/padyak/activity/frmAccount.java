@@ -161,6 +161,7 @@ public class frmAccount extends AppCompatActivity {
             JSONObject reader = new JSONObject(json);
             int responseStatus = reader.getInt("status");
             if (responseStatus == 200) {
+
                 if(!authSource.equals("SSO")) Prefs.getInstance().setUser(frmAccount.this, Prefs.PASSWORD_KEY, password);
                 Prefs.getInstance().setUser(frmAccount.this, Prefs.IMG_KEY, photoURL);
                 Prefs.getInstance().setUser(frmAccount.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());

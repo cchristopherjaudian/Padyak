@@ -48,12 +48,7 @@ public class AdminMainActivity extends AppCompatActivity {
         txProfileDay = findViewById(R.id.txProfileDay);
         imgAdminProfile = findViewById(R.id.imgAdminProfile);
 
-        txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
-        Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgAdminProfile);
-        LocalDate dateNow = LocalDate.now();
-        String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-        txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
+
         cardAdminProfile.setOnClickListener(v->{
             Intent intent = new Intent(AdminMainActivity.this,ProfileActivity.class);
             startActivity(intent);
@@ -111,5 +106,16 @@ public class AdminMainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
+        Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgAdminProfile);
+        LocalDate dateNow = LocalDate.now();
+        String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+        txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
     }
 }

@@ -2,6 +2,7 @@ package com.padyak.utility;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.padyak.R;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.util.regex.*;
 public class Helper {
     static Helper helper;
     final public String log_code = "Log_Padyak";
@@ -30,6 +31,19 @@ public class Helper {
     public static Helper getInstance(){
         if(helper == null) helper = new Helper();
         return helper;
+    }
+    public boolean checkString(String input) {
+        String pattern = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(input);
+        //Log.d(Helper.getInstance().log_code, "checkString: " + input + " " + m.find());
+        return m.find();
+    }
+    public boolean validateMobileNumber(String input) {
+        String pattern = "^[0-9]{11}$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(input);
+        return m.find();
     }
     public ProgressDialog progressDialog(Context c, String body){
         ProgressDialog progressDialog = new ProgressDialog(c);
@@ -120,6 +134,6 @@ public class Helper {
         alertLevelList.add(new AlertLevel(2, "My bike has a problem"));
         alertLevelList.add(new AlertLevel(3, "I had a bike breakdown and I don't have any tools. Please help."));
         alertLevelList.add(new AlertLevel(4, "I had an accident and I need help."));
-        return alertLevelList.get(level -1).getDescription();
+        return alertLevelList.get(level).getDescription();
     }
 }

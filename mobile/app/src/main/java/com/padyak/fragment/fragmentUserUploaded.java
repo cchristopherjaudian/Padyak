@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.padyak.R;
+import com.padyak.activity.PaymentValidationActivity;
 import com.padyak.activity.SsoLoginActivity;
 import com.padyak.activity.VerificationActivity;
 import com.padyak.activity.frmRide;
@@ -52,7 +53,7 @@ public class fragmentUserUploaded extends DialogFragment {
         alertDialog.setCancelable(false);
         Picasso.get().setLoggingEnabled(true);
         Picasso.get().load(userUrl).into(imgUser);
-        //Picasso.get().load(paymentUrl).into(imgUploaded);
+        Picasso.get().load(paymentUrl).into(imgUploaded);
         txUserNameUploaded.setText(userDisplayName);
 
         btnUploadConfirm.setOnClickListener(c -> {
@@ -60,15 +61,24 @@ public class fragmentUserUploaded extends DialogFragment {
             alertDialog.setMessage("Are you sure you want to set this payment as Confirmed?");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                     (d, w) -> {
+                        updatePayment("PAID");
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
+            });
+            alertDialog.show();
+        });
 
+        btnUploadDelete.setOnClickListener(c -> {
+            alertDialog.setTitle("Payment Validation");
+            alertDialog.setMessage("Are you sure you want to delete this payment?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                    (d, w) -> {
+                        updatePayment("REJECTED");
                     });
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
 
             });
             alertDialog.show();
-        });
-        btnUploadDelete.setOnClickListener(c -> {
-            dismiss();
         });
         parentView = v;
         return v;
@@ -76,16 +86,19 @@ public class fragmentUserUploaded extends DialogFragment {
 
     public void updatePayment(String status) {
         btnUploadConfirm.setEnabled(false);
+        btnUploadDelete.setEnabled(false);
         Map<String, Object> params = new HashMap<>();
         params.put("status", status);
         params.put("userId", userID);
         VolleyHttp volleyHttp = new VolleyHttp("/payment/".concat(eventID), params, "event-patch", parentView.getContext());
         String json = volleyHttp.getResponseBody(true);
         btnUploadConfirm.setEnabled(true);
+        btnUploadDelete.setEnabled(true);
         try {
             JSONObject reader = new JSONObject(json);
             int responseStatus = reader.getInt("status");
             if (responseStatus == 200) {
+                PaymentValidationActivity.me.loadValidations();
                 Toast.makeText(parentView.getContext(), "Payment updated successfully", Toast.LENGTH_SHORT).show();
                 dismiss();
             } else {
@@ -98,7 +111,7 @@ public class fragmentUserUploaded extends DialogFragment {
         }
     }
 
-    public static fragmentUserUploaded newInstance(String title, String username, String photoUrl, String userId, String eventId) {
+    public static fragmentUserUploaded newInstance(String title, String username, String photoUrl, String userId, String eventId, String pQR) {
         fragmentUserUploaded frag = new fragmentUserUploaded();
         Bundle args = new Bundle();
         args.putString("title", title);
@@ -107,6 +120,7 @@ public class fragmentUserUploaded extends DialogFragment {
         userDisplayName = username;
         userID = userId;
         eventID = eventId;
+        paymentUrl = pQR;
         return frag;
     }
 }

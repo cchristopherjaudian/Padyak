@@ -37,10 +37,12 @@ public class frmEventCrud extends AppCompatActivity {
     List<TextView> txMonth;
     ProgressDialog progressDialog;
     ImageView imgDP;
+    CardView cardView4;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_crud);
+        cardView4 = findViewById(R.id.cardView4);
         imgDP = findViewById(R.id.imgDP);
         Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgDP);
         clJanuary = findViewById(R.id.clJanuary);
@@ -96,7 +98,10 @@ public class frmEventCrud extends AppCompatActivity {
         txMonth.add(txOctober);
         txMonth.add(txNovember);
         txMonth.add(txDecember);
-
+        cardView4.setOnClickListener(v->{
+            Intent intent = new Intent(this,ProfileActivity.class);
+            startActivity(intent);
+        });
         for (int i = 0; i < cvMonth.size(); i++) {
             final int monthCounter = i + 1;
             cvMonth.get(i).setOnClickListener(v -> {

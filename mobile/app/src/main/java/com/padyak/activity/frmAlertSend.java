@@ -107,18 +107,18 @@ public class frmAlertSend extends AppCompatActivity {
                         fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
                                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                                     @Override
-                                    public void onSuccess(android.location.Location location) {
+                                    public void onSuccess(Location location) {
                                         if (location != null) {
                                             double _lat = location.getLatitude();
                                             double _long = location.getLongitude();
                                             String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + getString(R.string.maps_publicapi);
                                             VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmAlertSend.this);
                                             String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
-
+                                            Log.d(Helper.getInstance().log_code, "onSuccess: " + fromLocationURL);
 
                                             Map<String, Object> payload = new HashMap<>();
                                             payload.put("to",recipients);
-                                            payload.put("level",alertLevel);
+                                            payload.put("level",alertLevel-1);
                                             payload.put("location",alertAddress);
                                             payload.put("latitude",_lat);
                                             payload.put("longitude",_long);

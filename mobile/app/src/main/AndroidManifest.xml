@@ -22,36 +22,75 @@
         android:theme="@style/Theme.Padyak"
         tools:targetApi="31">
         <activity
+            android:name=".activity.EventPaymentActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.UpdateProfileActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.InAppActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.InappRegistrationActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.SsoLoginActivity"
             android:configChanges="screenSize|screenLayout"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.NewPasswordActivity"
             android:configChanges="screenSize|screenLayout"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.VerificationActivity"
             android:configChanges="screenSize|screenLayout"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:configChanges="screenSize|screenLayout"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.NewLoginActivity"
             android:configChanges="screenSize|screenLayout"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.frmStarted"
             android:configChanges="screenSize|screenLayout"
-            android:exported="false" />
+            android:exported="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.ValidationMenuActivity"
             android:configChanges="screenSize|screenLayout"
-            android:exported="true"/>
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PaymentValidationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.frmParticipate"
             android:configChanges="screenSize|screenLayout"
@@ -183,13 +222,8 @@
         <activity
             android:name=".activity.frmSplash"
             android:configChanges="screenSize|screenLayout"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

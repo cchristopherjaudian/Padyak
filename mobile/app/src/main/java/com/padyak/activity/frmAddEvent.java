@@ -170,21 +170,6 @@ public class frmAddEvent extends AppCompatActivity {
                     timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
                     selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
                     txAddEventEnd.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
-//                    if (catDate.equals(txAddEventEnd.getText().toString().trim())) {
-//                        if (selectedHour < hour) {
-//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//                        if (selectedHour == hour && selectedMinute <= minute) {
-//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//                    }
-//                    String timeSuffix = "";
-//                    timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
-//                    selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
-//                    txAddEventEnd.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
-
                 }
             }, hour, minute, false);
             mTimePicker.show();

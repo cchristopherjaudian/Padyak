@@ -1,6 +1,7 @@
 package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -46,10 +47,11 @@ import java.util.Locale;
 import java.util.Map;
 
 public class frmEventCalendar extends AppCompatActivity {
-ProgressDialog progressDialog;
+    ProgressDialog progressDialog;
+    CardView cardProfile;
     CalendarView calendarView;
     Button btnViewEvent;
-    TextView txSelectedDate,txCalendarEventTitle;
+    TextView txSelectedDate, txCalendarEventTitle;
     ImageView imgDP;
     String appColor;
     List<EventDay> events;
@@ -57,29 +59,35 @@ ProgressDialog progressDialog;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     Map<String, CalendarEvent> calendarMap;
     String selectedCalendarDate;
+
     @SuppressLint("ResourceType")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_calendar);
+        cardProfile = findViewById(R.id.cardProfile);
         calendarView = findViewById(R.id.calendarView);
         btnViewEvent = findViewById(R.id.btnViewEvent);
         txSelectedDate = findViewById(R.id.txSelectedDate);
         txCalendarEventTitle = findViewById(R.id.txCalendarEventTitle);
         appColor = getString(R.color.app_color);
         imgDP = findViewById(R.id.imgDP);
-        Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgDP);
+
 
         LocalDate dateNow = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
         txSelectedDate.setText(dateNow.format(formatter).toUpperCase());
 
+        cardProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+        });
         btnViewEvent.setOnClickListener((e) -> {
-            if(selectedCalendarDate.isEmpty()) return;
-            if(calendarMap.get(selectedCalendarDate) == null) return;
+            if (selectedCalendarDate.isEmpty()) return;
+            if (calendarMap.get(selectedCalendarDate) == null) return;
 
             Intent intent = new Intent(frmEventCalendar.this, frmEventInfo.class);
             Bundle bundle = new Bundle();
-            bundle.putString("eventId",calendarMap.get(selectedCalendarDate).getEventId());
+            bundle.putString("eventId", calendarMap.get(selectedCalendarDate).getEventId());
             intent.putExtras(bundle);
             startActivity(intent);
         });
@@ -95,73 +103,75 @@ ProgressDialog progressDialog;
         calendarView.setOnForwardPageChangeListener(this::loadCalendar);
 
 
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgDP);
         loadCalendar();
 
     }
-    private void loadEvent(Date d){
+
+    private void loadEvent(Date d) {
         selectedCalendarDate = simpleDateFormat.format(d);
-        if(calendarMap.containsKey(selectedCalendarDate)){
+        if (calendarMap.containsKey(selectedCalendarDate)) {
             CalendarEvent findEvent = calendarMap.get(selectedCalendarDate);
             txCalendarEventTitle.setText(findEvent.getEventName());
-        } else{
+        } else {
             txCalendarEventTitle.setText("No event registered");
         }
     }
+
     private void loadCalendar() {
-        progressDialog = Helper.getInstance().progressDialog(frmEventCalendar.this,"Retrieving events.");
+        progressDialog = Helper.getInstance().progressDialog(frmEventCalendar.this, "Retrieving events.");
         progressDialog.show();
 
         new Thread(() -> {
-                events = new ArrayList<>();
-                calendars = new ArrayList<>();
-                calendarMap = new HashMap<>();
+            events = new ArrayList<>();
+            calendars = new ArrayList<>();
+            calendarMap = new HashMap<>();
 
-                String selectedYear = String.valueOf(calendarView.getCurrentPageDate().get(Calendar.YEAR));
-                String monthName = Helper.getInstance().toTitleCase(Month.of(calendarView.getCurrentPageDate().get(Calendar.MONTH) + 1).toString().toLowerCase());
-                String params = "?year=" + selectedYear + "&month=" + monthName;
-                VolleyHttp volleyHttp = new VolleyHttp(params, null, "event", frmEventCalendar.this);
-                String response = volleyHttp.getResponseBody(true);
-                try {
-                    JSONObject responseJSON = new JSONObject(response);
-                    int statusCode = responseJSON.getInt("status");
-                    if (statusCode != 200) throw new JSONException("Status code" + statusCode);
-                    JSONArray eventArray = responseJSON.optJSONArray("data");
-                    for (int i = 0; i < eventArray.length(); i++) {
-                        JSONObject eventObject = eventArray.getJSONObject(i);
-                        Calendar calendar = Helper.getInstance().toCalendar(eventObject.getString("eventDate"));
-                        calendars.add(calendar);
-                        events.add(new EventDay(calendar, R.drawable.menuicon, Color.parseColor(appColor)));
-                        CalendarEvent calendarEvent = new CalendarEvent();
-                        calendarEvent.setEventId(eventObject.getString("id"));
-                        calendarEvent.setEventName(eventObject.getString("name"));
-                        calendarEvent.setEventAward(eventObject.getString("award"));
-                        calendarEvent.setEventDate(eventObject.getString("eventDate"));
-                        calendarEvent.setEventImage(eventObject.getString("photoUrl"));
-                        calendarEvent.setEventDescription(eventObject.getString("eventDescription"));
-                        calendarEvent.setEventStart(eventObject.getString("startTime"));
-                        calendarEvent.setEventEnd(eventObject.getString("endTime"));
-                        calendarEvent.setIs_done(false);
-                        calendarEvent.setEventRegistrar(null);
-                        calendarMap.put(eventObject.getString("eventDate"),calendarEvent);
-                    }
-                    runOnUiThread(()->{
-                        calendarView.setHighlightedDays(calendars);
-                        calendarView.setEvents(events);
-                        loadEvent(calendarView.getSelectedDates().get(0).getTime());
-                    });
-                } catch (JSONException e) {
-                    Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
-                    runOnUiThread(()->Toast.makeText(this, "Failed to retrieve list of events", Toast.LENGTH_SHORT).show());
-
-                } finally {
-                    runOnUiThread(()->progressDialog.dismiss());
+            String selectedYear = String.valueOf(calendarView.getCurrentPageDate().get(Calendar.YEAR));
+            String monthName = Helper.getInstance().toTitleCase(Month.of(calendarView.getCurrentPageDate().get(Calendar.MONTH) + 1).toString().toLowerCase());
+            String params = "?year=" + selectedYear + "&month=" + monthName;
+            VolleyHttp volleyHttp = new VolleyHttp(params, null, "event", frmEventCalendar.this);
+            String response = volleyHttp.getResponseBody(true);
+            try {
+                JSONObject responseJSON = new JSONObject(response);
+                int statusCode = responseJSON.getInt("status");
+                if (statusCode != 200) throw new JSONException("Status code" + statusCode);
+                JSONArray eventArray = responseJSON.optJSONArray("data");
+                for (int i = 0; i < eventArray.length(); i++) {
+                    JSONObject eventObject = eventArray.getJSONObject(i);
+                    Calendar calendar = Helper.getInstance().toCalendar(eventObject.getString("eventDate"));
+                    calendars.add(calendar);
+                    events.add(new EventDay(calendar, R.drawable.menuicon, Color.parseColor(appColor)));
+                    CalendarEvent calendarEvent = new CalendarEvent();
+                    calendarEvent.setEventId(eventObject.getString("id"));
+                    calendarEvent.setEventName(eventObject.getString("name"));
+                    calendarEvent.setEventAward(eventObject.getString("award"));
+                    calendarEvent.setEventDate(eventObject.getString("eventDate"));
+                    calendarEvent.setEventImage(eventObject.getString("photoUrl"));
+                    calendarEvent.setEventDescription(eventObject.getString("eventDescription"));
+                    calendarEvent.setEventStart(eventObject.getString("startTime"));
+                    calendarEvent.setEventEnd(eventObject.getString("endTime"));
+                    calendarEvent.setIs_done(false);
+                    calendarEvent.setEventRegistrar(null);
+                    calendarMap.put(eventObject.getString("eventDate"), calendarEvent);
                 }
+                runOnUiThread(() -> {
+                    calendarView.setHighlightedDays(calendars);
+                    calendarView.setEvents(events);
+                    loadEvent(calendarView.getSelectedDates().get(0).getTime());
+                });
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve list of events", Toast.LENGTH_SHORT).show());
+
+            } finally {
+                runOnUiThread(() -> progressDialog.dismiss());
+            }
         }).start();
     }
 }

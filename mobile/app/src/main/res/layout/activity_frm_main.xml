@@ -281,7 +281,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
     <ScrollView
         android:id="@+id/frame_home"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
@@ -366,7 +366,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="15dp"
                     android:fontFamily="@font/coolvetica"
-                    android:text="Events"
+                    android:text="Start Riding"
                     android:textColor="@color/app_color" />
 
                 <ImageView
@@ -374,7 +374,7 @@
                     android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/events" />
+                    android:src="@drawable/startride" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -473,22 +473,23 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/rlPolice"
                 app:layout_constraintTop_toBottomOf="@+id/rlRepair">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/coolvetica"
-                    android:text="Start Riding"
-                    android:textColor="@color/app_color"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="15dp"/>
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/coolvetica"
+                    android:text="Events"
+                    android:textColor="@color/app_color" />
 
                 <ImageView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/startride" />
+                    android:src="@drawable/events" />
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

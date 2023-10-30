@@ -62,7 +62,7 @@ public class adapterPaymentValidation extends RecyclerView.Adapter<adapterPaymen
             txPaymentStatus = itemView.findViewById(R.id.txPaymentStatus);
             itemView.setOnClickListener(v->{
                 PaymentValidationActivity paymentValidationActivity = PaymentValidationActivity.me;
-                paymentValidationActivity.showUserUploaded(participants.get(getAdapterPosition()).getUserName(),participants.get(getAdapterPosition()).getUserImage(),participants.get(getAdapterPosition()).getUserId());
+                paymentValidationActivity.showUserUploaded(participants.get(getAdapterPosition()).getUserName(),participants.get(getAdapterPosition()).getUserImage(),participants.get(getAdapterPosition()).getUserId(),participants.get(getAdapterPosition()).getPaymentURL());
             });
         }
     }

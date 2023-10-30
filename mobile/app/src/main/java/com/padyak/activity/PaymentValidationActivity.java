@@ -61,8 +61,9 @@ public class PaymentValidationActivity extends AppCompatActivity {
             List<UserValidation> participants = new ArrayList<>();
             for (int i = 0; i < participantJSON.length(); i++) {
                 String paymentStatus = participantJSON.getJSONObject(i).getString("status");
+                String paymentURL = participantJSON.getJSONObject(i).getString("paymentUrl");
                 JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
-                participants.add(new UserValidation(participantObject.getString("id"),participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")),participantObject.getString("photoUrl"),paymentStatus));
+                participants.add(new UserValidation(participantObject.getString("id"),participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")),participantObject.getString("photoUrl"),paymentStatus,paymentURL));
             }
             adapterPaymentValidation = new adapterPaymentValidation(participants);
             rvValidation.setAdapter(adapterPaymentValidation);
@@ -72,9 +73,9 @@ public class PaymentValidationActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
-    public void showUserUploaded(String username, String photoUrl,String userId){
+    public void showUserUploaded(String username, String photoUrl,String userId, String paymentURL){
         FragmentManager fm = getSupportFragmentManager();
-        fragmentUserUploaded editNameDialogFragment = fragmentUserUploaded.newInstance("UserUpload",username,photoUrl,userId,eventId);
+        fragmentUserUploaded editNameDialogFragment = fragmentUserUploaded.newInstance("UserUpload",username,photoUrl,userId,eventId,paymentURL);
         editNameDialogFragment.show(fm, "UserUpload");
     }
 }

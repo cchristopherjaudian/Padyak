@@ -318,16 +318,28 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/et_rounded"
             android:fontFamily="@font/coolvetica"
             android:inputType="textPassword"
             android:maxLength="15"
+            android:maxLines="1"
             android:padding="7dp"
             android:tag="Password"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgShowPassword"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txCreatePassword" />
+
+        <ImageView
+            android:id="@+id/imgShowPassword"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="10dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_outline_remove_red_eye_24"
+            app:layout_constraintBottom_toBottomOf="@+id/etCreatePassword"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etCreatePassword" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

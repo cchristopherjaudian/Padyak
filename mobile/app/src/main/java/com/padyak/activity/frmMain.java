@@ -121,19 +121,7 @@ public class frmMain extends AppCompatActivity {
         snapHelper.attachToRecyclerView(rvCoverPhoto);
 
 
-        txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
-        txProfileName.setText(LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()));
-        LocalDate dateNow = LocalDate.now();
-        String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-        txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
 
-        try {
-            Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgProfileDP);
-            Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgMainProfileDP);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
 
 
         bottomBar.setOnItemSelectedListener((OnItemSelectedListener) i -> {
@@ -154,12 +142,13 @@ public class frmMain extends AppCompatActivity {
             }
             return false;
         });
-        cardProfile.setOnClickListener(v->{
-            Intent intent = new Intent(com.padyak.activity.frmMain.this,ProfileActivity.class);
+        cardProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(com.padyak.activity.frmMain.this, ProfileActivity.class);
             startActivity(intent);
         });
         rlEvents.setOnClickListener(v -> {
-            intent = new Intent(frmMain.this, frmEventCalendar.class);
+
+            intent = new Intent(frmMain.this, frmRide.class);
             startActivity(intent);
         });
         rlAlert.setOnClickListener(v -> {
@@ -190,9 +179,10 @@ public class frmMain extends AppCompatActivity {
         });
 
         rlRiding.setOnClickListener(v -> {
-            intent = new Intent(frmMain.this, frmRide.class);
+            intent = new Intent(frmMain.this, frmEventCalendar.class);
             startActivity(intent);
         });
+
         loadCoverPhoto();
     }
 
@@ -234,7 +224,7 @@ public class frmMain extends AppCompatActivity {
                         coverPhotoList.add(new CoverPhoto(postImgUrl));
                         adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
                         rvCoverPhoto.setAdapter(adapterCoverPhoto);
-                    } else{
+                    } else {
                         textView6.setText("No recent post yet.");
                     }
                 } catch (JSONException e) {
@@ -249,7 +239,7 @@ public class frmMain extends AppCompatActivity {
     }
 
     public void loadNewsfeed() {
-        progressDialog = Helper.getInstance().progressDialog(frmMain,"Retrieving latest posts.");
+        progressDialog = Helper.getInstance().progressDialog(frmMain, "Retrieving latest posts.");
         progressDialog.show();
         new Thread(() -> {
             try {
@@ -324,17 +314,34 @@ public class frmMain extends AppCompatActivity {
                             rvNewsfeed.setAdapter(adapterNewsfeed));
 
                 } else {
-                    Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show());
+
                 }
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "loadNewsfeed: " + e.getMessage());
-                Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show());
             } finally {
                 runOnUiThread(() -> progressDialog.dismiss());
             }
         }).start();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
+            txProfileName.setText(LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()));
+            LocalDate dateNow = LocalDate.now();
+            String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
+            txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
+            Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgProfileDP);
+            Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgMainProfileDP);
+        } catch (Exception e) {
+            finish();
+        }
+    }
 
     @Override
     public void onBackPressed() {

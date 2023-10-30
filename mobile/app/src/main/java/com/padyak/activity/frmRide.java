@@ -1,6 +1,7 @@
 package com.padyak.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -39,35 +40,49 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.utility.Helper;
+import com.padyak.utility.LoggedUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCallback, OnMapReadyCallback {
     boolean startTracking = false;
     Helper helper = Helper.getInstance();
-    Instant timeStart,timeEnd;
+    Instant timeStart, timeEnd;
     Duration instantDuration;
     String instantFormat;
-    TextView txTimer,txDistance;
+    TextView txTimer, txDistance;
     LocationManager mLocationManager;
-    ImageButton btnPlayRide;
-
+    ImageButton btnPlayRide,btnStopRide;
     GoogleMap gMap;
     Marker marker;
+
     double startPosLat, startPosLong;
     int instantInterval;
     double rideDistance = 0d;
     double endPosLat, endPosLong;
-    LatLng previousLocation,newLocation;
+    LatLng previousLocation, newLocation;
+
     LocationCallback locationCallback;
     FusedLocationProviderClient fusedLocationClient;
     public static frmRide instance;
 
     ProgressDialog progressDialog;
     int tempCounter = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +91,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         instance = this;
 
         btnPlayRide = findViewById(R.id.btnPlayRide);
+        btnStopRide = findViewById(R.id.btnStopRide);
         txTimer = findViewById(R.id.txTimer);
         txDistance = findViewById(R.id.txDistance);
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -83,38 +99,36 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                 getSupportFragmentManager().findFragmentById(R.id.mapRides);
         mapFragment.getMapAsync(this);
 
-        btnPlayRide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!startTracking){
-                    btnPlayRide.setImageResource(R.drawable.baseline_stop_24);
-                    timeStart = Instant.now();
-                    startTracking = true;
-                    getLocation(gMap);
-                    if(marker != null){
-                        startPosLat = marker.getPosition().latitude;
-                        startPosLong = marker.getPosition().longitude;
-                    }
-                } else{
-                    btnPlayRide.setImageResource(R.drawable.baseline_play_arrow_24);
-                    startTracking = false;
-                    endPosLat = marker.getPosition().latitude;
-                    endPosLong = marker.getPosition().longitude;
-
-                    Bundle b = new Bundle();
-                    b.putInt("rideDuration", (int)(Duration.ofSeconds(instantInterval).toMillis() / 1000));
-                    b.putDouble("rideDistance",rideDistance);
-                    b.putDouble("startPosLat",startPosLat);
-                    b.putDouble("startPosLong",startPosLong);
-                    b.putDouble("endPosLat",endPosLat);
-                    b.putDouble("endPosLong",endPosLong);
-                    Intent intent = new Intent(frmRide.this, frmSaveRide.class);
-                    intent.putExtras(b);
-                    startActivity(intent);
-                }
-
+        btnPlayRide.setOnClickListener(v -> {
+            btnPlayRide.setVisibility(View.INVISIBLE);
+            btnStopRide.setVisibility(View.VISIBLE);
+            timeStart = Instant.now();
+            startTracking = true;
+            getLocation(gMap);
+            if (marker != null) {
+                startPosLat = marker.getPosition().latitude;
+                startPosLong = marker.getPosition().longitude;
             }
         });
+        btnStopRide.setOnClickListener(v->{
+            btnPlayRide.setVisibility(View.VISIBLE);
+            btnStopRide.setVisibility(View.INVISIBLE);
+            startTracking = false;
+            endPosLat = marker.getPosition().latitude;
+            endPosLong = marker.getPosition().longitude;
+
+            Bundle b = new Bundle();
+            b.putInt("rideDuration", (int) (Duration.ofSeconds(instantInterval).toMillis() / 1000));
+            b.putDouble("rideDistance", rideDistance);
+            b.putDouble("startPosLat", startPosLat);
+            b.putDouble("startPosLong", startPosLong);
+            b.putDouble("endPosLat", endPosLat);
+            b.putDouble("endPosLong", endPosLong);
+            Intent intent = new Intent(frmRide.this, frmSaveRide.class);
+            intent.putExtras(b);
+            startActivity(intent);
+        });
+
     }
 
     @Override
@@ -122,7 +136,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation(gMap);
+                getLocation(gMap);
             }
         }
     }
@@ -134,7 +148,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             progressDialog.dismiss();
             ActivityCompat.requestPermissions(frmRide.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-        } else{
+        } else {
 
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY)
@@ -151,42 +165,43 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
                 @Override
                 public void onLocationResult(@NonNull LocationResult locationResult) {
-                    if(startTracking){
+                    if (startTracking) {
                         for (Location location : locationResult.getLocations()) {
-                            if(marker == null ){
+                            if (marker == null) {
                                 marker = googleMap.addMarker(new MarkerOptions()
                                         .position(previousLocation)
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.bicycle)));
                             }
 
-                                previousLocation = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+                            previousLocation = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
 
-                                newLocation = new LatLng(location.getLatitude(),location.getLongitude());
+                            newLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-                                rideDistance += helper.calculateDistance(previousLocation,newLocation);
+                            rideDistance += helper.calculateDistance(previousLocation, newLocation);
 
-                                txDistance.setText(String.format("%.3f",rideDistance));
-                                ValueAnimator animation = ValueAnimator.ofFloat(0f, 100f);
-                                final float[] previousStep = {0f};
-                                double deltaLatitude = newLocation.latitude - previousLocation.latitude;
-                                double deltaLongitude = newLocation.longitude - previousLocation.longitude;
-                                animation.setDuration(2000);
-                                animation.addUpdateListener(animation1 -> {
-                                    float deltaStep = (Float) animation1.getAnimatedValue() - previousStep[0];
-                                    previousStep[0] = (Float) animation1.getAnimatedValue();
-                                    marker.setPosition(new LatLng(marker.getPosition().latitude + deltaLatitude * deltaStep * 1 / 100, marker.getPosition().longitude + deltaStep * deltaLongitude * 1 / 100));
-                                });
-                                animation.start();
-                                tempCounter++;
-                                if(tempCounter >=10){
-                                    tempCounter = 0;
-                                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, gMap.getCameraPosition().zoom));
-                                }
+                            txDistance.setText(String.format("%.3f", rideDistance));
+                            ValueAnimator animation = ValueAnimator.ofFloat(0f, 100f);
+                            final float[] previousStep = {0f};
+                            double deltaLatitude = newLocation.latitude - previousLocation.latitude;
+                            double deltaLongitude = newLocation.longitude - previousLocation.longitude;
+                            animation.setDuration(2000);
+                            animation.addUpdateListener(animation1 -> {
+                                float deltaStep = (Float) animation1.getAnimatedValue() - previousStep[0];
+                                previousStep[0] = (Float) animation1.getAnimatedValue();
+                                marker.setPosition(new LatLng(marker.getPosition().latitude + deltaLatitude * deltaStep * 1 / 100, marker.getPosition().longitude + deltaStep * deltaLongitude * 1 / 100));
+                            });
+                            animation.start();
+                            tempCounter++;
+                            if (tempCounter >= 10) {
+                                tempCounter = 0;
+                                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, gMap.getCameraPosition().zoom));
+                            }
+
+                        }
 
                     }
-
                 }
-            }};
+            };
             progressDialog.show();
             fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -199,25 +214,25 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                 LatLng myPos = new LatLng(startPosLat, startPosLong);
                                 previousLocation = myPos;
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15.0f));
-                            } else{
+                            } else {
                                 Toast.makeText(frmRide.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         }
                     });
 
-            if(startTracking){
+            if (startTracking) {
                 fusedLocationClient.requestLocationUpdates(locationRequest,
                         locationCallback,
                         Looper.getMainLooper());
-                new Thread(()->{
-                    while(startTracking){
+                new Thread(() -> {
+                    while (startTracking) {
                         timeEnd = Instant.now();
-                        instantInterval = (int)(Duration.between(timeStart, timeEnd).toMillis()/ 1000.0);
+                        instantInterval = (int) (Duration.between(timeStart, timeEnd).toMillis() / 1000.0);
                         instantDuration = Duration.ofSeconds(instantInterval);
 
                         instantFormat = helper.formatDuration(instantInterval);
-                        runOnUiThread(()->{
+                        runOnUiThread(() -> {
                             txTimer.setText(instantFormat);
                         });
                         try {

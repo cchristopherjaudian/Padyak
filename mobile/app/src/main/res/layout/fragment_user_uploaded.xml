@@ -95,7 +95,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/rounded_white_button"
         android:fontFamily="@font/coolvetica"
-        android:text="Back"
+        android:text="Delete"
         android:textColor="@color/ok_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

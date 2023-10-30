@@ -1,12 +1,17 @@
 package com.padyak.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +23,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.padyak.R;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
@@ -28,6 +39,9 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -35,20 +49,30 @@ import java.util.Map;
 
 public class UpdateProfileActivity extends AppCompatActivity {
     ImageView imgAdminProfile;
-    TextView txSave,txCreatePassword;
+    ImageView imgShowPassword;
+    TextView txSave, txCreatePassword;
     ArrayAdapter<String> aaGender;
-    EditText etCreatePassword,etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
+    EditText etCreatePassword, etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
     Spinner etCreateGender;
     String[] gender = {"-Please select a gender-", "Male", "Female"};
     boolean inputValid;
+    ProgressDialog progressDialog;
+    CardView cardView11;
+    Bitmap bitmapDP;
+    UploadTask uploadTask;
+
+    FirebaseStorage storage;
+    StorageReference storageRef, eventRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
         imgAdminProfile = findViewById(R.id.imgAdminProfile);
+        imgShowPassword = findViewById(R.id.imgShowPassword);
         Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgAdminProfile);
         txSave = findViewById(R.id.txSave);
+        cardView11 = findViewById(R.id.cardView11);
         txCreatePassword = findViewById(R.id.txCreatePassword);
         etCreatePassword = findViewById(R.id.etCreatePassword);
         etCreateEmail = findViewById(R.id.txAddEventTitle);
@@ -85,6 +109,25 @@ public class UpdateProfileActivity extends AppCompatActivity {
             datePickerDialog.show();
         });
 
+        cardView11.setOnClickListener(v -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(UpdateProfileActivity.this).create();
+            alertDialog.setTitle("Profile Picture");
+            alertDialog.setCancelable(false);
+            alertDialog.setMessage("Please select an image source");
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Gallery", (d, w) -> {
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, 1);
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Camera", (d, w) -> {
+                Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(takePicture, 0);
+            });
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cancel", (d, w) -> {
+
+            });
+            alertDialog.show();
+        });
         txSave.setOnClickListener(v -> {
             EditText[] editTexts = {etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateHeight, etCreateWeight};
             inputValid = true;
@@ -97,7 +140,21 @@ public class UpdateProfileActivity extends AppCompatActivity {
             if (etCreateGender.getSelectedItemPosition() < 1) inputValid = false;
 
             if (!inputValid) return;
+            if (LoggedUser.getInstance().getAuth().equals("IN_APP")) {
+                if (!Helper.getInstance().checkString(etCreatePassword.getText().toString().trim())) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(UpdateProfileActivity.this).create();
+                    alertDialog.setTitle("Password Confirmation");
+                    alertDialog.setCancelable(false);
+                    alertDialog.setMessage("Password should contain these criterias:\nAtleast 8 Characters\nContains atleast 1 special character\nContains atleast 1 numeric value\nShould start with a capital letter");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                            (d, w) -> {
 
+                            });
+
+                    alertDialog.show();
+                    return;
+                }
+            }
             AlertDialog alertDialog = new AlertDialog.Builder(UpdateProfileActivity.this).create();
             alertDialog.setTitle("Profile Settings");
             alertDialog.setCancelable(false);
@@ -121,24 +178,39 @@ public class UpdateProfileActivity extends AppCompatActivity {
         etCreateHeight.setText(LoggedUser.getInstance().getHeight());
         etCreateWeight.setText(LoggedUser.getInstance().getWeight());
         etCreateGender.setSelection(Arrays.asList(gender).indexOf(LoggedUser.getInstance().getGender()));
-        if(LoggedUser.getInstance().getAuth().equals("IN_APP")){
+        if (LoggedUser.getInstance().getAuth().equals("IN_APP")) {
             etCreatePassword.setVisibility(View.VISIBLE);
+            imgShowPassword.setVisibility(View.VISIBLE);
             etCreatePassword.setText(LoggedUser.getInstance().getPassword());
             etCreateContact.setEnabled(false);
-        } else{
+            Log.d(Helper.getInstance().log_code, "onCreate IT: " + etCreatePassword.getInputType());
+            imgShowPassword.setOnClickListener(v->{
+                if(etCreatePassword.getInputType() == 129){
+                    etCreatePassword.setInputType(InputType.TYPE_CLASS_TEXT);
+                } else{
+                    etCreatePassword.setInputType(129);
+                }
+            });
+        } else {
+            imgShowPassword.setVisibility(View.GONE);
             etCreatePassword.setVisibility(View.GONE);
             txCreatePassword.setVisibility(View.GONE);
             etCreateEmail.setEnabled(false);
         }
     }
-    private void updateAccount(){
+
+    private void updateAccount() {
         ProgressDialog progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Processing request.");
         progressDialog.show();
         Map<String, Object> params = new HashMap<>();
-        params.put(Prefs.PASSWORD_KEY, etCreatePassword.getText().toString().trim());
+        if (!LoggedUser.getInstance().getAuth().equals("SSO"))
+            params.put(Prefs.PASSWORD_KEY, etCreatePassword.getText().toString().trim());
+        if (LoggedUser.getInstance().getAuth().equals("SSO"))
+            params.put(Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
         params.put(Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
         params.put(Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
-        params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
+        if (!LoggedUser.getInstance().getAuth().equals("SSO"))
+            params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
         params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
         params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
         params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim());
@@ -151,7 +223,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
             JSONObject reader = new JSONObject(json);
             int responseStatus = reader.getInt("status");
             if (responseStatus == 200) {
-                if(!LoggedUser.getInstance().getAuth().equals("SSO")) Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.PASSWORD_KEY, etCreatePassword.getText().toString().trim());
+                if (!LoggedUser.getInstance().getAuth().equals("SSO"))
+                    Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.PASSWORD_KEY, etCreatePassword.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
@@ -171,5 +244,154 @@ public class UpdateProfileActivity extends AppCompatActivity {
             Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
             Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK && imageReturnedIntent != null) {
+                    Bitmap bitmap = imageReturnedIntent.getParcelableExtra("data");
+                    bitmapDP = bitmap;
+                    imgAdminProfile.setImageBitmap(bitmap);
+                    uploadDP();
+                }
+                break;
+            case 1:
+                if (resultCode == RESULT_OK && imageReturnedIntent != null) {
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    Bitmap bitmap = imageReturnedIntent.getParcelableExtra("data");
+                    imgAdminProfile.setImageBitmap(bitmap);
+                    Log.d(Helper.getInstance().log_code, "onActivityResult: " + selectedImage.toString());
+                    uploadDP(selectedImage);
+                }
+                break;
+        }
+    }
+
+    public void uploadDP(Uri imgURI) {
+        new Thread(() -> {
+            try {
+                runOnUiThread(()->{
+                    progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Uploading profile picture.");
+                    progressDialog.show();
+                });
+
+                bitmapDP = MediaStore.Images.Media.getBitmap(getContentResolver(), imgURI);
+                String ref = "dp/" + LoggedUser.getInstance().getUuid() + LocalDateTime.now().toString() + ".jpg";
+                FirebaseApp.initializeApp(this);
+                storage = FirebaseStorage.getInstance();
+                storageRef = storage.getReference();
+                eventRef = storageRef.child(ref);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmapDP.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] dataIntent = baos.toByteArray();
+                uploadTask = eventRef.putBytes(dataIntent);
+                runOnUiThread(()-> progressDialog.dismiss());
+
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_SHORT).show());
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                updateDP(uri.toString());
+                            }
+                        });
+                    }
+                });
+            } catch (IOException e) {
+                bitmapDP = null;
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show());
+            } finally {
+                runOnUiThread(()->{
+                    if(progressDialog != null) progressDialog.dismiss();
+                });
+            }
+        }).start();
+
+    }
+    public void uploadDP() {
+        new Thread(() -> {
+            try {
+                runOnUiThread(()->{
+                    progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Uploading profile picture.");
+                    progressDialog.show();
+                });
+                String ref = "dp/" + LoggedUser.getInstance().getUuid() + LocalDateTime.now().toString() + ".jpg";
+                FirebaseApp.initializeApp(this);
+                storage = FirebaseStorage.getInstance();
+                storageRef = storage.getReference();
+                eventRef = storageRef.child(ref);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmapDP.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] dataIntent = baos.toByteArray();
+                uploadTask = eventRef.putBytes(dataIntent);
+                runOnUiThread(()-> progressDialog.dismiss());
+
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_SHORT).show());
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                updateDP(uri.toString());
+                            }
+                        });
+                    }
+                });
+            } catch (Exception e) {
+                bitmapDP = null;
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show());
+            } finally {
+                runOnUiThread(()->{
+                    if(progressDialog != null) progressDialog.dismiss();
+                });
+            }
+        }).start();
+
+    }
+    public void updateDP(String imgURL) {
+        runOnUiThread(()->{
+            progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Uploading profile picture.");
+            progressDialog.show();
+        });
+
+        new Thread(()->{
+            Map<String, Object> params = new HashMap<>();
+            params.put(Prefs.IMG_KEY, imgURL);
+            VolleyHttp volleyHttp = new VolleyHttp("", params, "user-patch", UpdateProfileActivity.this);
+            String json = volleyHttp.getResponseBody(true);
+
+            try {
+                JSONObject reader = new JSONObject(json);
+                int responseStatus = reader.getInt("status");
+                if (responseStatus == 200) {
+                    Prefs.getInstance().setUser(UpdateProfileActivity.this,Prefs.IMG_KEY,imgURL);
+                    runOnUiThread(()-> Picasso.get().load(imgURL).into(imgAdminProfile));
+                    runOnUiThread(()->Toast.makeText(this, "Profile picture updated successfully.", Toast.LENGTH_SHORT).show());
+                } else {
+                    runOnUiThread(()->Toast.makeText(this, "Failed to update image. Please try again.", Toast.LENGTH_SHORT).show());
+                }
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
+                runOnUiThread(()->Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show());
+            } finally {
+                runOnUiThread(()->{
+                    if(null != progressDialog) progressDialog.dismiss();
+                });
+            }
+        }).start();
+
     }
 }

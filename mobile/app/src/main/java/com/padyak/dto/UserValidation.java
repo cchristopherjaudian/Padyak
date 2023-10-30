@@ -5,15 +5,24 @@ import java.util.Objects;
 public class UserValidation {
     private String userName, userImage, userId;
     private String paymentStatus;
-
+    private String paymentURL;
     public UserValidation() {
     }
 
-    public UserValidation(String userId, String userName, String userImage, String paymentStatus) {
+    public UserValidation(String userId, String userName, String userImage, String paymentStatus, String paymentURL) {
         this.userName = userName;
         this.userImage = userImage;
         this.userId = userId;
         this.paymentStatus = paymentStatus;
+        this.paymentURL = paymentURL;
+    }
+
+    public String getPaymentURL() {
+        return paymentURL;
+    }
+
+    public void setPaymentURL(String paymentURL) {
+        this.paymentURL = paymentURL;
     }
 
     public String getUserId() {
