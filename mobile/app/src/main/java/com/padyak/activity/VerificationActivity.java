@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +16,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.padyak.R;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
@@ -25,16 +35,17 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class VerificationActivity extends AppCompatActivity {
     public static VerificationActivity verificationActivity;
-
+    FirebaseAuth auth = FirebaseAuth.getInstance();
     String authSource,mobileNumber,password;
     boolean is_registration;
-
-    TextView txMobileNumberCode,txResend;
-    EditText txOtp1,txOtp2,txOtp3,txOtp4;
-
+    private String verificationCode = "";
+    TextView txMobileNumberCode,txResend,textView55;
+    EditText txOtp1;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback;
     Button btnVerify;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,36 +57,24 @@ public class VerificationActivity extends AppCompatActivity {
         password = getIntent().getStringExtra("password");
         is_registration = getIntent().getBooleanExtra("registration",false);
 
+        textView55 = findViewById(R.id.textView55);
         txResend = findViewById(R.id.txResend);
         txMobileNumberCode = findViewById(R.id.txMobileNumberCode);
         btnVerify = findViewById(R.id.btnVerify);
 
         txOtp1 = findViewById(R.id.txOtp1);
-        txOtp2 = findViewById(R.id.txOtp2);
-        txOtp3 = findViewById(R.id.txOtp3);
-        txOtp4 = findViewById(R.id.txOtp4);
-        txOtp1.setOnKeyListener((view, i, keyEvent) -> {
-            txOtp2.requestFocus();
-            return false;
-        });
-        txOtp2.setOnKeyListener((view, i, keyEvent) -> {
-            txOtp3.requestFocus();
-            return false;
-        });
-        txOtp3.setOnKeyListener((view, i, keyEvent) -> {
-            txOtp4.requestFocus();
-            return false;
-        });
+
+
                 txMobileNumberCode.setText(mobileNumber);
 
         btnVerify.setOnClickListener(v->{
-            if(is_registration){
-                inAppRegister();
-            } else{
-                resetPassword();
-            }
-
+            String otp = txOtp1.getText().toString();
+            if(otp.trim().equals("")) return;
+            btnVerify.setEnabled(false);
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, otp);
+            SigninWithPhone(credential);
         });
+        sendOtp();
     }
     private void resetPassword(){
         ProgressDialog progressDialog = Helper.getInstance().progressDialog(VerificationActivity.this, "Processing request.");
@@ -152,5 +151,68 @@ public class VerificationActivity extends AppCompatActivity {
         }).start();
 
 
+    }
+
+    private void sendOtp() {
+        textView55.setVisibility(View.INVISIBLE);
+        txResend.setVisibility(View.INVISIBLE);
+        String verifyMobile = "";
+        if(mobileNumber.startsWith("0")){
+            verifyMobile = mobileNumber.replaceFirst("0","+63");
+        }
+
+        mCallback = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+            @Override
+            public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            }
+
+            @Override
+            public void onVerificationFailed(FirebaseException e) {
+                Log.d(Helper.getInstance().log_code, "onVerificationFailed: " + e.getMessage());
+                Toast.makeText(VerificationActivity.this, "OTP Sent failed, Please click on Resend OTP.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                super.onCodeSent(s, forceResendingToken);
+                verificationCode = s;
+                Log.d(Helper.getInstance().log_code, "onCodeSent: " + s);
+                Toast.makeText(VerificationActivity.this, "OTP has been sent to " + mobileNumber, Toast.LENGTH_SHORT).show();
+            }
+        };
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(auth)
+                        .setPhoneNumber(verifyMobile)
+                        .setTimeout(50L, TimeUnit.SECONDS)
+                        .setActivity(this)
+                        .setCallbacks(mCallback)
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                textView55.setVisibility(View.VISIBLE);
+                txResend.setVisibility(View.VISIBLE);
+            }
+        }, 60000);
+    }
+    private void SigninWithPhone(PhoneAuthCredential credential) {
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        btnVerify.setEnabled(true);
+                        if (task.isSuccessful()) {
+                            if(is_registration){
+                                inAppRegister();
+                            } else{
+                                resetPassword();
+                            }
+                        } else {
+                            Toast.makeText(VerificationActivity.this, "Invalid OTP. Please try again", Toast.LENGTH_SHORT).show();
+                            Log.d(Helper.getInstance().log_code, "onComplete: " + task.getException().getMessage());
+                        }
+                    }
+                });
     }
 }

@@ -13,16 +13,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.padyak.R;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.Prefs;
 
+import java.util.concurrent.TimeUnit;
+
 public class frmStarted extends AppCompatActivity {
     Button btnGetStarted,btnAgree;
     FrameLayout frameGetStarted,frameTerms;
     Intent intent;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +65,7 @@ public class frmStarted extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -70,7 +81,6 @@ public class frmStarted extends AppCompatActivity {
         }
 
     }
-
     @Override
     public void onBackPressed() {
 
