@@ -80,7 +80,7 @@ public class InappRegistrationActivity extends AppCompatActivity {
             inputValid = true;
             Arrays.stream(editTexts).forEach(e -> {
                 if (e.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(this, "Please input a valid " + e.getTag().toString() + ".", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please input a valid " + e.getTag().toString() + ".", Toast.LENGTH_LONG).show();
                     inputValid = false;
                 }
             });

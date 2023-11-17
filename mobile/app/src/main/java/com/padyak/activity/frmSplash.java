@@ -217,7 +217,7 @@ public class frmSplash extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-                Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_LONG).show();
                 spinner.setVisibility(View.INVISIBLE);
                 textView2.setText("Please Sign-in with your Google Account");
                 btnGAuth.setVisibility(View.VISIBLE);

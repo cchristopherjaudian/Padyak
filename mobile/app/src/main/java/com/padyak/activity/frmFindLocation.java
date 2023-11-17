@@ -104,7 +104,7 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Please enable this application in Location permission using Android Settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enable this application in Location permission using Android Settings", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -203,7 +203,7 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
                             } else{
                                 runOnUiThread(()->{
                                     progressDialog.dismiss();
-                                    Toast.makeText(frmFindLocation.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(frmFindLocation.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
                                     finish();
                                 });
 

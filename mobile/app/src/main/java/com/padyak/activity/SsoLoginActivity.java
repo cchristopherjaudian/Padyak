@@ -87,7 +87,7 @@ public class SsoLoginActivity extends AppCompatActivity {
             mobileNumber = txMobileNumber.getText().toString().trim();
             mobilePassword = txMobilePassword.getText().toString().trim();
             if (mobileNumber.equals("") || mobilePassword.equals("")) {
-                Toast.makeText(this, "Please enter a valid credential.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter a valid credential.", Toast.LENGTH_LONG).show();
                 return;
             }
             authInApp(mobileNumber, mobilePassword);
@@ -113,7 +113,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             btnSSO.setEnabled(true);
-                            Toast.makeText(SsoLoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SsoLoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
         });
@@ -165,7 +165,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                 runOnUiThread(()->{
                     if(responseToken.startsWith("40")){
                         progressDialog.dismiss();
-                        Toast.makeText(SsoLoginActivity.this, "Invalid username/password. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SsoLoginActivity.this, "Invalid username/password. Please try again.", Toast.LENGTH_LONG).show();
                         return;
                     }
                 });
@@ -176,11 +176,11 @@ public class SsoLoginActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     progressDialog.dismiss();
                     if (reader == null) {
-                        Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_LONG).show();
                     } else {
                         try {
                             if(reader.getInt("status") == 400){
-                                Toast.makeText(SsoLoginActivity.this, "Invalid username/password. Please try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SsoLoginActivity.this, "Invalid username/password. Please try again.", Toast.LENGTH_LONG).show();
                                 return;
                             }
                             JSONObject userObject = dataObject.getJSONObject("user");
@@ -349,7 +349,7 @@ public class SsoLoginActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-                Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_LONG).show();
             } finally {
                 runOnUiThread(() -> {
                     progressDialog.dismiss();

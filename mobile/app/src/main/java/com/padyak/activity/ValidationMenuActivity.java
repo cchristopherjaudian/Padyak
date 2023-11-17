@@ -87,7 +87,7 @@ public class ValidationMenuActivity extends AppCompatActivity {
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(ValidationMenuActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ValidationMenuActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_LONG).show();
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -96,7 +96,7 @@ public class ValidationMenuActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
                                 uploadQR(uri.toString());
-                                Toast.makeText(ValidationMenuActivity.this, "Payment QR uploaded successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ValidationMenuActivity.this, "Payment QR uploaded successfully", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -104,7 +104,7 @@ public class ValidationMenuActivity extends AppCompatActivity {
                 //txProofPayment.setText("Image Attached Successfully");
             } catch (IOException e) {
                 bitmapPayment = null;
-                Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -131,9 +131,9 @@ public class ValidationMenuActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 progressDialog.dismiss();
                 if (data_inserted) {
-                    Toast.makeText(this, "Payment QR uploaded successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Payment QR uploaded successfully", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(this, "Failed to upload QR. Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to upload QR. Please try again", Toast.LENGTH_LONG).show();
                 }
             });
         }).start();

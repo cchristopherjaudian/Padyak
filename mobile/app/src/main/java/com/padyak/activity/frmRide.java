@@ -215,7 +215,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                 previousLocation = myPos;
                                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15.0f));
                             } else {
-                                Toast.makeText(frmRide.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(frmRide.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
                                 finish();
                             }
                         }

@@ -92,18 +92,18 @@ public class VerificationActivity extends AppCompatActivity {
                     JSONObject reader = new JSONObject(json);
                     int responseStatus = reader.getInt("status");
                     if (responseStatus == 200) {
-                        Toast.makeText(this, "Password updated successfully. Please try to log in", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Password updated successfully. Please try to log in", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(VerificationActivity.this,SsoLoginActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
                     Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
                     progressDialog.dismiss();
-                    Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -138,13 +138,13 @@ public class VerificationActivity extends AppCompatActivity {
                         startActivity(intent);
 
                     } else {
-                        Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_LONG).show();
                     }
 
                 } catch (JSONException e) {
                     Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
                     progressDialog.dismiss();
-                    Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -169,7 +169,7 @@ public class VerificationActivity extends AppCompatActivity {
             @Override
             public void onVerificationFailed(FirebaseException e) {
                 Log.d(Helper.getInstance().log_code, "onVerificationFailed: " + e.getMessage());
-                Toast.makeText(VerificationActivity.this, "OTP Sent failed, Please click on Resend OTP.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(VerificationActivity.this, "OTP Sent failed, Please click on Resend OTP.", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -177,7 +177,7 @@ public class VerificationActivity extends AppCompatActivity {
                 super.onCodeSent(s, forceResendingToken);
                 verificationCode = s;
                 Log.d(Helper.getInstance().log_code, "onCodeSent: " + s);
-                Toast.makeText(VerificationActivity.this, "OTP has been sent to " + mobileNumber, Toast.LENGTH_SHORT).show();
+                Toast.makeText(VerificationActivity.this, "OTP has been sent to " + mobileNumber, Toast.LENGTH_LONG).show();
             }
         };
         PhoneAuthOptions options =
@@ -209,7 +209,7 @@ public class VerificationActivity extends AppCompatActivity {
                                 resetPassword();
                             }
                         } else {
-                            Toast.makeText(VerificationActivity.this, "Invalid OTP. Please try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(VerificationActivity.this, "Invalid OTP. Please try again", Toast.LENGTH_LONG).show();
                             Log.d(Helper.getInstance().log_code, "onComplete: " + task.getException().getMessage());
                         }
                     }

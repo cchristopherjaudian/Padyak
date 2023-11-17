@@ -97,7 +97,7 @@ public class frmEventInfo extends AppCompatActivity {
         btnEventRegister.setOnClickListener((e) -> {
 
             if (is_done) {
-                Toast.makeText(frmEventInfo, "This event has already been completed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(frmEventInfo, "This event has already been completed", Toast.LENGTH_LONG).show();
                 finish();
             } else {
                 Intent intent = new Intent(frmEventInfo.this, frmEventRegister.class);
@@ -192,7 +192,7 @@ public class frmEventInfo extends AppCompatActivity {
                 Log.d(Helper.getInstance().log_code, "loadEventInfo: " + err.getMessage());
                 runOnUiThread(() -> {
                     progressDialog.dismiss();
-                    Toast.makeText(frmEventInfo, "Failed to load event information. Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(frmEventInfo, "Failed to load event information. Please try again", Toast.LENGTH_LONG).show();
                     finish();
                 });
             } finally {

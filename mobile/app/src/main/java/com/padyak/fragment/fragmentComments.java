@@ -110,7 +110,7 @@ public class fragmentComments extends BottomSheetDialogFragment {
                 txHeader.setText(String.format("%d%s", commentList.size(), (commentList.size() > 1) ? " comments" : " comment"));
                 frmMain.frmMain.notifyNewsfeed();
             } catch (JSONException e) {
-                Toast.makeText(v.getContext(), "Failed to add comment. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Failed to add comment. Please try again.", Toast.LENGTH_LONG).show();
                 Log.d(Helper.getInstance().log_code, "onCreateView: " + e.getMessage());
             }
 

@@ -205,7 +205,7 @@ public class frmEventRegister extends AppCompatActivity {
         runOnUiThread(() -> {
             progressDialog.dismiss();
             if (responseJSON == null) {
-                Toast.makeText(this, "Failed to process request. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to process request. Please try again.", Toast.LENGTH_LONG).show();
             } else {
                 AlertDialog alertDialog = new AlertDialog.Builder(frmEventRegister.this).create();
                 alertDialog.setTitle("Event Registration");
@@ -235,7 +235,7 @@ public class frmEventRegister extends AppCompatActivity {
                 txProofPayment.setText("Image Attached Successfully");
             } catch (IOException e) {
                 bitmapPayment = null;
-                Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_LONG).show();
             }
         }
 

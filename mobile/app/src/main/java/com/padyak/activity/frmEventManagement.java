@@ -99,7 +99,7 @@ public class frmEventManagement extends AppCompatActivity {
                     runOnUiThread(()->{
                         progressDialog.dismiss();
                         if(responseJSON == null){
-                            Toast.makeText(this, "Failed to delete event(s). Please try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Failed to delete event(s). Please try again.", Toast.LENGTH_LONG).show();
                             return;
                         }
                         adapterEventManagement.updateEventList();
@@ -159,7 +159,7 @@ public class frmEventManagement extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.d(Helper.getInstance().log_code, "loadEvents: " + e.getMessage());
                     runOnUiThread(()->{
-                        Toast.makeText(this, "Failed to load events. Please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to load events. Please try again", Toast.LENGTH_LONG).show();
                         finish();
                     });
 

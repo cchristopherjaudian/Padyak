@@ -85,7 +85,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
         btnCancelAlert.setOnClickListener(v -> finish());
         btnConfirmAlert.setOnClickListener(v -> {
             AlertDialog alertDialog = new AlertDialog.Builder(frmMemberAlertInfo.this).create();
-            alertDialog.setTitle("Event Registration");
+            alertDialog.setTitle("Member Alert");
             alertDialog.setCancelable(false);
             alertDialog.setMessage("Are you sure you want to confirm this alert?");
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
@@ -135,9 +135,9 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
             runOnUiThread(()->{
                 progressDialog.dismiss();
                 if(responseJSON == null){
-                    Toast.makeText(this, "Failed to confirm alert. Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to confirm alert. Please try again", Toast.LENGTH_LONG).show();
                 } else{
-                    Toast.makeText(this, "Alert confirmed successfully.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Alert confirmed successfully.", Toast.LENGTH_LONG).show();
                     finish();
                 }
             });

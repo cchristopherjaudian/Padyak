@@ -133,7 +133,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             inputValid = true;
             Arrays.stream(editTexts).forEach(e -> {
                 if (e.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(this, "Please input a valid " + e.getTag().toString() + ".", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please input a valid " + e.getTag().toString() + ".", Toast.LENGTH_LONG).show();
                     inputValid = false;
                 }
             });
@@ -234,15 +234,15 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim());
 
-                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_LONG).show();
                 finish();
             } else {
-                Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-            Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -292,7 +292,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_LONG).show());
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -307,7 +307,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 });
             } catch (IOException e) {
                 bitmapDP = null;
-                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_LONG).show());
             } finally {
                 runOnUiThread(()->{
                     if(progressDialog != null) progressDialog.dismiss();
@@ -337,7 +337,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_LONG).show());
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -352,7 +352,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 });
             } catch (Exception e) {
                 bitmapDP = null;
-                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_LONG).show());
             } finally {
                 runOnUiThread(()->{
                     if(progressDialog != null) progressDialog.dismiss();
@@ -379,13 +379,13 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 if (responseStatus == 200) {
                     Prefs.getInstance().setUser(UpdateProfileActivity.this,Prefs.IMG_KEY,imgURL);
                     runOnUiThread(()-> Picasso.get().load(imgURL).into(imgAdminProfile));
-                    runOnUiThread(()->Toast.makeText(this, "Profile picture updated successfully.", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(()->Toast.makeText(this, "Profile picture updated successfully.", Toast.LENGTH_LONG).show());
                 } else {
-                    runOnUiThread(()->Toast.makeText(this, "Failed to update image. Please try again.", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(()->Toast.makeText(this, "Failed to update image. Please try again.", Toast.LENGTH_LONG).show());
                 }
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-                runOnUiThread(()->Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show());
+                runOnUiThread(()->Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show());
             } finally {
                 runOnUiThread(()->{
                     if(null != progressDialog) progressDialog.dismiss();

@@ -41,11 +41,11 @@ public class InAppActivity extends AppCompatActivity {
 
         btnCreateInApp.setOnClickListener(v->{
             if(!Helper.getInstance().validateMobileNumber(txMobileNumber.getText().toString().trim())){
-                Toast.makeText(inAppActivity, "Please enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                Toast.makeText(inAppActivity, "Please enter a valid mobile number", Toast.LENGTH_LONG).show();
                 return;
             }
             if(!txNewPassword.getText().toString().trim().equals(txConfirmPassword.getText().toString().trim())){
-                Toast.makeText(inAppActivity, "New Password and Confirmed Password are not equal.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(inAppActivity, "New Password and Confirmed Password are not equal.", Toast.LENGTH_LONG).show();
                 return;
             }
             if(!Helper.getInstance().checkString(txNewPassword.getText().toString().trim())){

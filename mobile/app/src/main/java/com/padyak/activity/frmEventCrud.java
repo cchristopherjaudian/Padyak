@@ -148,7 +148,7 @@ public class frmEventCrud extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
-                    Toast.makeText(this, "Failed to retrieve event calendar. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to retrieve event calendar. Please try again.", Toast.LENGTH_LONG).show();
                     finish();
                 }
             });

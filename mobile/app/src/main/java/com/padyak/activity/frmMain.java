@@ -314,12 +314,12 @@ public class frmMain extends AppCompatActivity {
                             rvNewsfeed.setAdapter(adapterNewsfeed));
 
                 } else {
-                    runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_LONG).show());
 
                 }
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "loadNewsfeed: " + e.getMessage());
-                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve newsfeed. Please try again.", Toast.LENGTH_LONG).show());
             } finally {
                 runOnUiThread(() -> progressDialog.dismiss());
             }

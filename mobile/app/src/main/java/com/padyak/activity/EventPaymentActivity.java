@@ -90,7 +90,7 @@ public class EventPaymentActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     Log.d(Helper.getInstance().log_code, "loadEvents: " + e.getMessage());
                     runOnUiThread(()->{
-                        Toast.makeText(this, "Failed to load events. Please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to load events. Please try again", Toast.LENGTH_LONG).show();
                         finish();
                     });
                 }

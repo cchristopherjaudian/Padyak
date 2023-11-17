@@ -99,15 +99,15 @@ public class fragmentUserUploaded extends DialogFragment {
             int responseStatus = reader.getInt("status");
             if (responseStatus == 200) {
                 PaymentValidationActivity.me.loadValidations();
-                Toast.makeText(parentView.getContext(), "Payment updated successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(parentView.getContext(), "Payment updated successfully", Toast.LENGTH_LONG).show();
                 dismiss();
             } else {
-                Toast.makeText(parentView.getContext(), "Failed to update payment. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(parentView.getContext(), "Failed to update payment. Please try again.", Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-            Toast.makeText(parentView.getContext(), "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(parentView.getContext(), "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show();
         }
     }
 

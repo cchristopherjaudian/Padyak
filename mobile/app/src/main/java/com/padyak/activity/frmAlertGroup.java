@@ -62,7 +62,7 @@ public class frmAlertGroup extends AppCompatActivity {
         btnSendGroup.setOnClickListener(v -> {
             String selectedUsers = adapterAlertGroup.getChecked();
             if(selectedUsers.isEmpty()){
-                Toast.makeText(this, "Please select atleast 1 cyclist from the list.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please select atleast 1 cyclist from the list.", Toast.LENGTH_LONG).show();
                 return;
             }
             AlertDialog alertDialog = new AlertDialog.Builder(frmAlertGroup.this).create();
@@ -99,7 +99,7 @@ public class frmAlertGroup extends AppCompatActivity {
             JSONObject volleyObject = volleyHttp.getJsonResponse(true);
             runOnUiThread(()->{
                 if(volleyObject == null){
-                    Toast.makeText(this, "Failed to retrieve list of cyclists. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to retrieve list of cyclists. Please try again.", Toast.LENGTH_LONG).show();
                     finish();
                 } else{
                     groupContacts = new ArrayList<>();
@@ -131,7 +131,7 @@ public class frmAlertGroup extends AppCompatActivity {
     private void sendAlert(String recipients) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Please enable this application in Location permission using Android Settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enable this application in Location permission using Android Settings", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -160,9 +160,9 @@ public class frmAlertGroup extends AppCompatActivity {
                             runOnUiThread(()->{
                                 progressDialog.dismiss();
                                 if(responseJSON == null){
-                                    Toast.makeText(frmAlertGroup.this, "Failed to send alert. Please try again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(frmAlertGroup.this, "Failed to send alert. Please try again", Toast.LENGTH_LONG).show();
                                 } else{
-                                    Toast.makeText(frmAlertGroup.this, "Alert sent successfully.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(frmAlertGroup.this, "Alert sent successfully.", Toast.LENGTH_LONG).show();
                                     frmAlertInfo.frmAlertInfo.finish();
                                     frmAlertSend.frmAlertSend.finish();
                                     finish();
@@ -172,7 +172,7 @@ public class frmAlertGroup extends AppCompatActivity {
                         } else{
                             runOnUiThread(()->{
                                 progressDialog.dismiss();
-                                Toast.makeText(frmAlertGroup.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(frmAlertGroup.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
                             });
 
                         }

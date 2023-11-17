@@ -114,11 +114,11 @@ ProgressDialog progressDialog;
         });
         btnRideRegister.setOnClickListener(v -> {
             if(etRideTitle.getText().toString().trim().isEmpty()){
-                Toast.makeText(this, "Please provide a ride detail for this post.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please provide a ride detail for this post.", Toast.LENGTH_LONG).show();
                 return;
             }
             if(etRideCaption.getText().toString().trim().isEmpty()){
-                Toast.makeText(this, "Please provide a ride caption for this post.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please provide a ride caption for this post.", Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -181,7 +181,7 @@ ProgressDialog progressDialog;
             if(imgURL.isEmpty()){
                 runOnUiThread(()->{
                     progressDialog.dismiss();
-                    Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_LONG).show();
                     return;
                 });
 
@@ -220,21 +220,21 @@ ProgressDialog progressDialog;
             if (responseStatus == 200) {
                 runOnUiThread(()->{
                     progressDialog.dismiss();
-                    Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_LONG).show();
                     frmRide.instance.finish();
                     finish();
                 });
             } else {
                 runOnUiThread(()->{
                     progressDialog.dismiss();
-                    Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_LONG).show();
                 });
             }
         } catch (Exception e) {
             Log.d(Helper.getInstance().log_code, "saveRide JSONException: " + e.getMessage());
             runOnUiThread(()->{
                 progressDialog.dismiss();
-                Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_LONG).show();
             });
         }
     }

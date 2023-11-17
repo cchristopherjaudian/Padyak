@@ -87,7 +87,7 @@ public class frmAlertSend extends AppCompatActivity {
     private void sendAlert(String recipients) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Please enable this application in Location permission using Android Settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enable this application in Location permission using Android Settings", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -128,9 +128,9 @@ public class frmAlertSend extends AppCompatActivity {
                                             runOnUiThread(()->{
                                                 progressDialog.dismiss();
                                                 if(responseJSON == null){
-                                                    Toast.makeText(frmAlertSend, "Failed to send alert. Please try again", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(frmAlertSend, "Failed to send alert. Please try again", Toast.LENGTH_LONG).show();
                                                 } else{
-                                                    Toast.makeText(frmAlertSend.this, "Alert sent successfully", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(frmAlertSend.this, "Alert sent successfully", Toast.LENGTH_LONG).show();
                                                     frmAlertInfo.frmAlertInfo.finish();
                                                     finish();
                                                 }
@@ -139,7 +139,7 @@ public class frmAlertSend extends AppCompatActivity {
                                         } else{
                                             runOnUiThread(()->{
                                                 progressDialog.dismiss();
-                                                Toast.makeText(frmAlertSend.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(frmAlertSend.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
                                             });
                                         }
                                     }

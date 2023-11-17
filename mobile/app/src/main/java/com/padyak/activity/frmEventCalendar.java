@@ -167,7 +167,7 @@ public class frmEventCalendar extends AppCompatActivity {
                 });
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
-                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve list of events", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve list of events", Toast.LENGTH_LONG).show());
 
             } finally {
                 runOnUiThread(() -> progressDialog.dismiss());

@@ -70,7 +70,7 @@ public class AdminMainActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (jsonObject == null) {
                         progressDialog.dismiss();
-                        Toast.makeText(this, "Failed to retrieve current event. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to retrieve current event. Please try again.", Toast.LENGTH_LONG).show();
                         return;
                     }
                     try {
@@ -88,7 +88,7 @@ public class AdminMainActivity extends AppCompatActivity {
                         startActivity(intent);
                     } catch (JSONException e) {
 
-                        Toast.makeText(this, "Failed to retrieve current event. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to retrieve current event. Please try again.", Toast.LENGTH_LONG).show();
                         Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
                     }
                 });

@@ -67,7 +67,7 @@ public class frmAdminAlert extends AppCompatActivity {
                 JSONObject responseJSON = volleyHttp.getJsonResponse(true);
                 runOnUiThread(()->{
                     if(responseJSON == null){
-                        Toast.makeText(this, "Failed to retrieve list of alerts. Please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to retrieve list of alerts. Please try again", Toast.LENGTH_LONG).show();
                         finish();
                     } else{
                         JSONArray alertArray = responseJSON.optJSONArray("data");

@@ -113,7 +113,7 @@ public class frmAccount extends AppCompatActivity {
             inputValid = true;
             Arrays.stream(editTexts).forEach(e -> {
                 if (e.getText().toString().trim().isEmpty()) {
-                    Toast.makeText(this, "Please input a valid " + e.getTag().toString() + ".", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please input a valid " + e.getTag().toString() + ".", Toast.LENGTH_LONG).show();
                     inputValid = false;
                 }
             });
@@ -182,12 +182,12 @@ public class frmAccount extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_LONG).show();
             }
 
         } catch (JSONException e) {
             Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-            Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -136,11 +136,11 @@ public class frmAddEvent extends AppCompatActivity {
                     txAddEventStart.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
 //                    if (catDate.equals(txAddEventStart.getText().toString().trim())) {
 //                        if (selectedHour < hour) {
-//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_LONG).show();
 //                            return;
 //                        }
 //                        if (selectedHour == hour && selectedMinute <= minute) {
-//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_LONG).show();
 //                            return;
 //                        }
 //                    }
@@ -177,27 +177,27 @@ public class frmAddEvent extends AppCompatActivity {
 
         btnEventRegister.setOnClickListener(v -> {
             if (txAddEventTitle.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please input an event title", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please input an event title", Toast.LENGTH_LONG).show();
                 return;
             }
             if (txAddEventDate.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please input an event date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please input an event date", Toast.LENGTH_LONG).show();
                 return;
             }
             if (txAddEventAward.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please input an event award", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please input an event award", Toast.LENGTH_LONG).show();
                 return;
             }
             if (txAddEventDescription.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please input an event description", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please input an event description", Toast.LENGTH_LONG).show();
                 return;
             }
             if (txAddEventEnd.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please input an event end date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please input an event end date", Toast.LENGTH_LONG).show();
                 return;
             }
             if (txAddEventStart.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "Please input an event start date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please input an event start date", Toast.LENGTH_LONG).show();
                 return;
             }
             AlertDialog alertDialog = new AlertDialog.Builder(frmAddEvent.this).create();
@@ -253,7 +253,7 @@ public class frmAddEvent extends AppCompatActivity {
     private void saveEvent(String imgURL) {
         try {
             if (imgURL.isEmpty()) {
-                runOnUiThread(() -> Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_LONG).show());
                 return;
             }
             String etDate = txAddEventDate.getText().toString();
@@ -294,10 +294,10 @@ public class frmAddEvent extends AppCompatActivity {
             runOnUiThread(() -> {
                 progressDialog.dismiss();
                 if (data_inserted) {
-                    Toast.makeText(this, "Event registered successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Event registered successfully", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
-                    Toast.makeText(this, "Failed to register event. Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to register event. Please try again", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -305,7 +305,7 @@ public class frmAddEvent extends AppCompatActivity {
             Log.d(Helper.getInstance().log_code, "saveEvent: " + err.getMessage());
             runOnUiThread(() -> {
                 progressDialog.dismiss();
-                Toast.makeText(this, "Failed to register event. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to register event. Please try again", Toast.LENGTH_LONG).show();
             });
         }
     }
@@ -322,7 +322,7 @@ public class frmAddEvent extends AppCompatActivity {
                 imgAddEvent.setScaleType(ImageView.ScaleType.FIT_XY);
             } catch (IOException e) {
                 imgAddEvent.setImageBitmap(null);
-                Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_LONG).show();
             }
         }
 

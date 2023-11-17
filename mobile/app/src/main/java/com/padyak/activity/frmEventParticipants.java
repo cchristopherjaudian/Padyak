@@ -109,7 +109,7 @@ public class frmEventParticipants extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.d(Helper.getInstance().log_code, "loadParticipants: " + e.getMessage());
-                runOnUiThread(()-> Toast.makeText(this, "Failed to load list of participants.", Toast.LENGTH_SHORT).show());
+                runOnUiThread(()-> Toast.makeText(this, "Failed to load list of participants.", Toast.LENGTH_LONG).show());
             } finally {
                 runOnUiThread(()-> progressDialog.dismiss());
             }
