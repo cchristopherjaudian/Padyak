@@ -45,8 +45,13 @@ public class frmStarted extends AppCompatActivity {
         frameTerms = findViewById(R.id.frameTerms);
 
         btnGetStarted.setOnClickListener(v->{
-            frameGetStarted.setVisibility(View.GONE);
-            frameTerms.setVisibility(View.VISIBLE);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            } else{
+                Prefs.getInstance().setUser(frmStarted.this, Prefs.AUTH, "G");
+                startActivity(intent);
+                finish();
+            }
         });
         btnAgree.setOnClickListener(v->{
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

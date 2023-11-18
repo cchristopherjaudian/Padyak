@@ -21,12 +21,14 @@ import java.util.Calendar;
 
 public class InappRegistrationActivity extends AppCompatActivity {
     String[] gender = {"-Please select a gender-", "Male", "Female"};
+    String[] heightUnit = {"-", "cm", "in"};
     String photoURL = "";
-    ArrayAdapter<String> aaGender;
-    EditText etPassword,etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
-    Spinner etCreateGender;
+    ArrayAdapter<String> aaGender, aaHeightUnit;
+    EditText etPassword, etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
+    Spinner etCreateGender, etHeightUnit;
     Button btnUpdateAccount, btnCancelAccount;
     boolean inputValid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class InappRegistrationActivity extends AppCompatActivity {
         btnUpdateAccount = findViewById(R.id.btnUpdateAccount);
         btnCancelAccount = findViewById(R.id.btnCancelAccount);
 
+        etHeightUnit = findViewById(R.id.etHeightUnit);
         etPassword = findViewById(R.id.etPassword);
         etCreateEmail = findViewById(R.id.txAddEventTitle);
         etCreateFirstName = findViewById(R.id.etCreateFirstName);
@@ -47,6 +50,10 @@ public class InappRegistrationActivity extends AppCompatActivity {
         aaGender = new ArrayAdapter<String>(InappRegistrationActivity.this, R.layout.sp_format, gender);
         aaGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etCreateGender.setAdapter(aaGender);
+        aaHeightUnit = new ArrayAdapter<String>(InappRegistrationActivity.this, R.layout.sp_format, heightUnit);
+        aaHeightUnit.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        etHeightUnit.setAdapter(aaHeightUnit);
+
         photoURL = getIntent().getStringExtra(Prefs.IMG_KEY);
         etCreateEmail.setText(getIntent().getStringExtra(Prefs.EMAIL_KEY));
         etCreateFirstName.setText(getIntent().getStringExtra(Prefs.FN_KEY));
@@ -76,7 +83,7 @@ public class InappRegistrationActivity extends AppCompatActivity {
 
         btnCancelAccount.setOnClickListener(v -> finish());
         btnUpdateAccount.setOnClickListener(v -> {
-            EditText[] editTexts = {etPassword,etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateHeight, etCreateWeight};
+            EditText[] editTexts = {etPassword, etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateHeight, etCreateWeight};
             inputValid = true;
             Arrays.stream(editTexts).forEach(e -> {
                 if (e.getText().toString().trim().isEmpty()) {
@@ -85,7 +92,7 @@ public class InappRegistrationActivity extends AppCompatActivity {
                 }
             });
             if (etCreateGender.getSelectedItemPosition() < 1) inputValid = false;
-
+            if (etHeightUnit.getSelectedItemPosition() < 1) inputValid = false;
             if (!inputValid) return;
 
             AlertDialog alertDialog = new AlertDialog.Builder(InappRegistrationActivity.this).create();

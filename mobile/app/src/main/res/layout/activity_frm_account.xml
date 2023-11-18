@@ -171,8 +171,6 @@
 
             <EditText
                 android:id="@+id/etCreateBirthdate"
-                android:tag="Birthdate"
-                android:maxLength="10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -180,9 +178,11 @@
                 android:background="@drawable/et_rounded"
                 android:fontFamily="@font/coolvetica"
                 android:inputType="text"
+                android:maxLength="10"
                 android:maxLines="1"
                 android:padding="7dp"
-                app:layout_constraintEnd_toEndOf="@+id/etCreateHeight"
+                android:tag="Birthdate"
+                app:layout_constraintEnd_toEndOf="@+id/etCreateFirstName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
@@ -195,19 +195,19 @@
                 android:text="Gender"
                 android:textColor="#000"
                 android:textSize="@dimen/subheader_size"
-                app:layout_constraintStart_toStartOf="@+id/etCreateGender"
+                app:layout_constraintStart_toStartOf="@+id/etCreateLastName"
                 app:layout_constraintTop_toBottomOf="@+id/etCreateContact" />
 
             <Spinner
                 android:id="@+id/etCreateGender"
-                android:textSize="18dp"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/et_rounded"
                 android:fontFamily="@font/coolvetica"
+                android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="@+id/etCreateBirthdate"
                 app:layout_constraintEnd_toEndOf="@+id/etCreateWeight"
-                app:layout_constraintStart_toStartOf="@+id/etCreateWeight"
+                app:layout_constraintStart_toStartOf="@+id/etCreateLastName"
                 app:layout_constraintTop_toTopOf="@+id/etCreateBirthdate" />
 
             <TextView
@@ -225,21 +225,32 @@
 
             <EditText
                 android:id="@+id/etCreateHeight"
-                android:tag="Height"
-                android:maxLength="10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/et_rounded"
                 android:fontFamily="@font/coolvetica"
-                android:inputType="text"
+                android:inputType="number"
+                android:maxLength="10"
                 android:maxLines="1"
                 android:padding="7dp"
-                app:layout_constraintEnd_toStartOf="@+id/etCreateWeight"
-                app:layout_constraintStart_toStartOf="parent"
+                android:tag="Height"
+                app:layout_constraintEnd_toStartOf="@+id/etHeightUnit"
+                app:layout_constraintStart_toStartOf="@+id/etCreateFirstName"
                 app:layout_constraintTop_toBottomOf="@+id/textView43" />
+
+            <Spinner
+                android:id="@+id/etHeightUnit"
+                android:layout_width="50dp"
+                android:layout_height="0dp"
+                android:background="@drawable/et_rounded"
+                android:fontFamily="@font/coolvetica"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="@+id/etCreateHeight"
+                app:layout_constraintEnd_toEndOf="@+id/etCreateFirstName"
+                app:layout_constraintStart_toEndOf="@+id/etCreateHeight"
+                app:layout_constraintTop_toTopOf="@+id/etCreateHeight" />
 
             <TextView
                 android:id="@+id/textView44"
@@ -255,8 +266,6 @@
 
             <EditText
                 android:id="@+id/etCreateWeight"
-                android:tag="Weight"
-                android:maxLength="10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -264,10 +273,12 @@
                 android:background="@drawable/et_rounded"
                 android:fontFamily="@font/coolvetica"
                 android:inputType="text"
+                android:maxLength="10"
                 android:maxLines="1"
                 android:padding="7dp"
+                android:tag="Weight"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/etCreateHeight"
+                app:layout_constraintStart_toStartOf="@+id/etCreateLastName"
                 app:layout_constraintTop_toBottomOf="@+id/textView43" />
 
             <Button

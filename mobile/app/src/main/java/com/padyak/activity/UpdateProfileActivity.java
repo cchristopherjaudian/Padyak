@@ -42,19 +42,22 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UpdateProfileActivity extends AppCompatActivity {
     ImageView imgAdminProfile;
     ImageView imgShowPassword;
     TextView txSave, txCreatePassword;
-    ArrayAdapter<String> aaGender;
+    ArrayAdapter<String> aaGender,aaHeightUnit;
     EditText etCreatePassword, etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
-    Spinner etCreateGender;
+    Spinner etCreateGender,etHeightUnit;
     String[] gender = {"-Please select a gender-", "Male", "Female"};
+    String[] heightUnit = {"-", "cm", "in"};
     boolean inputValid;
     ProgressDialog progressDialog;
     CardView cardView11;
@@ -83,7 +86,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
         etCreateHeight = findViewById(R.id.etCreateHeight);
         etCreateWeight = findViewById(R.id.etCreateWeight);
         etCreateGender = findViewById(R.id.etCreateGender);
+        etHeightUnit = findViewById(R.id.etHeightUnit);
 
+        aaHeightUnit = new ArrayAdapter<String>(UpdateProfileActivity.this, R.layout.sp_format, heightUnit);
+        aaHeightUnit.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        etHeightUnit.setAdapter(aaHeightUnit);
         aaGender = new ArrayAdapter<String>(UpdateProfileActivity.this, R.layout.sp_format, gender);
         aaGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etCreateGender.setAdapter(aaGender);
@@ -169,13 +176,21 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
 
         });
+        List<String> heightList =  Arrays.asList(LoggedUser.getInstance().getHeight().split("@"));
+
         etCreatePassword.setVisibility(View.GONE);
         etCreateEmail.setText(LoggedUser.getInstance().getEmail());
         etCreateFirstName.setText(LoggedUser.getInstance().getFirstName());
         etCreateLastName.setText(LoggedUser.getInstance().getLastName());
         etCreateContact.setText(LoggedUser.getInstance().getPhoneNumber());
         etCreateBirthdate.setText(LoggedUser.getInstance().getBirthDate());
-        etCreateHeight.setText(LoggedUser.getInstance().getHeight());
+        if(heightList.size() < 2){
+            etCreateHeight.setText(LoggedUser.getInstance().getHeight());
+        } else{
+            etCreateHeight.setText(heightList.get(0));
+            etHeightUnit.setSelection(Arrays.asList(heightUnit).indexOf(heightList.get(1)));
+        }
+
         etCreateWeight.setText(LoggedUser.getInstance().getWeight());
         etCreateGender.setSelection(Arrays.asList(gender).indexOf(LoggedUser.getInstance().getGender()));
         if (LoggedUser.getInstance().getAuth().equals("IN_APP")) {
@@ -213,7 +228,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
         params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
         params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
-        params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim());
+        params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
         params.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
         params.put(Prefs.IMG_KEY, LoggedUser.getInstance().getImgUrl());
         VolleyHttp volleyHttp = new VolleyHttp("", params, "user-patch", UpdateProfileActivity.this);
@@ -232,7 +247,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
-                Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim());
+                Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
 
                 Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_LONG).show();
                 finish();

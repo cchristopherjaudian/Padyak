@@ -34,10 +34,11 @@ public class frmAccount extends AppCompatActivity {
     String authSource;
     String password;
     String[] gender = {"-Please select a gender-", "Male", "Female"};
+    String[] heightUnit = {"-", "cm", "in"};
     String photoURL = "";
-    ArrayAdapter<String> aaGender;
+    ArrayAdapter<String> aaGender,aaHeightUnit;
     EditText etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
-    Spinner etCreateGender;
+    Spinner etCreateGender,etHeightUnit;
     Button btnUpdateAccount, btnCancelAccount;
     String mobileNumber, emailAddress;
     boolean is_registration;
@@ -58,6 +59,7 @@ public class frmAccount extends AppCompatActivity {
         btnUpdateAccount = findViewById(R.id.btnUpdateAccount);
         btnCancelAccount = findViewById(R.id.btnCancelAccount);
 
+        etHeightUnit = findViewById(R.id.etHeightUnit);
         etCreateEmail = findViewById(R.id.txAddEventTitle);
         etCreateFirstName = findViewById(R.id.etCreateFirstName);
         etCreateLastName = findViewById(R.id.etCreateLastName);
@@ -66,6 +68,9 @@ public class frmAccount extends AppCompatActivity {
         etCreateHeight = findViewById(R.id.etCreateHeight);
         etCreateWeight = findViewById(R.id.etCreateWeight);
         etCreateGender = findViewById(R.id.etCreateGender);
+
+        aaHeightUnit = new ArrayAdapter<String>(frmAccount.this, R.layout.sp_format, heightUnit);
+        aaHeightUnit.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         aaGender = new ArrayAdapter<String>(frmAccount.this, R.layout.sp_format, gender);
         aaGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -118,7 +123,7 @@ public class frmAccount extends AppCompatActivity {
                 }
             });
             if (etCreateGender.getSelectedItemPosition() < 1) inputValid = false;
-
+            if (etHeightUnit.getSelectedItemPosition() < 1) inputValid = false;
             if (!inputValid) return;
 
             AlertDialog alertDialog = new AlertDialog.Builder(frmAccount.this).create();
@@ -150,7 +155,7 @@ public class frmAccount extends AppCompatActivity {
         params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
         params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
         params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
-        params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim());
+        params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
         params.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
         params.put(Prefs.IMG_KEY, photoURL);
         params.put("source", authSource);
@@ -171,7 +176,7 @@ public class frmAccount extends AppCompatActivity {
                 Prefs.getInstance().setUser(frmAccount.this, Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
                 Prefs.getInstance().setUser(frmAccount.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
                 Prefs.getInstance().setUser(frmAccount.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim());
+                Prefs.getInstance().setUser(frmAccount.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
                 Prefs.getInstance().setUser(frmAccount.this, Prefs.PASSWORD_KEY, password);
                 Prefs.getInstance().setUser(frmAccount.this, Prefs.AUTH, authSource);
                 Intent intent = new Intent(frmAccount.this, frmMain.class);
