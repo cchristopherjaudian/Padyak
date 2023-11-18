@@ -73,6 +73,7 @@ public class VerificationActivity extends AppCompatActivity {
             btnVerify.setEnabled(false);
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, otp);
             SigninWithPhone(credential);
+
         });
         sendOtp();
     }
@@ -153,6 +154,11 @@ public class VerificationActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     private void sendOtp() {
         textView55.setVisibility(View.INVISIBLE);
         txResend.setVisibility(View.INVISIBLE);
@@ -204,7 +210,9 @@ public class VerificationActivity extends AppCompatActivity {
                         btnVerify.setEnabled(true);
                         if (task.isSuccessful()) {
                             if(is_registration){
-                                inAppRegister();
+                                frmAccount f = frmAccount.frmAccount;
+                                f.registerAccount();
+                                finish();
                             } else{
                                 resetPassword();
                             }

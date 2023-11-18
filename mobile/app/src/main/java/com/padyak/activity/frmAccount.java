@@ -2,6 +2,7 @@ package com.padyak.activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -9,10 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -36,9 +39,12 @@ public class frmAccount extends AppCompatActivity {
     String[] gender = {"-Please select a gender-", "Male", "Female"};
     String[] heightUnit = {"-", "cm", "in"};
     String photoURL = "";
-    ArrayAdapter<String> aaGender,aaHeightUnit;
+    ImageView imgShowPassword, imgShowPassword2;
+    EditText txNewPassword, txConfirmPassword;
+    ArrayAdapter<String> aaGender, aaHeightUnit;
+    ConstraintLayout linearLayoutCompat2;
     EditText etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
-    Spinner etCreateGender,etHeightUnit;
+    Spinner etCreateGender, etHeightUnit;
     Button btnUpdateAccount, btnCancelAccount;
     String mobileNumber, emailAddress;
     boolean is_registration;
@@ -53,12 +59,12 @@ public class frmAccount extends AppCompatActivity {
         frmAccount = this;
         authSource = getIntent().getStringExtra("source");
         is_registration = getIntent().getBooleanExtra("register", false);
-        mobileNumber = getIntent().getStringExtra("mobileNumber");
+        //mobileNumber = getIntent().getStringExtra("mobileNumber");
         emailAddress = getIntent().getStringExtra("emailAddress");
-        password = getIntent().getStringExtra("password");
+        //password = getIntent().getStringExtra("password");
         btnUpdateAccount = findViewById(R.id.btnUpdateAccount);
         btnCancelAccount = findViewById(R.id.btnCancelAccount);
-
+        linearLayoutCompat2 = findViewById(R.id.linearLayoutCompat2);
         etHeightUnit = findViewById(R.id.etHeightUnit);
         etCreateEmail = findViewById(R.id.txAddEventTitle);
         etCreateFirstName = findViewById(R.id.etCreateFirstName);
@@ -69,25 +75,45 @@ public class frmAccount extends AppCompatActivity {
         etCreateWeight = findViewById(R.id.etCreateWeight);
         etCreateGender = findViewById(R.id.etCreateGender);
 
+        txNewPassword = findViewById(R.id.txNewPassword);
+        txConfirmPassword = findViewById(R.id.txConfirmPassword);
+
+        imgShowPassword = findViewById(R.id.imgShowPassword);
+        imgShowPassword2 = findViewById(R.id.imgShowPassword2);
+        imgShowPassword.setOnClickListener(v -> {
+            if (txNewPassword.getInputType() == 129) {
+                txNewPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            } else {
+                txNewPassword.setInputType(129);
+            }
+        });
+        imgShowPassword2.setOnClickListener(v -> {
+            if (txConfirmPassword.getInputType() == 129) {
+                txConfirmPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            } else {
+                txConfirmPassword.setInputType(129);
+            }
+        });
         aaHeightUnit = new ArrayAdapter<String>(frmAccount.this, R.layout.sp_format, heightUnit);
         aaHeightUnit.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+        etHeightUnit.setAdapter(aaHeightUnit);
         aaGender = new ArrayAdapter<String>(frmAccount.this, R.layout.sp_format, gender);
         aaGender.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         etCreateGender.setAdapter(aaGender);
-        if(authSource.equals("SSO")){
+        if (authSource.equals("SSO")) {
+            linearLayoutCompat2.setVisibility(View.GONE);
             photoURL = getIntent().getStringExtra(Prefs.IMG_KEY);
             etCreateEmail.setText(getIntent().getStringExtra(Prefs.EMAIL_KEY));
             etCreateFirstName.setText(getIntent().getStringExtra(Prefs.FN_KEY));
             etCreateLastName.setText(getIntent().getStringExtra(Prefs.LN_KEY));
             etCreateContact.setText(getIntent().getStringExtra(Prefs.PHONE_KEY));
             etCreateEmail.setEnabled(false);
-            etCreateContact.setEnabled(true);
-        } else{
+
+        } else {
             photoURL = getResources().getString(R.string.imgPlaceholder);
             etCreateContact.setText(mobileNumber);
             etCreateEmail.setEnabled(true);
-            etCreateContact.setEnabled(false);
+
         }
 
 
@@ -124,6 +150,30 @@ public class frmAccount extends AppCompatActivity {
             });
             if (etCreateGender.getSelectedItemPosition() < 1) inputValid = false;
             if (etHeightUnit.getSelectedItemPosition() < 1) inputValid = false;
+            if (!Helper.getInstance().validateMobileNumber(etCreateContact.getText().toString().trim())) {
+                Toast.makeText(frmAccount.this, "Please enter a valid mobile number", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (authSource.equals("IN_APP")) {
+                if (!txNewPassword.getText().toString().trim().equals(txConfirmPassword.getText().toString().trim())) {
+                    Toast.makeText(frmAccount.this, "New Password and Confirmed Password are not equal.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (!Helper.getInstance().checkString(txNewPassword.getText().toString().trim())) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(frmAccount.this).create();
+                    alertDialog.setTitle("Password Confirmation");
+                    alertDialog.setCancelable(false);
+                    alertDialog.setMessage("Password should contain these criterias:\nAtleast 8 Characters\nContains atleast 1 special character\nContains atleast 1 numeric value\nShould start with a capital letter");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                            (d, w) -> {
+
+                            });
+
+                    alertDialog.show();
+                    return;
+                }
+            }
+
             if (!inputValid) return;
 
             AlertDialog alertDialog = new AlertDialog.Builder(frmAccount.this).create();
@@ -134,7 +184,17 @@ public class frmAccount extends AppCompatActivity {
 
             });
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", (d, w) -> {
-                registerAccount();
+                Intent intent = new Intent(frmAccount.this, TermsActivity.class);
+                Bundle b = new Bundle();
+                if (authSource.equals("IN_APP")) {
+                    b.putString("mobileNumber", etCreateContact.getText().toString().trim());
+                    b.putString("source", "IN_APP");
+                } else {
+                    b.putString("source", "SSO");
+                }
+                intent.putExtras(b);
+                startActivity(intent);
+
             });
             alertDialog.show();
 
@@ -143,56 +203,138 @@ public class frmAccount extends AppCompatActivity {
 
     }
 
-    private void registerAccount() {
+    public void registerAccount() {
         String uriPath = (authSource.equals("IN_APP")) ? "/inapp/profile" : "/sso/auth";
         String uriMethod = (authSource.equals("IN_APP")) ? "user-patch" : "user";
         ProgressDialog progressDialog = Helper.getInstance().progressDialog(frmAccount.this, "Processing request.");
         progressDialog.show();
-        Map<String, Object> params = new HashMap<>();
-        params.put(Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
-        params.put(Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
-        if(authSource.equals("SSO")) params.put(Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
-        params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
-        params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
-        params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
-        params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
-        params.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
-        params.put(Prefs.IMG_KEY, photoURL);
-        params.put("source", authSource);
-        VolleyHttp volleyHttp = new VolleyHttp(uriPath, params, uriMethod, frmAccount.this);
-        String json = volleyHttp.getResponseBody(true);
-        progressDialog.dismiss();
-        try {
-            JSONObject reader = new JSONObject(json);
-            int responseStatus = reader.getInt("status");
-            if (responseStatus == 200) {
 
-                if(!authSource.equals("SSO")) Prefs.getInstance().setUser(frmAccount.this, Prefs.PASSWORD_KEY, password);
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.IMG_KEY, photoURL);
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.PASSWORD_KEY, password);
-                Prefs.getInstance().setUser(frmAccount.this, Prefs.AUTH, authSource);
-                Intent intent = new Intent(frmAccount.this, frmMain.class);
+        new Thread(() -> {
+            if (authSource.equals("IN_APP")) {
+                Map<String, Object> paramsCreate = new HashMap<>();
+                paramsCreate.put("contactNumber", etCreateContact.getText().toString());
+                paramsCreate.put("password", txNewPassword.getText().toString());
+                paramsCreate.put("source", "IN_APP");
+                VolleyHttp volleyHttpCreate = new VolleyHttp("/inapp/signup", paramsCreate, "user", frmAccount.this);
+                String json = volleyHttpCreate.getResponseBody(false);
+                try {
+                    JSONObject reader = new JSONObject(json);
+                    int responseStatus = reader.getInt("status");
+                    if (responseStatus == 200) {
+                        JSONObject dataObject = reader.getJSONObject("data");
+                        LoggedUser.getInstance().setRefreshToken(dataObject.getString("token"));
+                        Map<String, Object> params = new HashMap<>();
+                        params.put(Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
+                        params.put(Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
+                        //params.put(Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
+                        params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
+                        params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
+                        params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
+                        params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
+                        params.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
+                        params.put(Prefs.IMG_KEY, photoURL);
+                        params.put("source", authSource);
+                        VolleyHttp volleyHttpPatch = new VolleyHttp(uriPath, params, uriMethod, frmAccount.this);
+                        String jsonPatch = volleyHttpPatch.getResponseBody(true);
+                        JSONObject readerPatch = new JSONObject(jsonPatch);
+                        int responsePatch = readerPatch.getInt("status");
+                        if (responsePatch == 200) {
+                            if (!authSource.equals("SSO"))
+                                Prefs.getInstance().setUser(frmAccount.this, Prefs.PASSWORD_KEY, txNewPassword.getText().toString().trim());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.IMG_KEY, photoURL);
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.AUTH, authSource);
 
-                if(null != VerificationActivity.verificationActivity) VerificationActivity.verificationActivity.finish();
-                if(null != InAppActivity.inAppActivity) InAppActivity.inAppActivity.finish();
+                            runOnUiThread(() -> {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(frmAccount.this, frmMain.class);
+                                if (null != VerificationActivity.verificationActivity)
+                                    VerificationActivity.verificationActivity.finish();
+                                if (null != InAppActivity.inAppActivity)
+                                    InAppActivity.inAppActivity.finish();
 
-                startActivity(intent);
-                finish();
+                                startActivity(intent);
+                                finish();
+                            });
+
+                        } else {
+                            throw new Exception("Invalid patch response code " + responsePatch);
+                        }
+                    } else {
+                        throw new Exception("Invalid create response code " + responseStatus);
+                    }
+                } catch (Exception e) {
+                    runOnUiThread(() -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(frmAccount, "Failed to register account, Please try again.", Toast.LENGTH_LONG).show();
+                    });
+                }
             } else {
-                Toast.makeText(this, "Failed to register information. Please try again.", Toast.LENGTH_LONG).show();
+                try {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put(Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
+                    params.put(Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
+                    params.put(Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
+                    params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
+                    params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
+                    params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
+                    params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
+                    params.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
+                    params.put(Prefs.IMG_KEY, photoURL);
+                    params.put("source", authSource);
+                    VolleyHttp volleyHttpPatch = new VolleyHttp(uriPath, params, uriMethod, frmAccount.this);
+                    String jsonPatch = volleyHttpPatch.getResponseBody(true);
+                    JSONObject readerPatch = new JSONObject(jsonPatch);
+                    int responsePatch = readerPatch.getInt("status");
+                    if (responsePatch == 200) {
+
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.IMG_KEY, photoURL);
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
+                        Prefs.getInstance().setUser(frmAccount.this, Prefs.AUTH, authSource);
+
+                        runOnUiThread(() -> {
+                            progressDialog.dismiss();
+                            //Intent intent = new Intent(frmAccount.this, frmMain.class);
+                            if (null != VerificationActivity.verificationActivity)
+                                VerificationActivity.verificationActivity.finish();
+                            if (null != InAppActivity.inAppActivity)
+                                InAppActivity.inAppActivity.finish();
+
+//                            startActivity(intent);
+//                            finish();
+                            Intent intent = getBaseContext().getPackageManager()
+                                    .getLaunchIntentForPackage(getBaseContext().getPackageName());
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+
+                        });
+
+                    } else {
+                        throw new Exception("Invalid patch response code " + responsePatch);
+                    }
+                } catch (Exception e) {
+                    runOnUiThread(() -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(frmAccount, "Failed to register account, Please try again.", Toast.LENGTH_LONG).show();
+                    });
+                }
+
             }
 
-        } catch (JSONException e) {
-            Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-            Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show();
-        }
+        }).start();
     }
 }

@@ -272,7 +272,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/et_rounded"
                 android:fontFamily="@font/coolvetica"
-                android:inputType="text"
+                android:inputType="number"
                 android:maxLength="10"
                 android:maxLines="1"
                 android:padding="7dp"
@@ -281,19 +281,110 @@
                 app:layout_constraintStart_toStartOf="@+id/etCreateLastName"
                 app:layout_constraintTop_toBottomOf="@+id/textView43" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/linearLayoutCompat2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etCreateHeight">
+
+                <TextView
+                    android:id="@+id/textView56"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/coolvetica"
+                    android:text="New Password"
+                    android:textColor="#000"
+                    android:textSize="@dimen/subheader_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/txNewPassword"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/et_rounded"
+                    android:fontFamily="@font/coolvetica"
+                    android:inputType="textPassword"
+                    android:maxLength="15"
+                    android:padding="7dp"
+                    android:tag="New Password"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView56" />
+
+                <ImageView
+                    android:id="@+id/imgShowPassword"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_outline_remove_red_eye_24"
+                    app:layout_constraintBottom_toBottomOf="@+id/txNewPassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txNewPassword" />
+
+                <TextView
+                    android:id="@+id/textView58"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/coolvetica"
+                    android:text="Confirm Password"
+                    android:textColor="#000"
+                    android:textSize="@dimen/subheader_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txNewPassword" />
+
+                <EditText
+                    android:id="@+id/txConfirmPassword"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/et_rounded"
+                    android:fontFamily="@font/coolvetica"
+                    android:inputType="textPassword"
+                    android:maxLength="15"
+                    android:padding="7dp"
+                    android:tag="New Password"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView58" />
+
+                <ImageView
+                    android:id="@+id/imgShowPassword2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_outline_remove_red_eye_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txConfirmPassword" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <Button
                 android:id="@+id/btnUpdateAccount"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/button_size"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/rounded_main_button"
                 android:text="Create Account"
                 android:textColor="#FFF"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etCreateHeight" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat2" />
 
             <Button
                 android:id="@+id/btnCancelAccount"

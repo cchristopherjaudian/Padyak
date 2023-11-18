@@ -44,7 +44,8 @@ import java.util.Map;
 
 public class SsoLoginActivity extends AppCompatActivity {
     Button btnNewLogin;
-    com.google.android.gms.common.SignInButton btnSSO;
+    //com.google.android.gms.common.SignInButton btnSSO;
+    Button btnSSO;
     TextView txForgot, txSignup;
     EditText txMobileNumber, txMobilePassword;
     String mobileNumber, mobilePassword;
@@ -118,9 +119,10 @@ public class SsoLoginActivity extends AppCompatActivity {
                     });
         });
         txSignup.setOnClickListener(v->{
-            Intent intent = new Intent(SsoLoginActivity.this,InAppActivity.class);
+            Intent intent = new Intent(SsoLoginActivity.this,frmAccount.class);
             Bundle b = new Bundle();
             b.putBoolean("forgot",false);
+            b.putString("source","IN_APP");
             intent.putExtras(b);
             startActivity(intent);
         });
