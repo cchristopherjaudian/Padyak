@@ -1,0 +1,270 @@
+{
+    "data": [
+        {
+            "type": "HOSPITAL",
+            "name": "CECILIA HOSPITAL",
+            "latitude": 13.9566546189911,
+            "longitude": 121.320853106918,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=kfEEVRy17B596hfTq3M2Vw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=201.54822&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "HOSPITAL DE SOLEDAD",
+            "latitude": 13.9600283375523,
+            "longitude": 121.323801738816,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=pBLcbzZqRqInZ6-EZjfX7w&cb_client=search.gws-prod.gps&w=408&h=240&yaw=218.32236&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "DRL MEDICAL CLINIC",
+            "latitude": 13.9588831,
+            "longitude": 121.3239445,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=DuvDisE4aU4h8nR-9mDCnA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=228.91487&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "JOHN PAUL CLINICAL LABORATORY",
+            "latitude": "13.96024699710953121.32184021183105",
+            "longitude": 121.321840211831,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Cb4z3tKWID9GFKLO0tOxyg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=237.25143&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "LIWAG MEDICAL CLINIC INC.",
+            "latitude": 13.948854,
+            "longitude": 121.353086,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=0ASGoOVnVMGSYcBClsBLbQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=22.35937&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "UNITED CANDELARIA DOCTORS HOSPITAL",
+            "latitude": 13.930437405514,
+            "longitude": 121.451476665801,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=ytWIdWnbdE0GD4SO1QHGdQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=180.2049&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "CANDELARIA DISTRICT HOSPITAL",
+            "latitude": 13.9301465993517,
+            "longitude": 121.420657025323,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=r5fm60Q4SRxaMF1zx6Pisw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=76.206116&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "PETER PAUL MEDICAL CENTER OF CANDELARIA INC.",
+            "latitude": 13.926656569203,
+            "longitude": 121.423500638815,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipNaIEC0y3BYLG8wQAwn6OYo1eVCSz0IlTGTW2u8=w408-h306-k-no"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "GREG HOSPITAL",
+            "latitude": 13.9630273719934,
+            "longitude": 121.522548135245,
+            "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Sariaya%2CQuezonjf9733_23.JPG/2560px-Sariaya%2CQuezonjf9733_23.JPG"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "SOLER GENERAL HOSPITAL",
+            "latitude": 13.9617822121229,
+            "longitude": 121.52398755601,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Y3OJGa6fJXx8GDSuoMy1Wg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=313.8459&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "ALLIED CARE EXPERTS (ACE) MEDICAL CENTER SARIAYA",
+            "latitude": 13.9665018797445,
+            "longitude": 121.542585518577,
+            "photoUrl": "https://scontent-hkt1-1.xx.fbcdn.net/v/t39.30808-6/400336716_1049814463033078_1724373369565411127_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEAOVQq0gehlcFsuiae1vKwjzsSqrbBty6POxKqtsG3LvRIc-C7qThbAXo9p6Rg4K2FGDFmVuAgQJLlFqhz4-pD&_nc_ohc=rtb-h9kdV-kAX_I4DNG&_nc_ht=scontent-hkt1-1.xx&oh=00_AfD4rl_ay5Zzs7AwD79hipg4dnBB-e2MjuPF_FRjXqHHMA&oe=6553977F"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "TAYABAS COMMUNITY HOSPITAL INC.",
+            "latitude": 14.0210104899697,
+            "longitude": 121.597409725324,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMyg0M9T4MTO1U2KBDFy9z9RzGqDf19yBDw3MTd=w408-h544-k-no"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "MOUNT CARMEL DIOCESAN GENERAL HOSPITAL",
+            "latitude": 13.9410412463421,
+            "longitude": 121.611063632639,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMMa1R-WBALW-sYKvuoxdAzP62sItpEKsSHPvY=w408-h261-k-no"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "LUCENA UNITED DOCTORS HOSPITAL AND MEDICAL CENTER",
+            "latitude": 13.9476641870354,
+            "longitude": 121.585298725323,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipNsDzrQeC7b1vTthZj8xd3l4ZlideQBxSkfx2r_=w408-h306-k-no"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "CAMP NAKAR STATION HOSPITAL",
+            "latitude": 13.9539819677628,
+            "longitude": 121.60895125601,
+            "photoUrl": "https://lh5.googleusercontent.com/tg8qHTHb8LeE5tx6Oi7TttcxuuHBWn6zqZcJojN4qBdAWuaacKT9EMGScUsuZb0=w426-h240-k-no"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "QUEZON MEMORIAL HOSPITAL",
+            "latitude": 13.9422728671649,
+            "longitude": 121.612747754159,
+            "photoUrl": "https://lh4.googleusercontent.com/J_IqQALZaNMKjbMhY_rthIfGFKxz9AcPa0BtwJe98gJ_36bYbDNr-NTIDJW6Hko=w426-h240-k-no"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "ST. ANNE GENERAL HOSPITAL INC.",
+            "latitude": 13.9378184975196,
+            "longitude": 121.618618123472,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMQaMjagROOtIaobReqPEcgtIMmH4PJEBA-dqw=w408-h306-k-no"
+        },
+        {
+            "type": "HOSPITAL",
+            "name": "ALILIO'S MEDICAL CLINIC AND SAINT CECILIA HOSPITAL",
+            "latitude": 14.0240926782954,
+            "longitude": 121.403225831331,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=vAQey6vJ3uxL-awR2zVVFA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=133.55753&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "RIC BIKESHOP",
+            "latitude": 13.9466475753846,
+            "longitude": 121.360798627174,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipN6GINCgULM9MMfIF_trOU6TTcMVw3Z1JKkBcXe=w424-h240-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "WILD BIKES",
+            "latitude": 13.958307611431,
+            "longitude": 121.320623823473,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipNEd9x17U8EuBFvlzyQd49UgbmbsAqnAldiVL6r=w408-h306-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "CYCLE REPUBLIK",
+            "latitude": 13.9462257996673,
+            "longitude": 121.360624694637,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMTXQQbamaqjBhKr5wMdx1P6ZSIS01JMBuBmZm1=w408-h306-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "CENTURY BIKE",
+            "latitude": 13.9496636976752,
+            "longitude": 121.352056954159,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=6WIc5gBRFU_Nkmc5x3U8QA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=47.482044&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "BIKE FOR LESS",
+            "latitude": 13.92602,
+            "longitude": 121.6162,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=GcrNLY7gcNWgiuMgAAvvZQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=116.90683&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "WIN’S BIKE",
+            "latitude": 13.92604,
+            "longitude": 121.6162,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipM03IrvosjLPKcLF6aWRovaDv82YnTQ2Qxv6KXH=w408-h306-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "ERWIN CATAPANG - EBIKE REPAIR SHOP",
+            "latitude": 13.926,
+            "longitude": 121.61625,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMvt86HSWjxsOItHZDeVinxdGn2c48KmjTPHm_M=w533-h240-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "V. QUERUBIN BICYCLE PARTS & ACCESSORIES",
+            "latitude": 13.92605,
+            "longitude": 121.61623,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=I_AoA9FCRw8IXP6B7c8uxw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=39.150234&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "BIKE SHOP NI MANG GARY",
+            "latitude": 13.92604,
+            "longitude": 121.61625,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipPjoMq3dabizS8xG--a-xpXoX4TqkdBCG-HkcRJ=w408-h544-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "YAOSON BIKE SHOP",
+            "latitude": 13.92605,
+            "longitude": 121.61604,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMnUv8WN6IiQfbTuUmKUIl_vAkVahQoCYvtN8Nb=w408-h320-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "PECHAK CYCLE CENTER",
+            "latitude": 13.93132978,
+            "longitude": 121.6119462,
+            "photoUrl": "https://lh4.googleusercontent.com/yyorddONccdanKOjBhNH2zIAIjgQ2NVIeMycWfeWFJOMSC743lYD-gG0q2b1_rL0RA=w426-h240-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "BIKE ONE",
+            "latitude": 13.9325928,
+            "longitude": 121.611219,
+            "photoUrl": "https://lh4.googleusercontent.com/YIxpYgPsHQxfjJuGKR3nR9e_AuniCp_VY5lp0lRUogIlYUnz0qTteSkThaTRJ2g=w408-h725-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "BIKEYARD BICYCLE SHOP",
+            "latitude": 13.94122,
+            "longitude": 121.62366,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=mqZXrgLgq_zhpv4HrdKJVQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=358.70856&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "BIKEXZONE",
+            "latitude": 13.9422,
+            "longitude": 121.6045,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipPQ8YpuFQriPy9BXUrR-ZQ6pVySYJzq6lNnccK7=w408-h544-k-no"
+        },
+        {
+            "type": "REPAIR_SHOP",
+            "name": "BIKEPUNX BIKE SHOP",
+            "latitude": 13.92603,
+            "longitude": 121.61624,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipP3cW--vzRF_XzsPaXB29xnaNQxtQqAeLU5xcrH=w408-h306-k-no"
+        },
+        {
+            "type": "POLICE_STATION",
+            "name": "TIAONG POLICE STATION",
+            "latitude": 13.9591,
+            "longitude": 121.3235,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Sj-VQliQE-cC7wbv-yApxg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=236.75836&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "POLICE_STATION",
+            "name": "CANDELARIA POLICE STATION",
+            "latitude": 13.9284,
+            "longitude": 121.4244,
+            "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipOD_k3JIAnkB2j-8SZqhfjS1Xl3YaCVvi5kSCeW=w408-h544-k-no"
+        },
+        {
+            "type": "POLICE_STATION",
+            "name": "SARIAYA POLICE STATION",
+            "latitude": 13.963,
+            "longitude": 121.5237,
+            "photoUrl": "https://scontent-hkt1-1.xx.fbcdn.net/v/t39.30808-6/400572638_1049814479699743_8618607756815020590_n.jpg?stp=dst-jpg_s600x600&_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGqMnWKH3Xdqwh5T_Y8s1NVrFhcr4Xw1AWsWFyvhfDUBegLSIMeS2MelmD5-vAB9qMLK8rscmuXh_y6Lnb7LGnH&_nc_ohc=AZHnY5kvh1wAX_hSmY4&_nc_ht=scontent-hkt1-1.xx&oh=00_AfAJ0Ves2cQ2aEtq5KmMWbtBEb8klUtekBSXSp63CXUr1g&oe=655314EE"
+        },
+        {
+            "type": "POLICE_STATION",
+            "name": "TAYABAS CITY POLICE STATION",
+            "latitude": 14.0203,
+            "longitude": 121.5842,
+            "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=akYGvuwFh_xAI7wQ-rwHaQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=3.0110617&pitch=0&thumbfov=100"
+        },
+        {
+            "type": "POLICE_STATION",
+            "name": "LUCENA CITY POLICE STATION",
+            "latitude": 13.9362907072828,
+            "longitude": 121.611620103996,
+            "photoUrl": "https://lh4.googleusercontent.com/dSDQ2oU3krhCBLyfCBc8X63qyK4qhWnLNnlr-ZsjWH6eMIco2k6rC2Jfc65qsiFrdQ=w408-h654-k-no"
+        }
+    ]
+}
