@@ -52,7 +52,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:gravity="center_vertical"
+                    android:gravity="center_horizontal|bottom"
                     android:text="Users must use the application responsibly and in compliance with all applicable laws and regulations. Users are responsible for the accuracy and truthfulness of the information they provide."
                     android:textSize="15dp" />
                 <TextView
@@ -73,7 +73,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:gravity="center_vertical"
+                    android:gravity="center_horizontal|bottom"
                     android:text="Users must grant necessary permissions for the application to access their GPS location. The GPS location will use for tracking the ride of the User and to easily track by the admin in case of emergency."
                     android:textSize="15dp" />
                 <TextView
@@ -94,7 +94,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:gravity="center_vertical"
+                    android:gravity="center_horizontal|bottom"
                     android:text="The user will receive SMS Alert if someone in the club send an emergency alert during the ride."
                     android:textSize="15dp" />
                 <TextView
@@ -115,7 +115,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:gravity="center_vertical"
+                    android:gravity="center_horizontal|bottom"
                     android:text="In creating account you must choose strong unique passwords and protect their account credentials. After creating an account you must verify your email and mobile number to secure your account. If you forgot your password, you can change your password in the login section and in profile settings"
                     android:textSize="15dp" />
                 <TextView
@@ -136,9 +136,20 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/coolvetica"
-                    android:gravity="center"
+                    android:gravity="center_horizontal|bottom"
                     android:text="Require users to explicitly accept the terms and conditions before using the application."
                     android:textSize="15dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/coolvetica"
+                    android:gravity="center_vertical"
+                    android:text="Age Restrictions"
+                    android:textColor="#000"
+                    android:textSize="19dp" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -149,6 +160,23 @@
                     android:gravity="center"
                     android:text="If you are 12 years old below, you need to have your parent's consent"
                     android:textSize="15dp" />
+<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    >-->
+<!--                    <CheckBox-->
+<!--                        android:id="@+id/chkAgree"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="I agree to the terms and conditions"-->
+<!--                        android:textColor="#FFF"-->
+<!--                        android:textSize="15dp"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent" />-->
+<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+
                 <Button
                     android:id="@+id/btnAgree"
                     android:layout_width="match_parent"
@@ -158,7 +186,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/rounded_white_button"
-                    android:text="I Agree"
+                    android:text="Agree"
                     android:textColor="@color/ok_color" />
 
             </LinearLayout>
