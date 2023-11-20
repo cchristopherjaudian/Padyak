@@ -174,7 +174,10 @@ public class frmAccount extends AppCompatActivity {
                 }
             }
 
-            if (!inputValid) return;
+            if (!inputValid){
+                Toast.makeText(frmAccount, "Please validate all fields to continue", Toast.LENGTH_LONG).show();
+                return;
+            }
 
             AlertDialog alertDialog = new AlertDialog.Builder(frmAccount.this).create();
             alertDialog.setTitle("Create Account");
@@ -204,97 +207,29 @@ public class frmAccount extends AppCompatActivity {
     }
 
     public void registerAccount() {
-        String uriPath = (authSource.equals("IN_APP")) ? "/inapp/profile" : "/sso/auth";
-        String uriMethod = (authSource.equals("IN_APP")) ? "user-patch" : "user";
         ProgressDialog progressDialog = Helper.getInstance().progressDialog(frmAccount.this, "Processing request.");
         progressDialog.show();
-
         new Thread(() -> {
-            if (authSource.equals("IN_APP")) {
                 Map<String, Object> paramsCreate = new HashMap<>();
                 paramsCreate.put("contactNumber", etCreateContact.getText().toString());
-                paramsCreate.put("password", txNewPassword.getText().toString());
-                paramsCreate.put("source", "IN_APP");
-                VolleyHttp volleyHttpCreate = new VolleyHttp("/inapp/signup", paramsCreate, "user", frmAccount.this);
+                paramsCreate.put("password", authSource.equals("SSO") ? "Padyak123*" : txNewPassword.getText().toString());
+                paramsCreate.put(Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
+                paramsCreate.put(Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
+                paramsCreate.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
+                paramsCreate.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
+                paramsCreate.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
+                paramsCreate.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
+                paramsCreate.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
+                paramsCreate.put(Prefs.IMG_KEY, photoURL);
+                paramsCreate.put("source", authSource);
+                VolleyHttp volleyHttpCreate = new VolleyHttp("/inapp/profile", paramsCreate, "user", frmAccount.this);
                 String json = volleyHttpCreate.getResponseBody(false);
                 try {
                     JSONObject reader = new JSONObject(json);
                     int responseStatus = reader.getInt("status");
                     if (responseStatus == 200) {
-                        JSONObject dataObject = reader.getJSONObject("data");
-                        LoggedUser.getInstance().setRefreshToken(dataObject.getString("token"));
-                        Map<String, Object> params = new HashMap<>();
-                        params.put(Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
-                        params.put(Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
-                        //params.put(Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
-                        params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
-                        params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
-                        params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
-                        params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
-                        params.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
-                        params.put(Prefs.IMG_KEY, photoURL);
-                        params.put("source", authSource);
-                        VolleyHttp volleyHttpPatch = new VolleyHttp(uriPath, params, uriMethod, frmAccount.this);
-                        String jsonPatch = volleyHttpPatch.getResponseBody(true);
-                        JSONObject readerPatch = new JSONObject(jsonPatch);
-                        int responsePatch = readerPatch.getInt("status");
-                        if (responsePatch == 200) {
-                            if (!authSource.equals("SSO"))
-                                Prefs.getInstance().setUser(frmAccount.this, Prefs.PASSWORD_KEY, txNewPassword.getText().toString().trim());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.IMG_KEY, photoURL);
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
-                            Prefs.getInstance().setUser(frmAccount.this, Prefs.AUTH, authSource);
-
-                            runOnUiThread(() -> {
-                                progressDialog.dismiss();
-                                Intent intent = new Intent(frmAccount.this, frmMain.class);
-                                if (null != VerificationActivity.verificationActivity)
-                                    VerificationActivity.verificationActivity.finish();
-                                if (null != InAppActivity.inAppActivity)
-                                    InAppActivity.inAppActivity.finish();
-
-                                startActivity(intent);
-                                finish();
-                            });
-
-                        } else {
-                            throw new Exception("Invalid patch response code " + responsePatch);
-                        }
-                    } else {
-                        throw new Exception("Invalid create response code " + responseStatus);
-                    }
-                } catch (Exception e) {
-                    runOnUiThread(() -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(frmAccount, "Failed to register account, Please try again.", Toast.LENGTH_LONG).show();
-                    });
-                }
-            } else {
-                try {
-                    Map<String, Object> params = new HashMap<>();
-                    params.put(Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
-                    params.put(Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
-                    params.put(Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
-                    params.put(Prefs.EMAIL_KEY, etCreateEmail.getText().toString().trim());
-                    params.put(Prefs.GENDER_KEY, etCreateGender.getSelectedItem().toString());
-                    params.put(Prefs.BDAY_KEY, etCreateBirthdate.getText().toString().trim());
-                    params.put(Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
-                    params.put(Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
-                    params.put(Prefs.IMG_KEY, photoURL);
-                    params.put("source", authSource);
-                    VolleyHttp volleyHttpPatch = new VolleyHttp(uriPath, params, uriMethod, frmAccount.this);
-                    String jsonPatch = volleyHttpPatch.getResponseBody(true);
-                    JSONObject readerPatch = new JSONObject(jsonPatch);
-                    int responsePatch = readerPatch.getInt("status");
-                    if (responsePatch == 200) {
-
+                        if (!authSource.equals("SSO"))
+                            Prefs.getInstance().setUser(frmAccount.this, Prefs.PASSWORD_KEY, txNewPassword.getText().toString().trim());
                         Prefs.getInstance().setUser(frmAccount.this, Prefs.IMG_KEY, photoURL);
                         Prefs.getInstance().setUser(frmAccount.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
                         Prefs.getInstance().setUser(frmAccount.this, Prefs.LN_KEY, etCreateLastName.getText().toString().trim());
@@ -308,32 +243,28 @@ public class frmAccount extends AppCompatActivity {
 
                         runOnUiThread(() -> {
                             progressDialog.dismiss();
-                            //Intent intent = new Intent(frmAccount.this, frmMain.class);
+
                             if (null != VerificationActivity.verificationActivity)
                                 VerificationActivity.verificationActivity.finish();
                             if (null != InAppActivity.inAppActivity)
                                 InAppActivity.inAppActivity.finish();
 
-//                            startActivity(intent);
-//                            finish();
                             Intent intent = getBaseContext().getPackageManager()
                                     .getLaunchIntentForPackage(getBaseContext().getPackageName());
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-
                         });
 
                     } else {
-                        throw new Exception("Invalid patch response code " + responsePatch);
+                        throw new Exception("Invalid patch response code " + responseStatus);
                     }
+
                 } catch (Exception e) {
                     runOnUiThread(() -> {
                         progressDialog.dismiss();
                         Toast.makeText(frmAccount, "Failed to register account, Please try again.", Toast.LENGTH_LONG).show();
                     });
                 }
-
-            }
 
         }).start();
     }
