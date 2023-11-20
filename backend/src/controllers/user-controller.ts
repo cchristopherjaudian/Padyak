@@ -118,6 +118,18 @@ const getUserList = catchAsync(async (req: Request, res: Response) => {
     );
 });
 
+const createUserProfile = catchAsync(async (req: Request, res: Response) => {
+    const profile = await userInstance.createUserProfile({
+        ...req.body,
+    });
+    responseObject.createResponse(
+        res,
+        httpStatus.OK,
+        ResponseCodes.DATA_CREATED,
+        profile!
+    );
+});
+
 export default {
     authSso,
     getUserByEmail,
@@ -128,4 +140,5 @@ export default {
     createInappProfile,
     getInappAuth,
     forgotPassword,
+    createUserProfile,
 };

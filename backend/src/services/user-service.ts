@@ -4,6 +4,7 @@ import {
     IUserModel,
     TCreateInappProfile,
     TInappAuth,
+    TUserProfile,
 } from '../database/models/user';
 import JsonWebToken from './token-service';
 import UserRepository, {
@@ -20,6 +21,7 @@ import {
 
 class UserService {
     private _repository = new UserRepository();
+    private _mapper = new UserMapper();
 
     public async getUsers() {
         try {
@@ -69,6 +71,29 @@ class UserService {
         if (hasEmail) throw new ResourceConflictError('Email already exists.');
 
         return this._repository.update(payload);
+    }
+
+    public async createUserProfile(payload: TUserProfile) {
+        const isExists = await this._repository.getUserByContact(
+            payload.contactNumber,
+            payload.source
+        );
+        if (isExists) throw new ResourceConflictError('User already exists.');
+
+        const isEmailExists = await this._repository.findUserByEmail(
+            payload.emailAddress,
+            payload.source
+        );
+        if (isEmailExists) {
+            throw new ResourceConflictError('User already exists.');
+        }
+
+        payload.password = await bcrypt.hashSync(payload.password, 10);
+        const newUser = await this._repository.create(
+            this._mapper.createUser(payload) as IUserModel
+        );
+
+        return newUser;
     }
 }
 

@@ -39,3 +39,8 @@ export type TCreateInappProfile = {
     photoUrl: string;
     source: AuthSource;
 };
+
+export type TUserProfile = TCreateInappProfile & {
+    contactNumber: string;
+    password: string;
+};

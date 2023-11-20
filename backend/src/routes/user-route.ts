@@ -10,6 +10,7 @@ import {
     getInappUserProfile,
     updateUserSchema,
     forgotPasswordSchema,
+    createUserProfileSchema,
 } from '../lib/joi-schemas/cyclist-schema';
 import TokenMiddleware from '../middlewares/token-middleware';
 
@@ -59,6 +60,12 @@ router.patch(
         requestSchemaValidate(createInappProfileSchema),
     ],
     userController.createInappProfile
+);
+
+router.post(
+    '/inapp/profile',
+    [requestSchemaValidate(createUserProfileSchema)],
+    userController.createUserProfile
 );
 
 router.patch(

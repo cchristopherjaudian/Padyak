@@ -131,6 +131,40 @@ const createInappProfileSchema = Joi.object({
         .required(),
 });
 
+const createUserProfileSchema = Joi.object({
+    firstname: Joi.string().required(),
+    photoUrl: Joi.string().required(),
+    lastname: Joi.string().required(),
+    emailAddress: Joi.string().email().required(),
+    gender: Joi.string()
+        .valid(...genderDictionary)
+        .required(),
+    birthday: Joi.string().required(),
+    height: Joi.string().required(),
+    weight: Joi.string().required(),
+    source: Joi.string()
+        .trim()
+        .valid(...Object.values(AuthSource))
+        .required(),
+    contactNumber: Joi.string().min(11).max(11).required(),
+    password: Joi.string()
+        .pattern(/^[A-Z]/, 'Password should start with a capital letter')
+        .pattern(
+            /(?=.*\d)/,
+            'Password should contain atleast contain 1 numeric value'
+        )
+        .pattern(
+            /(?=.*[@#$!%*?&])/,
+            'Password should atleast contain 1 special character'
+        )
+        .pattern(
+            /[A-Za-z\d@$!%*?&]{7,}/,
+            'Password should be 8 characters length'
+        )
+        .trim()
+        .required(),
+});
+
 export {
     createUserSchema,
     getUserByEmailSchma,
@@ -140,4 +174,5 @@ export {
     createInappProfileSchema,
     getInappUserProfile,
     forgotPasswordSchema,
+    createUserProfileSchema,
 };
