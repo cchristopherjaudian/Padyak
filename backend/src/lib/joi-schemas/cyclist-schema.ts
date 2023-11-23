@@ -142,6 +142,7 @@ const createUserProfileSchema = Joi.object({
     birthday: Joi.string().required(),
     height: Joi.string().required(),
     weight: Joi.string().required(),
+    isAdmin: Joi.boolean().optional().default(false),
     source: Joi.string()
         .trim()
         .valid(...Object.values(AuthSource))
