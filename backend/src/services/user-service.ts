@@ -131,6 +131,7 @@ class UserAuthService {
 
             if (!user) throw new NotFoundError('User does not exists.');
 
+            const { isAdmin, ...userObject } = user;
             const isMatched = await bcrypt.compareSync(
                 payload.password as string,
                 user.password as string
@@ -139,12 +140,17 @@ class UserAuthService {
                 throw new AuthenticationError('Wrong contact or password');
             }
 
+            const admin = {} as { isAdmin: boolean };
+            if (isAdmin) {
+                admin.isAdmin = isAdmin;
+            }
+
             const token = await this._jwt.sign({
                 id: user.id,
                 source: user.source,
             });
 
-            return { user, token };
+            return { user: { ...userObject, ...admin }, token };
         } catch (error) {
             throw error;
         }
