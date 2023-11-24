@@ -79,7 +79,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
 
         Picasso.get().load(getIntent().getStringExtra("photoUrl")).into(imgDP);
 
-        txAlertLevel.setText("Level ".concat(String.valueOf(getIntent().getIntExtra("level", 0))));
+        txAlertLevel.setText("Level ".concat(String.valueOf(getIntent().getIntExtra("level", 0) + 1)));
         txAlertDescription.setText(Helper.getInstance().getAlertDescription(getIntent().getIntExtra("level", 0)));
 
         btnCancelAlert.setOnClickListener(v -> finish());
