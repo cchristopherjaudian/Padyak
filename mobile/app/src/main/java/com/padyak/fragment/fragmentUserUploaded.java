@@ -23,6 +23,7 @@ import com.padyak.activity.VerificationActivity;
 import com.padyak.activity.frmRide;
 import com.padyak.activity.frmSaveRide;
 import com.padyak.utility.Helper;
+import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
 
@@ -39,11 +40,12 @@ public class fragmentUserUploaded extends DialogFragment {
     AlertDialog alertDialog;
     static String userDisplayName, userUrl, paymentUrl, userID, eventID;
     View parentView;
-
+    boolean isAdmin;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user_uploaded, container, false);
+        isAdmin = LoggedUser.getInstance().isIs_admin();
         imgUploaded = v.findViewById(R.id.imgUploaded);
         imgUser = v.findViewById(R.id.imgUser);
         txUserNameUploaded = v.findViewById(R.id.txUserNameUploaded);
@@ -80,6 +82,11 @@ public class fragmentUserUploaded extends DialogFragment {
             });
             alertDialog.show();
         });
+
+        if(!isAdmin){
+            btnUploadDelete.setVisibility(View.INVISIBLE);
+            btnUploadConfirm.setVisibility(View.INVISIBLE);
+        }
         parentView = v;
         return v;
     }

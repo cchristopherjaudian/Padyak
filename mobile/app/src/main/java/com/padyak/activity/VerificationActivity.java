@@ -75,6 +75,10 @@ public class VerificationActivity extends AppCompatActivity {
             SigninWithPhone(credential);
 
         });
+
+        txResend.setOnClickListener(v->{
+            sendOtp();
+        });
         sendOtp();
     }
     private void resetPassword(){
@@ -182,6 +186,7 @@ public class VerificationActivity extends AppCompatActivity {
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 verificationCode = s;
+                Log.d(Helper.getInstance().log_code, "onCodeSent: " + mobileNumber);
                 Log.d(Helper.getInstance().log_code, "onCodeSent: " + s);
                 Toast.makeText(VerificationActivity.this, "OTP has been sent to " + mobileNumber, Toast.LENGTH_LONG).show();
             }

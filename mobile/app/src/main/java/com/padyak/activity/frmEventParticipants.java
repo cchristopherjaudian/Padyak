@@ -1,6 +1,7 @@
 package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -23,6 +24,7 @@ import com.padyak.adapter.adapterPaymentValidation;
 import com.padyak.dto.Participants;
 import com.padyak.dto.UserValidation;
 import com.padyak.fragment.fragmentEvent;
+import com.padyak.fragment.fragmentUserUploaded;
 import com.padyak.utility.CustomViewPager;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
@@ -37,6 +39,7 @@ import java.util.List;
 
 
 public class frmEventParticipants extends AppCompatActivity {
+    public static frmEventParticipants me;
     com.padyak.adapter.adapterPaymentValidation adapterPaymentValidation;
     RecyclerView rvEventInfoParticipants;
     LinearLayoutManager linearLayoutManager;
@@ -48,12 +51,13 @@ public class frmEventParticipants extends AppCompatActivity {
     SmartTabLayout viewPagerTab;
     FragmentPagerItemAdapter adapter;
     List<Participants> participantsList;
-    String eventId,eventName,eventImg;
+    static String eventId,eventName,eventImg;
     ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_event_participants);
+        me = this;
         txParticipantDescription = findViewById(R.id.txParticipantDescription);
         txEventName = findViewById(R.id.txEventName);
         imgEventParticipant = findViewById(R.id.imgEventParticipant);
@@ -115,7 +119,11 @@ public class frmEventParticipants extends AppCompatActivity {
             }
         }).start();
     }
-
+    public static void showUserUploaded(String username, String photoUrl, String userId, String paymentURL){
+        FragmentManager fm = me.getSupportFragmentManager();
+        fragmentUserUploaded editNameDialogFragment = fragmentUserUploaded.newInstance("UserUpload",username,photoUrl,userId,eventId,paymentURL);
+        editNameDialogFragment.show(fm, "UserUpload");
+    }
     @Override
     public void onBackPressed() {
 

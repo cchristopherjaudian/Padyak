@@ -1,8 +1,5 @@
 package com.padyak.adapter;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,33 +13,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.padyak.R;
 import com.padyak.activity.PaymentValidationActivity;
 import com.padyak.activity.frmEventParticipants;
-import com.padyak.activity.frmMemberAlertInfo;
-import com.padyak.dto.MemberAlert;
-import com.padyak.dto.Participants;
 import com.padyak.dto.UserValidation;
-import com.padyak.fragment.fragmentUserUploaded;
-import com.padyak.utility.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class adapterPaymentValidation extends RecyclerView.Adapter<adapterPaymentValidation.viewHolder>{
+public class adapterAdminPaymentValidation extends RecyclerView.Adapter<adapterAdminPaymentValidation.viewHolder>{
     List<UserValidation> participants;
 
-    public adapterPaymentValidation(List<UserValidation> participants) {
+    public adapterAdminPaymentValidation(List<UserValidation> participants) {
         this.participants = participants;
     }
 
     @NonNull
     @Override
-    public adapterPaymentValidation.viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public adapterAdminPaymentValidation.viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_validation,parent,false);
-        adapterPaymentValidation.viewHolder viewHolder = new viewHolder(v);
+        adapterAdminPaymentValidation.viewHolder viewHolder = new viewHolder(v);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull adapterPaymentValidation.viewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull adapterAdminPaymentValidation.viewHolder holder, int position) {
         holder.txRowName.setText(participants.get(position).getUserName());
         holder.txPaymentStatus.setText(participants.get(position).getPaymentStatus());
         Picasso.get().load(participants.get(position).getUserImage()).into(holder.imgParticipant);
@@ -62,8 +54,8 @@ public class adapterPaymentValidation extends RecyclerView.Adapter<adapterPaymen
             imgParticipant = itemView.findViewById(R.id.imgParticipant);
             txPaymentStatus = itemView.findViewById(R.id.txPaymentStatus);
             itemView.setOnClickListener(v->{
-                frmEventParticipants f = frmEventParticipants.me;
-                frmEventParticipants.showUserUploaded(participants.get(getAdapterPosition()).getUserName(),participants.get(getAdapterPosition()).getUserImage(),participants.get(getAdapterPosition()).getUserId(),participants.get(getAdapterPosition()).getPaymentURL());
+                PaymentValidationActivity f = PaymentValidationActivity.me;
+                f.showUserUploaded(participants.get(getAdapterPosition()).getUserName(),participants.get(getAdapterPosition()).getUserImage(),participants.get(getAdapterPosition()).getUserId(),participants.get(getAdapterPosition()).getPaymentURL());
             });
         }
     }

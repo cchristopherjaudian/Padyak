@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.padyak.R;
+import com.padyak.adapter.adapterAdminPaymentValidation;
 import com.padyak.adapter.adapterPaymentValidation;
 import com.padyak.dto.UserValidation;
 import com.padyak.fragment.fragmentUserUploaded;
@@ -30,7 +31,7 @@ public class PaymentValidationActivity extends AppCompatActivity {
     public static PaymentValidationActivity me;
     RecyclerView rvValidation;
     LinearLayoutManager linearLayoutManager;
-    com.padyak.adapter.adapterPaymentValidation adapterPaymentValidation;
+    com.padyak.adapter.adapterAdminPaymentValidation adapterAdminPaymentValidation;
     String eventId;
     Button btnEventCancel;
     @Override
@@ -48,6 +49,7 @@ public class PaymentValidationActivity extends AppCompatActivity {
         rvValidation.setLayoutManager(linearLayoutManager);
         loadValidations();
     }
+
     public void loadValidations(){
         ProgressDialog progressDialog = Helper.getInstance().progressDialog(PaymentValidationActivity.this, "Retrieving participants.");
         progressDialog.show();
@@ -65,8 +67,8 @@ public class PaymentValidationActivity extends AppCompatActivity {
                 JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
                 participants.add(new UserValidation(participantObject.getString("id"),participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")),participantObject.getString("photoUrl"),paymentStatus,paymentURL));
             }
-            adapterPaymentValidation = new adapterPaymentValidation(participants);
-            rvValidation.setAdapter(adapterPaymentValidation);
+            adapterAdminPaymentValidation = new adapterAdminPaymentValidation(participants);
+            rvValidation.setAdapter(adapterAdminPaymentValidation);
         } catch (Exception err){
             Log.d(Helper.getInstance().log_code, "loadValidations: " + err.getMessage());
         } finally {

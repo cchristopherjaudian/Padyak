@@ -111,7 +111,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/coolvetica"
-            android:text="orem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam dapibus nisi ac urna tristique, vel facilisis metus rutrum. Morbi vel velit tellus. Aenean finibus non libero sed porta. Nullam quam justo, volutpat eu turpis vel, faucibus porta est. Etiam ultrices purus non urna elementum efficitur. Praesent molestie, velit eget condimentum viverra, ante augue convallis lectus, a molestie ex nisl sed tellus"
+            android:text=""
             android:textColor="#FFF"
             app:layout_constraintBottom_toTopOf="@+id/btnEventCancel"
             app:layout_constraintEnd_toEndOf="parent"
