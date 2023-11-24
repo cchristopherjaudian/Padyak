@@ -91,7 +91,7 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
         database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
         myRef = database.getReference(LoggedUser.loggedUser.getUuid());
         eventRef = database.getReference();
-
+        myRef.onDisconnect().removeValue();
         txEventTitle = findViewById(R.id.txEventTitle);
         rvParticipants = findViewById(R.id.rvParticipants);
         btnCloseEvent = findViewById(R.id.btnCloseEvent);
@@ -105,7 +105,38 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
         eventRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Object object = snapshot.getValue();
+                String json = new Gson().toJson(object);
+                try {
+                    JSONObject jObject = new JSONObject(json);
+                    Log.d("Firebase_Location", "onChildAdded: " + jObject);
+                    String uuid = jObject.getString("id");
+                    String name = jObject.getString("name");
+                    double _lat = jObject.getDouble("latitude");
+                    double _long = jObject.getDouble("longitude");
+                    if(participantMarkers != null){
+                        if(!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())){
+                            Marker newMarker = gMap.addMarker(new MarkerOptions()
+                                    .title(name)
+                                    .position(new LatLng(_lat,_long)));
+                            participantMarkers.put(uuid,newMarker);
+                        } else {
+                            Marker moveMarker = participantMarkers.get(uuid);
+                            if(moveMarker == null){
+                                moveMarker = gMap.addMarker(new MarkerOptions()
+                                        .title(name)
+                                        .position(new LatLng(_lat,_long)));
+                            } else{
+                                moveMarker.setPosition(new LatLng(_lat,_long));
+                            }
 
+                            participantMarkers.put(uuid,moveMarker);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -114,22 +145,16 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                 String json = new Gson().toJson(object);
                 try {
                     JSONObject jObject = new JSONObject(json);
-                    Double _long = jObject.getDouble("longitude");
-                    Double _lat = jObject.getDouble("latitude");
-                    String name = jObject.getString("name");
-                    String photoUrl = jObject.getString("photoUrl");
-                    String _id =  jObject.getString("id");
-                    Log.d(Helper.getInstance().log_code, "onChildChanged: " + jObject);
-                    if(!participantMarkers.containsKey(_id)){
-                        participantMarkers.put(_id,gMap.addMarker(new MarkerOptions().position(new LatLng(_lat,_long))));
-                    } else{
-                        if(participantMarkers.get(_id) == null){
-                            participantMarkers.put(_id,gMap.addMarker(new MarkerOptions().title(name).position(new LatLng(_lat,_long))));
-                        } else{
-                            Marker marker = participantMarkers.get(_id);
-                            marker.setPosition(new LatLng(_lat,_long));
-                            marker.showInfoWindow();
-                        }
+                    Log.d("Firebase_Location", "onChildChanged: " + jObject);
+                    String uuid = jObject.getString("id");
+                    if(!uuid.equals(LoggedUser.getLoggedUser().getUuid())){
+                        double _lat = jObject.getDouble("latitude");
+                        double _long = jObject.getDouble("longitude");
+                        Marker moveMarker = participantMarkers.get(uuid);
+                        Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                        moveMarker.setPosition(new LatLng(_lat,_long));
+                        participantMarkers.put(uuid,moveMarker);
+                        Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -269,5 +294,8 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
     protected void onDestroy() {
         super.onDestroy();
         fusedLocationClient.removeLocationUpdates(locationCallback);
+        database = null;
+        myRef = null;
+        eventRef = null;
     }
 }
