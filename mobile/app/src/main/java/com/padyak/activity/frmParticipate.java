@@ -89,8 +89,8 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
         eventId = getIntent().getStringExtra("eventId");
         eventName = getIntent().getStringExtra("eventName");
         database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
-        myRef = database.getReference(eventId.concat("/").concat(LoggedUser.loggedUser.getUuid()));
-        eventRef = database.getReference(eventId);
+        myRef = database.getReference(LoggedUser.loggedUser.getUuid());
+        eventRef = database.getReference();
 
         txEventTitle = findViewById(R.id.txEventTitle);
         rvParticipants = findViewById(R.id.rvParticipants);

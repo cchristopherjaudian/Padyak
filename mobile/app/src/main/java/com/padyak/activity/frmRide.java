@@ -11,13 +11,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,13 +67,13 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     ImageButton btnPlayRide,btnStopRide;
     GoogleMap gMap;
     Marker marker;
-
+    Map<String,Marker> participantMarkers;
     double startPosLat, startPosLong;
     int instantInterval;
     double rideDistance = 0d;
     double endPosLat, endPosLong;
     LatLng previousLocation, newLocation;
-
+    Map<String, Object> payload;
     LocationCallback locationCallback;
     FusedLocationProviderClient fusedLocationClient;
     public static frmRide instance;
@@ -83,13 +81,17 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     ProgressDialog progressDialog;
     int tempCounter = 0;
 
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    DatabaseReference eventRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, frmRide.this);
         setContentView(R.layout.activity_frm_ride);
         instance = this;
-
+        participantMarkers = new HashMap<>();
         btnPlayRide = findViewById(R.id.btnPlayRide);
         btnStopRide = findViewById(R.id.btnStopRide);
         txTimer = findViewById(R.id.txTimer);
@@ -109,6 +111,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                 startPosLat = marker.getPosition().latitude;
                 startPosLong = marker.getPosition().longitude;
             }
+
         });
         btnStopRide.setOnClickListener(v->{
             btnPlayRide.setVisibility(View.VISIBLE);
@@ -117,6 +120,9 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             endPosLat = marker.getPosition().latitude;
             endPosLong = marker.getPosition().longitude;
 
+            myRef = null;
+            database = null;
+            eventRef = null;
             Bundle b = new Bundle();
             b.putInt("rideDuration", (int) (Duration.ofSeconds(instantInterval).toMillis() / 1000));
             b.putDouble("rideDistance", rideDistance);
@@ -149,7 +155,70 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             ActivityCompat.requestPermissions(frmRide.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
         } else {
+            database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
+            eventRef = database.getReference();
+            myRef = database.getReference(LoggedUser.loggedUser.getUuid());
+            myRef.onDisconnect().removeValue();
+            eventRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Object object = snapshot.getValue();
+                    String json = new Gson().toJson(object);
+                    try {
+                        JSONObject jObject = new JSONObject(json);
+                        Log.d("Firebase_Location", "onChildAdded: " + jObject);
+                        String uuid = jObject.getString("id");
+                        String name = jObject.getString("name");
+                        double _lat = jObject.getDouble("latitude");
+                        double _long = jObject.getDouble("longitude");
+                        if(!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())){
+                            Marker newMarker = googleMap.addMarker(new MarkerOptions()
+                                            .title(name)
+                                    .position(new LatLng(_lat,_long)));
+                            participantMarkers.put(uuid,newMarker);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Object object = snapshot.getValue();
+                    String json = new Gson().toJson(object);
+                    try {
+                        JSONObject jObject = new JSONObject(json);
+                        Log.d("Firebase_Location", "onChildChanged: " + jObject);
+                        String uuid = jObject.getString("id");
+                        if(!uuid.equals(LoggedUser.getLoggedUser().getUuid())){
+                            double _lat = jObject.getDouble("latitude");
+                            double _long = jObject.getDouble("longitude");
+                            Marker moveMarker = participantMarkers.get(uuid);
+                            Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                            moveMarker.setPosition(new LatLng(_lat,_long));
+                            participantMarkers.put(uuid,moveMarker);
+                            Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY)
                     .setIntervalMillis(3000)
@@ -172,14 +241,26 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                         .position(previousLocation)
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.bicycle)));
                             }
-
                             previousLocation = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
-
                             newLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
                             rideDistance += helper.calculateDistance(previousLocation, newLocation);
+                            txDistance.setText(String.format("%.4f", rideDistance));
 
-                            txDistance.setText(String.format("%.3f", rideDistance));
+                            new Thread(()->{
+                                payload = new HashMap<>();
+                                payload.put("id",LoggedUser.getInstance().getUuid());
+                                payload.put("name", LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.loggedUser.getLastName()));
+                                payload.put("photoUrl", LoggedUser.getInstance().getImgUrl());
+                                payload.put("latitude", newLocation.latitude);
+                                payload.put("longitude", newLocation.longitude);
+                                myRef.setValue(payload);
+                                Log.d(Helper.getInstance().log_code, "onLocationResult: Payload sent " + payload);
+                            }).start();
+
+                            Log.d(Helper.getInstance().log_code, "onLocationResult: previousLocation " + previousLocation.latitude + " @ " + previousLocation.longitude);
+                            Log.d(Helper.getInstance().log_code, "onLocationResult: newLocation " + newLocation.latitude + " @ " + newLocation.longitude);
+                            Log.d(Helper.getInstance().log_code, "onLocationResult: rideDistance " + rideDistance);
+
                             ValueAnimator animation = ValueAnimator.ofFloat(0f, 100f);
                             final float[] previousStep = {0f};
                             double deltaLatitude = newLocation.latitude - previousLocation.latitude;
@@ -266,5 +347,8 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     protected void onDestroy() {
         super.onDestroy();
         fusedLocationClient.removeLocationUpdates(locationCallback);
+        database = null;
+        myRef = null;
+        eventRef = null;
     }
 }
