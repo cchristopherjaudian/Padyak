@@ -3,6 +3,7 @@ package com.padyak.activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -58,18 +59,20 @@ import java.util.Map;
 
 public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCallback, OnMapReadyCallback {
     boolean startTracking = false;
+    CardView cardView8;
     Helper helper = Helper.getInstance();
     Instant timeStart, timeEnd;
     Duration instantDuration;
     String instantFormat;
     TextView txTimer, txDistance;
     LocationManager mLocationManager;
-    ImageButton btnPlayRide,btnStopRide;
+    ImageButton btnPlayRide, btnStopRide, btnPauseRide;
     GoogleMap gMap;
     Marker marker;
-    Map<String,Marker> participantMarkers;
+    Map<String, Marker> participantMarkers;
     double startPosLat, startPosLong;
-    int instantInterval;
+    int instantInterval = 0;
+    int previousInterval = 0;
     double rideDistance = 0d;
     double endPosLat, endPosLong;
     LatLng previousLocation, newLocation;
@@ -85,6 +88,8 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     DatabaseReference myRef;
     DatabaseReference eventRef;
 
+    boolean isPaused = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +97,8 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         setContentView(R.layout.activity_frm_ride);
         instance = this;
         participantMarkers = new HashMap<>();
+        cardView8 = findViewById(R.id.cardView8);
+        btnPauseRide = findViewById(R.id.btnPauseRide);
         btnPlayRide = findViewById(R.id.btnPlayRide);
         btnStopRide = findViewById(R.id.btnStopRide);
         txTimer = findViewById(R.id.txTimer);
@@ -102,24 +109,57 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         mapFragment.getMapAsync(this);
 
         btnPlayRide.setOnClickListener(v -> {
+
+            cardView8.setVisibility(View.VISIBLE);
             btnPlayRide.setVisibility(View.INVISIBLE);
             btnStopRide.setVisibility(View.VISIBLE);
-            timeStart = Instant.now();
+            //timeStart = Instant.now();
             startTracking = true;
-            getLocation(gMap);
+            if(!isPaused){
+                getLocation(gMap);
+            }
+
             if (marker != null) {
                 startPosLat = marker.getPosition().latitude;
                 startPosLong = marker.getPosition().longitude;
             }
 
+            new Thread(() -> {
+                while (startTracking) {
+                    if (!isPaused) {
+                        if(timeStart == null) timeStart = Instant.now();
+                        timeEnd = Instant.now();
+                        instantInterval = previousInterval + ((int) (Duration.between(timeStart, timeEnd).toMillis() / 1000.0));
+                        instantDuration = Duration.ofSeconds(instantInterval);
+
+                        instantFormat = helper.formatDuration(instantInterval);
+                        runOnUiThread(() -> {
+                            txTimer.setText(instantFormat);
+                        });
+                    } else {
+                        isPaused = false;
+                        timeStart = Instant.now();
+                    }
+                    try {
+                        Log.d("Padyak_Time", "onCreate: timeStart " + timeStart);
+                        Log.d("Padyak_Time", "onCreate: timeEnd " + timeEnd);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+            }).start();
+
         });
-        btnStopRide.setOnClickListener(v->{
+        btnStopRide.setOnClickListener(v -> {
+            isPaused = false;
+            cardView8.setVisibility(View.INVISIBLE);
             btnPlayRide.setVisibility(View.VISIBLE);
             btnStopRide.setVisibility(View.INVISIBLE);
             startTracking = false;
             endPosLat = marker.getPosition().latitude;
             endPosLong = marker.getPosition().longitude;
-
+            database.goOffline();
             myRef = null;
             database = null;
             eventRef = null;
@@ -134,7 +174,18 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             intent.putExtras(b);
             startActivity(intent);
         });
+        btnPauseRide.setOnClickListener(v -> {
+            isPaused = true;
+            startTracking = false;
+            previousInterval = instantInterval;
+//            myRef = null;
+//            database = null;
+//            eventRef = null;
+            cardView8.setVisibility(View.INVISIBLE);
+            btnPlayRide.setVisibility(View.VISIBLE);
+            btnStopRide.setVisibility(View.INVISIBLE);
 
+        });
     }
 
     @Override
@@ -171,11 +222,11 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                         String name = jObject.getString("name");
                         double _lat = jObject.getDouble("latitude");
                         double _long = jObject.getDouble("longitude");
-                        if(!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())){
+                        if (!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())) {
                             Marker newMarker = googleMap.addMarker(new MarkerOptions()
-                                            .title(name)
-                                    .position(new LatLng(_lat,_long)));
-                            participantMarkers.put(uuid,newMarker);
+                                    .title(name)
+                                    .position(new LatLng(_lat, _long)));
+                            participantMarkers.put(uuid, newMarker);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -190,13 +241,13 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                         JSONObject jObject = new JSONObject(json);
                         Log.d("Firebase_Location", "onChildChanged: " + jObject);
                         String uuid = jObject.getString("id");
-                        if(!uuid.equals(LoggedUser.getLoggedUser().getUuid())){
+                        if (!uuid.equals(LoggedUser.getLoggedUser().getUuid())) {
                             double _lat = jObject.getDouble("latitude");
                             double _long = jObject.getDouble("longitude");
                             Marker moveMarker = participantMarkers.get(uuid);
                             Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
-                            moveMarker.setPosition(new LatLng(_lat,_long));
-                            participantMarkers.put(uuid,moveMarker);
+                            moveMarker.setPosition(new LatLng(_lat, _long));
+                            participantMarkers.put(uuid, moveMarker);
                             Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
                         }
                     } catch (JSONException e) {
@@ -246,9 +297,9 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                             rideDistance += helper.calculateDistance(previousLocation, newLocation);
                             txDistance.setText(String.format("%.4f", rideDistance));
 
-                            new Thread(()->{
+                            new Thread(() -> {
                                 payload = new HashMap<>();
-                                payload.put("id",LoggedUser.getInstance().getUuid());
+                                payload.put("id", LoggedUser.getInstance().getUuid());
                                 payload.put("name", LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.loggedUser.getLastName()));
                                 payload.put("photoUrl", LoggedUser.getInstance().getImgUrl());
                                 payload.put("latitude", newLocation.latitude);
@@ -306,24 +357,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                 fusedLocationClient.requestLocationUpdates(locationRequest,
                         locationCallback,
                         Looper.getMainLooper());
-                new Thread(() -> {
-                    while (startTracking) {
-                        timeEnd = Instant.now();
-                        instantInterval = (int) (Duration.between(timeStart, timeEnd).toMillis() / 1000.0);
-                        instantDuration = Duration.ofSeconds(instantInterval);
 
-                        instantFormat = helper.formatDuration(instantInterval);
-                        runOnUiThread(() -> {
-                            txTimer.setText(instantFormat);
-                        });
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-
-                        }
-                    }
-
-                }).start();
             }
 
         }
@@ -347,6 +381,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     protected void onDestroy() {
         super.onDestroy();
         fusedLocationClient.removeLocationUpdates(locationCallback);
+
         database = null;
         myRef = null;
         eventRef = null;
