@@ -36,7 +36,7 @@ public class Prefs {
         try {
             SharedPreferences sharedPreferences = c.getSharedPreferences(spTag, Context.MODE_PRIVATE);
             if(sharedPreferences == null) throw new Exception("");
-            //LoggedUser.getInstance().setIs_admin(sharedPreferences.getBoolean(ADMIN_KEY, false));
+            LoggedUser.getInstance().setIs_admin(sharedPreferences.getBoolean(ADMIN_KEY, false));
             LoggedUser.getInstance().setUuid(sharedPreferences.getString(ID_KEY, ""));
             LoggedUser.getInstance().setImgUrl(sharedPreferences.getString(IMG_KEY, ""));
             LoggedUser.getInstance().setFirstName(sharedPreferences.getString(FN_KEY, ""));

@@ -196,10 +196,16 @@ public class SsoLoginActivity extends AppCompatActivity {
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.IMG_KEY, userObject.getString(Prefs.IMG_KEY));
 
                             if(userObject.has("isAdmin")){
-                                intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
+                                if(userObject.getBoolean("isAdmin") == false){
+                                    intent = new Intent(SsoLoginActivity.this, frmMain.class);
+                                } else{
+                                    intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
+                                }
+                                Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.ADMIN_KEY, userObject.getBoolean(Prefs.ADMIN_KEY));
                             } else{
                                 intent = new Intent(SsoLoginActivity.this, frmMain.class);
                             }
+
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.BDAY_KEY, userObject.getString(Prefs.BDAY_KEY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.WEIGHT_KEY, userObject.getString(Prefs.WEIGHT_KEY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.HEIGHT_KEY, userObject.getString(Prefs.HEIGHT_KEY));
@@ -208,7 +214,8 @@ public class SsoLoginActivity extends AppCompatActivity {
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.GENDER_KEY, userObject.getString(Prefs.GENDER_KEY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.EMAIL_KEY, userObject.getString(Prefs.EMAIL_KEY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.AUTH, "IN_APP");
-
+                            Log.d(Helper.getInstance().log_code, "authInApp LoggedUser: " +LoggedUser.getLoggedUser().toString());
+                            Log.d(Helper.getInstance().log_code, "authInApp LoggedUser: " +LoggedUser.getLoggedUser().toString());
                             startActivity(intent);
                             finish();
                         } catch (JSONException e) {
@@ -332,13 +339,18 @@ public class SsoLoginActivity extends AppCompatActivity {
                     LoggedUser.getInstance().setRefreshToken(refToken);
                     Log.d(Helper.getInstance().log_code, "validateLogin: " + LoggedUser.getInstance().toString());
                     Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY,userObject.getString("photoUrl"));
+                    Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.ADMIN_KEY,false);
                     if(userObject.has("isAdmin")){
                         if(!userObject.getBoolean("isAdmin")){
                             intent = new Intent(SsoLoginActivity.this, frmMain.class);
                         } else{
-                            intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
+                            if(userObject.getBoolean("isAdmin") == false){
+                                intent = new Intent(SsoLoginActivity.this, frmMain.class);
+                            } else{
+                                intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
+                            }
                         }
-
+                        Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY, userObject.getBoolean("isAdmin"));
                     } else{
                         intent = new Intent(SsoLoginActivity.this, frmMain.class);
                     }
