@@ -114,6 +114,7 @@ public class frmEventCalendar extends AppCompatActivity {
     }
 
     private void loadEvent(Date d) {
+        Log.d("Log_Padyak", "Starting loadEvent");
         selectedCalendarDate = simpleDateFormat.format(d);
         if (calendarMap.containsKey(selectedCalendarDate)) {
             CalendarEvent findEvent = calendarMap.get(selectedCalendarDate);
@@ -121,12 +122,16 @@ public class frmEventCalendar extends AppCompatActivity {
         } else {
             txCalendarEventTitle.setText("No event registered");
         }
+        Log.d("Log_Padyak", "Ending loadEvent");
     }
 
     private void loadCalendar() {
+        Log.d("Log_Padyak", "Starting loadCalendar");
         progressDialog = Helper.getInstance().progressDialog(frmEventCalendar.this, "Retrieving events.");
         progressDialog.show();
-
+        calendarView.setOnForwardPageChangeListener(null);
+        calendarView.setOnPreviousPageChangeListener(null);
+        calendarView.setEnabled(false);
         new Thread(() -> {
             events = new ArrayList<>();
             calendars = new ArrayList<>();
@@ -164,13 +169,17 @@ public class frmEventCalendar extends AppCompatActivity {
                     calendarView.setHighlightedDays(calendars);
                     calendarView.setEvents(events);
                     loadEvent(calendarView.getSelectedDates().get(0).getTime());
+                    Log.d("Log_Padyak", "Ending loadCalendar");
+                    if(progressDialog != null) progressDialog.dismiss();
+                    calendarView.setEnabled(true);
+                    calendarView.setOnForwardPageChangeListener(this::loadCalendar);
+                    calendarView.setOnPreviousPageChangeListener(this::loadCalendar);
                 });
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "loadCalendar: " + e.getMessage());
                 runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve list of events", Toast.LENGTH_LONG).show());
-
-            } finally {
                 runOnUiThread(() -> progressDialog.dismiss());
+
             }
         }).start();
     }
