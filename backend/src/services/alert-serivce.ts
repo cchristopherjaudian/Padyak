@@ -62,7 +62,7 @@ class UserAlerts {
             }`;
 
             const mappedUserAlert = await this._mapper.createUserAlert({
-                to: payload.to.split(','),
+                to: payload.to.split(',').map((k) => '63' + k.substring(1)),
                 uid: payload.uid,
                 level: payload.level,
                 location: payload.location,
@@ -74,7 +74,7 @@ class UserAlerts {
 
             await this._repository.create(mappedUserAlert);
             const alerted = await this._alert.sendAlert(sms, {
-                to: payload.to.split(','),
+                to: payload.to.split(',').map((k) => '63' + k.substring(1)),
                 message: message,
             });
 
