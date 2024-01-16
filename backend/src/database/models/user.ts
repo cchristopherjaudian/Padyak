@@ -1,4 +1,5 @@
 import { TEmergencyContact } from './contacts';
+import { TRescueGroup } from './event';
 import { IBaseModel } from './model';
 
 export enum AuthSource {
@@ -20,6 +21,7 @@ export interface IUserModel extends IBaseModel {
   source: AuthSource;
   password?: string;
   emergencyContacts?: TEmergencyContact[];
+  rescueGroup?: TRescueGroup[];
 }
 
 export type TInappAuth = {

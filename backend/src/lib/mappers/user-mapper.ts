@@ -23,6 +23,7 @@ class UserMapper {
       id: uuidv4(),
       createdAt: date.getIsoDate(new Date()),
       emergencyContacts: [],
+      rescueGroup: [],
       ...payload,
     };
   }

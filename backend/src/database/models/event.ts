@@ -24,6 +24,7 @@ export interface IRegisteredUser {
 export type TRescueGroup = {
   contact: string;
   name: string;
+  eventId?: string;
 };
 
 export interface IEvent extends IBaseModel {
@@ -38,7 +39,7 @@ export interface IEvent extends IBaseModel {
   award: string;
   registeredUser?: IRegisteredUser[];
   author: Pick<IUserModel, 'photoUrl' | 'firstname' | 'lastname' | 'id'>;
-  rescueGroups: TRescueGroup[];
+  rescueGroup: TRescueGroup[];
 }
 
 export type TPaymentStatusValidate = {
