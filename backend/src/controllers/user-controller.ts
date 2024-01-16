@@ -12,133 +12,133 @@ const userAuthInstance = new UserAuthService();
 const responseObject = new ResponseObject();
 
 const authSso = catchAsync(async (req: Request, res: Response) => {
-    const authenticated = await userAuthInstance.authSso(req.body);
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_CREATED,
-        authenticated
-    );
+  const authenticated = await userAuthInstance.authSso(req.body);
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_CREATED,
+    authenticated
+  );
 });
 
 const inappSignup = catchAsync(async (req: Request, res: Response) => {
-    const authenticated = await userAuthInstance.signupInapp(req.body);
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_CREATED,
-        authenticated
-    );
+  const authenticated = await userAuthInstance.signupInapp(req.body);
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_CREATED,
+    authenticated
+  );
 });
 
 const inappLogin = catchAsync(async (req: Request, res: Response) => {
-    const authenticated = await userAuthInstance.login(req.body);
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.AUTHENTICATED,
-        authenticated
-    );
+  const authenticated = await userAuthInstance.login(req.body);
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.AUTHENTICATED,
+    authenticated
+  );
 });
 
 const createInappProfile = catchAsync(async (req: Request, res: Response) => {
-    const request = req as IRequestWithUser;
-    const profile = await userInstance.createInappProfile({
-        ...req.body,
-        id: request.user.id,
-        source: request.user.source,
-    });
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_MODIFIED,
-        profile!
-    );
+  const request = req as IRequestWithUser;
+  const profile = await userInstance.createInappProfile({
+    ...req.body,
+    id: request.user.id,
+    source: request.user.source,
+  });
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_MODIFIED,
+    profile!
+  );
 });
 
 const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
-    const user = await userAuthInstance.getUserSsoEmail(
-        req.query.emailAddress as string,
-        AuthSource.SSO
-    );
+  const user = await userAuthInstance.getUserSsoEmail(
+    req.query.emailAddress as string,
+    AuthSource.SSO
+  );
 
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_RETRIEVED,
-        user
-    );
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_RETRIEVED,
+    user
+  );
 });
 
 const getInappAuth = catchAsync(async (req: Request, res: Response) => {
-    const user = await userAuthInstance.getInappAuth(req?.query);
+  const user = await userAuthInstance.getInappAuth(req?.query);
 
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_RETRIEVED,
-        user
-    );
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_RETRIEVED,
+    user
+  );
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-    const request = req as IRequestWithUser;
-    const user = await userInstance.updateUser({
-        ...req.body,
-        id: request.user.id,
-    });
+  const request = req as IRequestWithUser;
+  const user = await userInstance.updateUser({
+    ...req.body,
+    id: request.user.id,
+  });
 
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_MODIFIED,
-        user!
-    );
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_MODIFIED,
+    user!
+  );
 });
 
 const forgotPassword = catchAsync(async (req: Request, res: Response) => {
-    const user = await userInstance.forgotPassword(req.body);
+  const user = await userInstance.forgotPassword(req.body);
 
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_MODIFIED,
-        user!
-    );
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_MODIFIED,
+    user!
+  );
 });
 
 const getUserList = catchAsync(async (req: Request, res: Response) => {
-    const users = await userInstance.getUsers();
+  const users = await userInstance.getUsers();
 
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.LIST_RETRIEVED,
-        users
-    );
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.LIST_RETRIEVED,
+    users
+  );
 });
 
 const createUserProfile = catchAsync(async (req: Request, res: Response) => {
-    const profile = await userInstance.createUserProfile({
-        ...req.body,
-    });
-    responseObject.createResponse(
-        res,
-        httpStatus.OK,
-        ResponseCodes.DATA_CREATED,
-        profile!
-    );
+  const profile = await userInstance.createUserProfile({
+    ...req.body,
+  });
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_CREATED,
+    profile!
+  );
 });
 
 export default {
-    authSso,
-    getUserByEmail,
-    updateUser,
-    getUserList,
-    inappSignup,
-    inappLogin,
-    createInappProfile,
-    getInappAuth,
-    forgotPassword,
-    createUserProfile,
+  authSso,
+  getUserByEmail,
+  updateUser,
+  getUserList,
+  inappSignup,
+  inappLogin,
+  createInappProfile,
+  getInappAuth,
+  forgotPassword,
+  createUserProfile,
 };
