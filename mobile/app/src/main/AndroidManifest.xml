@@ -22,10 +22,25 @@
         android:theme="@style/Theme.Padyak"
         tools:targetApi="31">
         <activity
+            android:name=".activity.EmergencyListActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AddEmergencyActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.EventListActivity"
+            android:configChanges="screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.TermsActivity"
             android:configChanges="screenSize|screenLayout"
-            android:screenOrientation="portrait"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.EventPaymentActivity"
             android:configChanges="screenSize|screenLayout"
