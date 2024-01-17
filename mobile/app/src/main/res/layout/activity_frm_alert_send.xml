@@ -69,50 +69,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txAlertDescription" />
 
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/coolvetica"
-            android:text="Send to Designated Contact"
-            android:textSize="@dimen/header_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnAlertGroup" />
-
-        <EditText
-            android:id="@+id/etContact"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/et_rounded"
-            android:gravity="center"
-            android:hint="Enter Contact Number"
-            android:inputType="number"
-            android:maxLines="1"
-            android:maxLength="11"
-            android:padding="10dp"
-            android:textSize="13dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13" />
         <Button
             android:id="@+id/btnSendContact"
             android:layout_width="0dp"
             android:layout_height="@dimen/button_size"
             android:layout_marginStart="80dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="80dp"
             android:background="@drawable/rounded_affirmative_button"
-            android:text="Send to Contact"
+            android:text="Send to Rescue Group or Emergency Contact list"
             android:textColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etContact" />
+            app:layout_constraintTop_toBottomOf="@+id/btnAlertGroup" />
 
         <ImageView
             android:layout_width="0dp"

@@ -41,7 +41,6 @@ import java.util.Map;
 
 public class frmAlertSend extends AppCompatActivity {
     TextView txAlertLevel, txAlertDescription;
-    EditText etContact;
     Button btnAlertGroup, btnSendContact;
     String alertDescription;
     int alertLevel;
@@ -56,7 +55,6 @@ public class frmAlertSend extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         btnSendContact = findViewById(R.id.btnSendContact);
         btnAlertGroup = findViewById(R.id.btnAlertGroup);
-        etContact = findViewById(R.id.etContact);
         txAlertLevel = findViewById(R.id.txAlertLevel);
         txAlertDescription = findViewById(R.id.txAlertDescription);
         alertLevel = bundle.getInt("level");
@@ -65,88 +63,15 @@ public class frmAlertSend extends AppCompatActivity {
         txAlertLevel.setText("Level " + alertLevel);
         txAlertDescription.setText(alertDescription);
 
-        btnAlertGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(frmAlertSend.this, frmAlertGroup.class);
-                Bundle bundleAlert = new Bundle();
-                bundleAlert.putInt("level",alertLevel);
-                intent.putExtras(bundleAlert);
-                startActivity(intent);
-            }
+        btnAlertGroup.setOnClickListener(v -> {
+            Intent intent = new Intent(frmAlertSend.this, frmAlertGroup.class);
+            Bundle bundleAlert = new Bundle();
+            bundleAlert.putInt("level",alertLevel);
+            intent.putExtras(bundleAlert);
+            startActivity(intent);
         });
-        btnSendContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String sendTo = etContact.getText().toString().trim();
-                sendAlert(sendTo);
-            }
-        });
-    }
-
-    private void sendAlert(String recipients) {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Please enable this application in Location permission using Android Settings", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-        AlertDialog alertDialog = new AlertDialog.Builder(frmAlertSend.this).create();
-        alertDialog.setTitle("Send Alert");
-        alertDialog.setCancelable(false);
-        alertDialog.setMessage("Are you sure you want to send this alert?");
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE,"No",(d,v)->{
+        btnSendContact.setOnClickListener(v -> {
 
         });
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
-                (d,w)->{
-                    progressDialog = Helper.getInstance().progressDialog(com.padyak.activity.frmAlertSend.this,"Sending alert.");
-                    progressDialog.show();
-
-                    new Thread(()->{
-                        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
-                                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                                    @Override
-                                    public void onSuccess(Location location) {
-                                        if (location != null) {
-                                            double _lat = location.getLatitude();
-                                            double _long = location.getLongitude();
-                                            String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + getString(R.string.maps_publicapi);
-                                            VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmAlertSend.this);
-                                            String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
-                                            Log.d(Helper.getInstance().log_code, "onSuccess: " + fromLocationURL);
-
-                                            Map<String, Object> payload = new HashMap<>();
-                                            payload.put("to",recipients);
-                                            payload.put("level",alertLevel-1);
-                                            payload.put("location",alertAddress);
-                                            payload.put("latitude",_lat);
-                                            payload.put("longitude",_long);
-
-                                            VolleyHttp volleyHttp = new VolleyHttp("",payload,"alert", com.padyak.activity.frmAlertSend.this);
-                                            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-                                            runOnUiThread(()->{
-                                                progressDialog.dismiss();
-                                                if(responseJSON == null){
-                                                    Toast.makeText(frmAlertSend, "Failed to send alert. Please try again", Toast.LENGTH_LONG).show();
-                                                } else{
-                                                    Toast.makeText(frmAlertSend.this, "Alert sent successfully", Toast.LENGTH_LONG).show();
-                                                    frmAlertInfo.frmAlertInfo.finish();
-                                                    finish();
-                                                }
-                                            });
-
-                                        } else{
-                                            runOnUiThread(()->{
-                                                progressDialog.dismiss();
-                                                Toast.makeText(frmAlertSend.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
-                                            });
-                                        }
-                                    }
-                                });
-                    }).start();
-                });
-        alertDialog.show();
-
     }
 }
