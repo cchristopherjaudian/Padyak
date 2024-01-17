@@ -55,7 +55,7 @@ public class frmEventRegister extends AppCompatActivity {
     Button btnEventRegister, btnEventCancel, btnRegisterPayment;
     TextView txEventName, txProofPayment, txViewQR;
     ImageView imgEventRegister;
-    CheckBox checkBox;
+    CheckBox checkBox,checkBoxRescue;
     Bitmap bitmapPayment;
     byte[] data;
     FirebaseStorage storage;
@@ -75,6 +75,7 @@ public class frmEventRegister extends AppCompatActivity {
         btnEventRegister = findViewById(R.id.btnEventRegister);
         btnEventCancel = findViewById(R.id.btnEventCancel);
         checkBox = findViewById(R.id.checkBox);
+        checkBoxRescue = findViewById(R.id.checkBoxRescue);
 
         txProofPayment = findViewById(R.id.txProofPayment);
         txEventName = findViewById(R.id.txEventName);
@@ -109,6 +110,10 @@ public class frmEventRegister extends AppCompatActivity {
         btnEventRegister.setOnClickListener(v -> {
             if (!checkBox.isChecked()) {
                 Toast.makeText(this, "Please tick the waiver agreement to proceed.", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if(!checkBoxRescue.isChecked()){
+                Toast.makeText(this, "Please tick the rescue group to proceed.", Toast.LENGTH_LONG).show();
                 return;
             }
             if (bitmapPayment == null) {

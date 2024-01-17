@@ -148,14 +148,37 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
                     android:fontFamily="@font/coolvetica"
                     android:text="I hereby waive all claims agaimst the Quezon Science High School, sponsors or any personnel for any injury I might suffer from this event entitled Tour de Quesayano: Kalusugan Mo, Ipaglaban Mo. I attest that I am physically fit and prepared for this event."
                     android:textSize="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+                <TextView
+                    android:id="@+id/textViewRescueGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/coolvetica"
+                    android:text="Rescue Group"
+                    android:textColor="@color/app_color"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+                <CheckBox
+                    android:id="@+id/checkBoxRescue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/coolvetica"
+                    android:text="I hereby checked to add as my emergency contacts to help me in case I have an emergency or accident"
+                    android:textSize="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewRescueGroup" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
