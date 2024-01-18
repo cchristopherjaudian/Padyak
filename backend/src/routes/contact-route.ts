@@ -26,6 +26,11 @@ router
       requestSchemaValidate(removeEmergencyContactSchema),
     ],
     contactController.removeEmergencyContact
+  )
+  .get(
+    '/',
+    [tokenMiddleware.endUserValidate as any],
+    contactController.getEmergencyContacts
   );
 
 export default router;

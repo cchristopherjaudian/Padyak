@@ -21,7 +21,6 @@ export interface IUserModel extends IBaseModel {
   source: AuthSource;
   password?: string;
   emergencyContacts?: TEmergencyContact[];
-  rescueGroup?: TRescueGroup[];
 }
 
 export type TInappAuth = {

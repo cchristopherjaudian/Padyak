@@ -40,6 +40,8 @@ export interface IEvent extends IBaseModel {
   registeredUser?: IRegisteredUser[];
   author: Pick<IUserModel, 'photoUrl' | 'firstname' | 'lastname' | 'id'>;
   rescueGroup: TRescueGroup[];
+  isDone: boolean;
+  isNow: boolean;
 }
 
 export type TPaymentStatusValidate = {

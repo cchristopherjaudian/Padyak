@@ -47,4 +47,24 @@ const removeEmergencyContact = catchAsync(
   }
 );
 
-export default { createEmergencyContact, removeEmergencyContact };
+const getEmergencyContacts = catchAsync(async (req: Request, res: Response) => {
+  const request = req as IRequestWithUser;
+  const { id } = request.user;
+
+  const newContact = await contact.getEmergencyContacts({
+    userId: id,
+  });
+
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.DATA_CREATED,
+    newContact!
+  );
+});
+
+export default {
+  createEmergencyContact,
+  removeEmergencyContact,
+  getEmergencyContacts,
+};

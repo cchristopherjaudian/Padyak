@@ -36,7 +36,6 @@ class EventRegistration {
   public async registerCyclist(
     payload: IRegisteredUser & { eventId: string; modifiedAt: string }
   ) {
-    const userRepo = new UserRepository();
     try {
       const event = await this._event.getEvent(payload.eventId);
       if (!event) throw new NotFoundError('Event not found.');
@@ -48,18 +47,9 @@ class EventRegistration {
         throw new ResourceConflictError('User already registered.');
       }
 
-      const user = await userRepo.getUserById(payload.user.id);
-      const mappedRescueGroup = event.rescueGroup.map((group) => ({
-        name: group.name,
-        contact: group.contact,
-        eventId: payload.eventId,
-      }));
-      console.log('mappedRescueGroup', mappedRescueGroup);
-      user.rescueGroup = [...user.rescueGroup!, ...mappedRescueGroup];
       event.registeredUser?.push(payload);
       payload.status = EventPaymentStatus.UNPAID;
       event.modifiedAt = payload.modifiedAt;
-      await userRepo.update(user);
       return this._event.update(event);
     } catch (error) {
       throw error;

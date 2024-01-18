@@ -11,3 +11,7 @@ export type TCreateEmergencyContact = TEmergencyContact & {
 export type TRemoveEmergencyContact = Pick<TEmergencyContact, 'contact'> & {
   userId: string;
 };
+
+export type TGetEmergencyContactsQry = {
+  userId: string;
+};
