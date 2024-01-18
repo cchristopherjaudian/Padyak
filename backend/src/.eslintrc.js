@@ -1,62 +1,63 @@
 module.exports = {
-    root: true,
-    env: {
-        es6: true,
-        node: true,
-    },
+  root: true,
+  env: {
+    es6: true,
+    node: true,
+  },
 
-    extends: [
-        'eslint:recommended',
-        'plugin:import/errors',
-        'plugin:import/warnings',
-        'plugin:import/typescript',
-        'google',
-        'plugin:@typescript-eslint/recommended',
+  extends: [
+    'eslint:recommended',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
+    'google',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: ['tsconfig.json', 'tsconfig.dev.json'],
+    tsconfigRootDir: __dirname,
+    sourceType: 'module',
+  },
+  ignorePatterns: [
+    '/dist/**/*', // Ignore built files.
+    '/node_modules/**/*',
+  ],
+  plugins: ['@typescript-eslint', 'import'],
+  rules: {
+    'keyword-spacing': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'warn', // or "error"
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
     ],
-    parser: '@typescript-eslint/parser',
-    parserOptions: {
-        project: ['tsconfig.json', 'tsconfig.dev.json'],
-        tsconfigRootDir: __dirname,
-        sourceType: 'module',
-    },
-    ignorePatterns: [
-        '/dist/**/*', // Ignore built files.
-        '/node_modules/**/*',
+    'max-len': 'off',
+    'space-before-function-paren': 'off',
+    'quote-props': ['error', 'as-needed'],
+    '@typescript-eslint/no-explicit-any': 'off',
+    indent: 'off',
+    'operator-linebreak': 'off',
+    'import/no-unresolved': 0,
+    'linebreak-style': 0,
+    'require-jsdoc': [
+      'error',
+      {
+        require: {
+          FunctionDeclaration: false,
+          MethodDefinition: false,
+          ClassDeclaration: false,
+          ArrowFunctionExpression: false,
+          FunctionExpression: false,
+        },
+      },
     ],
-    plugins: ['@typescript-eslint', 'import'],
-    rules: {
-        'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': [
-            'warn', // or "error"
-            {
-                argsIgnorePattern: '^_',
-                varsIgnorePattern: '^_',
-                caughtErrorsIgnorePattern: '^_',
-            },
-        ],
-        'max-len': 'off',
-        'space-before-function-paren': 'off',
-        'quote-props': ['error', 'as-needed'],
-        '@typescript-eslint/no-explicit-any': 'off',
-        indent: 'off',
-        'operator-linebreak': 'off',
-        'import/no-unresolved': 0,
-        'linebreak-style': 0,
-        'require-jsdoc': [
-            'error',
-            {
-                require: {
-                    FunctionDeclaration: false,
-                    MethodDefinition: false,
-                    ClassDeclaration: false,
-                    ArrowFunctionExpression: false,
-                    FunctionExpression: false,
-                },
-            },
-        ],
-        'object-curly-spacing': 'off',
-        '@typescript-eslint/no-non-null-assertion': 'off',
-        'no-useless-catch': 'off',
-        'new-cap': 'off',
-    },
+    'object-curly-spacing': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    'no-useless-catch': 'off',
+    'new-cap': 'off',
+  },
 };

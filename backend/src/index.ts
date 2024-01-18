@@ -18,5 +18,5 @@ app.use(errorMiddlewares.errorResponse);
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
 export const v2 = new CloudFunctions()
-    .withRuntime()
-    .handlerV2(<THttpsFunction>(<unknown>app));
+  .withRuntime()
+  .handlerV2(<THttpsFunction>(<unknown>app));
