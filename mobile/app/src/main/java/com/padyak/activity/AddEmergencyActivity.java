@@ -45,10 +45,6 @@ public class AddEmergencyActivity extends AppCompatActivity {
             firstName = etFirstName.getText().toString().trim();
             phoneNumber = etPhoneNumber.getText().toString().trim();
 
-            if(lastName.isEmpty()){
-                Toast.makeText(this, "Please input person's last name", Toast.LENGTH_LONG).show();
-                return;
-            }
             if(firstName.isEmpty()){
                 Toast.makeText(this, "Please input person's first name", Toast.LENGTH_LONG).show();
                 return;
@@ -67,7 +63,7 @@ public class AddEmergencyActivity extends AppCompatActivity {
                 boolean data_inserted = false;
                 Map<String, Object> payload = new HashMap<>();
                 payload.put("firstname", firstName);
-                payload.put("lastname", lastName);
+                if(!lastName.isEmpty()) payload.put("lastname", lastName);
                 payload.put("contact", phoneNumber);
                 VolleyHttp volleyHttp = new VolleyHttp("", payload, "contacts-patch", AddEmergencyActivity.this);
                 String response = volleyHttp.getResponseBody(true);

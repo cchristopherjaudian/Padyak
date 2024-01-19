@@ -41,7 +41,10 @@ public class adapterEmergencyContact extends RecyclerView.Adapter<adapterEmergen
 
     @Override
     public void onBindViewHolder(@NonNull adapterEmergencyContact.viewHolder holder, int position) {
-        holder.txRowName.setText(emergencyContactList.get(position).getFirstname().concat(" ").concat(emergencyContactList.get(position).getLastname()));
+        holder.txRowName.setText(
+                emergencyContactList.get(position).getFirstname()
+                        .concat(" ")
+                        .concat(emergencyContactList.get(position).getLastname() == null ? "" : emergencyContactList.get(position).getLastname()));
         holder.txRowMessage.setText(emergencyContactList.get(position).getContact());
     }
 
