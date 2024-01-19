@@ -67,6 +67,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     TextView txTimer, txDistance;
     LocationManager mLocationManager;
     ImageButton btnPlayRide, btnStopRide, btnPauseRide;
+    ImageButton imgSOS;
     GoogleMap gMap;
     Marker marker;
     Map<String, Marker> participantMarkers;
@@ -101,13 +102,17 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         btnPauseRide = findViewById(R.id.btnPauseRide);
         btnPlayRide = findViewById(R.id.btnPlayRide);
         btnStopRide = findViewById(R.id.btnStopRide);
+        imgSOS = findViewById(R.id.imgSOS);
         txTimer = findViewById(R.id.txTimer);
         txDistance = findViewById(R.id.txDistance);
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager().findFragmentById(R.id.mapRides);
         mapFragment.getMapAsync(this);
-
+        imgSOS.setOnClickListener(v->{
+            Intent intent = new Intent(frmRide.this, frmAlertInfo.class);
+            startActivity(intent);
+        });
         btnPlayRide.setOnClickListener(v -> {
 
             cardView8.setVisibility(View.VISIBLE);
@@ -178,9 +183,6 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             isPaused = true;
             startTracking = false;
             previousInterval = instantInterval;
-//            myRef = null;
-//            database = null;
-//            eventRef = null;
             cardView8.setVisibility(View.INVISIBLE);
             btnPlayRide.setVisibility(View.VISIBLE);
             btnStopRide.setVisibility(View.INVISIBLE);
