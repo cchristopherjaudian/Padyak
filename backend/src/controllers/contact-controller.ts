@@ -58,7 +58,7 @@ const getEmergencyContacts = catchAsync(async (req: Request, res: Response) => {
   responseObject.createResponse(
     res,
     httpStatus.OK,
-    ResponseCodes.DATA_CREATED,
+    ResponseCodes.LIST_RETRIEVED,
     newContact!
   );
 });
