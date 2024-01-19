@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,6 +63,8 @@ public class EmergencyListActivity extends AppCompatActivity {
         emergencyListActivity = this;
         rvEmergencyList = findViewById(R.id.rvEmergencyList);
         btnEmergencyAdd = findViewById(R.id.btnEmergencyAdd);
+        imgEmpty = findViewById(R.id.imgEmpty);
+        txEmpty = findViewById(R.id.txEmpty);
 
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -124,6 +127,16 @@ public class EmergencyListActivity extends AppCompatActivity {
         Set<EmergencyContact> emergencyContactSet = Helper.getInstance().getTempEmergencySet();
         adapterEmergencyContact = new adapterEmergencyContact(new ArrayList<>(emergencyContactSet));
         rvEmergencyList.setAdapter(adapterEmergencyContact);
+
+        if(emergencyContactSet.isEmpty()){
+            txEmpty.setVisibility(View.VISIBLE);
+            imgEmpty.setVisibility(View.VISIBLE);
+            rvEmergencyList.setVisibility(View.GONE);
+        } else{
+            txEmpty.setVisibility(View.GONE);
+            imgEmpty.setVisibility(View.GONE);
+            rvEmergencyList.setVisibility(View.VISIBLE);
+        }
     }
     @Override
     protected void onResume() {

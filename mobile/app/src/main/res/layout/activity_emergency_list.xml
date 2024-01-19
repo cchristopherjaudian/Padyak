@@ -59,6 +59,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvEmergencyList"
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
@@ -69,5 +70,30 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView64" />
+
+        <ImageView
+            android:id="@+id/imgEmpty"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="100dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/empty"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView64" />
+
+        <TextView
+            android:id="@+id/txEmpty"
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="Emergency Contacts is Empty"
+            android:textColor="#000"
+            android:textSize="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgEmpty" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
