@@ -8,4 +8,5 @@ public class Constants {
     public static String eventURL = baseURL.concat("events");
     public static String locationURL = baseURL.concat("locations");
     public static String alertURL = baseURL.concat("alerts");
+    public static String contactURL = baseURL.concat("contacts");
 }

@@ -55,6 +55,8 @@ public class VolleyHttp {
             endpoint = Constants.locationURL.concat(url);
         } else if(getType().contains("ALERT")){
             endpoint = Constants.alertURL.concat(url);
+        } else if(getType().contains("CONTACTS")){
+            endpoint = Constants.contactURL.concat(url);
         }
     }
     @SuppressLint("StaticFieldLeak")

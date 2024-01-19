@@ -21,7 +21,7 @@ public class Prefs {
     public final static String WEIGHT_KEY = "weight";
     public final static String HEIGHT_KEY = "height";
     public final static String AUTH = "auth";
-
+    public final static String EMERGENCY = "emergencyContacts";
 
 
     public Prefs() {
@@ -49,6 +49,7 @@ public class Prefs {
             LoggedUser.getInstance().setHeight(sharedPreferences.getString(HEIGHT_KEY, ""));
             LoggedUser.getInstance().setAuth(sharedPreferences.getString(AUTH, ""));
             LoggedUser.getInstance().setPassword(sharedPreferences.getString(PASSWORD_KEY, ""));
+            LoggedUser.getInstance().setEmergencyContacts(sharedPreferences.getString(EMERGENCY,""));
             Log.d(Helper.getInstance().log_code, "getUser: " + LoggedUser.getInstance().toString());
             return true;
         } catch (Exception err) {

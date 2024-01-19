@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.padyak.R;
 import com.padyak.dto.AlertLevel;
+import com.padyak.dto.EmergencyContact;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,18 +20,34 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.*;
 public class Helper {
     static Helper helper;
     final public String log_code = "Log_Padyak";
+    static Set<EmergencyContact> tempEmergencySet;
     public Helper() {
     }
 
 
     public static Helper getInstance(){
         if(helper == null) helper = new Helper();
+        if(tempEmergencySet == null) tempEmergencySet = new HashSet<>();
         return helper;
+    }
+    public Set<EmergencyContact> getTempEmergencySet(){
+        return tempEmergencySet;
+    }
+    public void addTempEmergencyContact(EmergencyContact emergencyContact){
+        tempEmergencySet.add(emergencyContact);
+    }
+    public void removeTempEmergencyContact(String phoneNumber){
+        tempEmergencySet.removeIf(contact -> contact.getContact().equals(phoneNumber));
+    }
+    public boolean checkTempContact(String phoneNumber){
+        return tempEmergencySet.stream().anyMatch(contact -> contact.getContact().equals(phoneNumber));
     }
     public boolean checkString(String input) {
         String pattern = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$";
