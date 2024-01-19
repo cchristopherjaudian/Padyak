@@ -32,12 +32,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.padyak.R;
+import com.padyak.dto.EmergencyContact;
+import com.padyak.dto.GroupContact;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.Prefs;
 import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,9 +60,9 @@ public class UpdateProfileActivity extends AppCompatActivity {
     TextView txSave, txCreatePassword;
     TextView txEmergencyCount;
     ConstraintLayout constraintLayout4;
-    ArrayAdapter<String> aaGender,aaHeightUnit;
+    ArrayAdapter<String> aaGender, aaHeightUnit;
     EditText etCreatePassword, etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
-    Spinner etCreateGender,etHeightUnit;
+    Spinner etCreateGender, etHeightUnit;
     String[] gender = {"-Please select a gender-", "Male", "Female"};
     String[] heightUnit = {"-", "cm", "in"};
     boolean inputValid;
@@ -104,12 +107,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
         etCreateBirthdate.setInputType(InputType.TYPE_NULL);
         etCreateBirthdate.setOnClickListener(v -> {
-            final DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    etCreateBirthdate.setText(year + "-" + String.format("%02d", monthOfYear + 1) + "-" + String.format("%02d", dayOfMonth));
-                }
-            };
+            final DatePickerDialog.OnDateSetListener datePickerListener = (view, year, monthOfYear, dayOfMonth) -> etCreateBirthdate.setText(year + "-" + String.format("%02d", monthOfYear + 1) + "-" + String.format("%02d", dayOfMonth));
             Calendar c = Calendar.getInstance();
             int mYear = c.get(Calendar.YEAR);
             int mMonth = c.get(Calendar.MONTH);
@@ -142,7 +140,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             });
             alertDialog.show();
         });
-        constraintLayout4.setOnClickListener(v->{
+        constraintLayout4.setOnClickListener(v -> {
             Intent intent = new Intent(UpdateProfileActivity.this, EmergencyListActivity.class);
             startActivity(intent);
         });
@@ -187,7 +185,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
 
         });
-        List<String> heightList =  Arrays.asList(LoggedUser.getInstance().getHeight().split("@"));
+        List<String> heightList = Arrays.asList(LoggedUser.getInstance().getHeight().split("@"));
 
         etCreatePassword.setVisibility(View.GONE);
         etCreateEmail.setText(LoggedUser.getInstance().getEmail());
@@ -195,9 +193,9 @@ public class UpdateProfileActivity extends AppCompatActivity {
         etCreateLastName.setText(LoggedUser.getInstance().getLastName());
         etCreateContact.setText(LoggedUser.getInstance().getPhoneNumber());
         etCreateBirthdate.setText(LoggedUser.getInstance().getBirthDate());
-        if(heightList.size() < 2){
+        if (heightList.size() < 2) {
             etCreateHeight.setText(LoggedUser.getInstance().getHeight());
-        } else{
+        } else {
             etCreateHeight.setText(heightList.get(0));
             etHeightUnit.setSelection(Arrays.asList(heightUnit).indexOf(heightList.get(1)));
         }
@@ -210,10 +208,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
             etCreatePassword.setText(LoggedUser.getInstance().getPassword());
             etCreateContact.setEnabled(false);
             Log.d(Helper.getInstance().log_code, "onCreate IT: " + etCreatePassword.getInputType());
-            imgShowPassword.setOnClickListener(v->{
-                if(etCreatePassword.getInputType() == 129){
+            imgShowPassword.setOnClickListener(v -> {
+                if (etCreatePassword.getInputType() == 129) {
                     etCreatePassword.setInputType(InputType.TYPE_CLASS_TEXT);
-                } else{
+                } else {
                     etCreatePassword.setInputType(129);
                 }
             });
@@ -261,7 +259,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
-                Prefs.getInstance().setUser(UpdateProfileActivity.this,Prefs.EMERGENCY,gson.toJson(Helper.getInstance().getTempEmergencySet()));
+                Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.EMERGENCY, gson.toJson(Helper.getInstance().getTempEmergencySet()));
                 Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_LONG).show();
                 finish();
             } else {
@@ -300,7 +298,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
     public void uploadDP(Uri imgURI) {
         new Thread(() -> {
             try {
-                runOnUiThread(()->{
+                runOnUiThread(() -> {
                     progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Uploading profile picture.");
                     progressDialog.show();
                 });
@@ -315,39 +313,30 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 bitmapDP.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] dataIntent = baos.toByteArray();
                 uploadTask = eventRef.putBytes(dataIntent);
-                runOnUiThread(()-> progressDialog.dismiss());
+                runOnUiThread(() -> progressDialog.dismiss());
 
-                uploadTask.addOnFailureListener(new OnFailureListener() {
+                uploadTask.addOnFailureListener(exception -> runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_LONG).show())).addOnSuccessListener(taskSnapshot -> taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        runOnUiThread(() -> Toast.makeText(UpdateProfileActivity.this, "Failed to upload QR. Please try again", Toast.LENGTH_LONG).show());
+                    public void onSuccess(Uri uri) {
+                        updateDP(uri.toString());
                     }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                updateDP(uri.toString());
-                            }
-                        });
-                    }
-                });
+                }));
             } catch (IOException e) {
                 bitmapDP = null;
                 runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_LONG).show());
             } finally {
-                runOnUiThread(()->{
-                    if(progressDialog != null) progressDialog.dismiss();
+                runOnUiThread(() -> {
+                    if (progressDialog != null) progressDialog.dismiss();
                 });
             }
         }).start();
 
     }
+
     public void uploadDP() {
         new Thread(() -> {
             try {
-                runOnUiThread(()->{
+                runOnUiThread(() -> {
                     progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Uploading profile picture.");
                     progressDialog.show();
                 });
@@ -360,7 +349,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 bitmapDP.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] dataIntent = baos.toByteArray();
                 uploadTask = eventRef.putBytes(dataIntent);
-                runOnUiThread(()-> progressDialog.dismiss());
+                runOnUiThread(() -> progressDialog.dismiss());
 
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -382,20 +371,21 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 bitmapDP = null;
                 runOnUiThread(() -> Toast.makeText(this, "Failed to retrieve image. Please try again", Toast.LENGTH_LONG).show());
             } finally {
-                runOnUiThread(()->{
-                    if(progressDialog != null) progressDialog.dismiss();
+                runOnUiThread(() -> {
+                    if (progressDialog != null) progressDialog.dismiss();
                 });
             }
         }).start();
 
     }
+
     public void updateDP(String imgURL) {
-        runOnUiThread(()->{
+        runOnUiThread(() -> {
             progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Uploading profile picture.");
             progressDialog.show();
         });
 
-        new Thread(()->{
+        new Thread(() -> {
             Map<String, Object> params = new HashMap<>();
             params.put(Prefs.IMG_KEY, imgURL);
             VolleyHttp volleyHttp = new VolleyHttp("", params, "user-patch", UpdateProfileActivity.this);
@@ -405,29 +395,74 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 JSONObject reader = new JSONObject(json);
                 int responseStatus = reader.getInt("status");
                 if (responseStatus == 200) {
-                    Prefs.getInstance().setUser(UpdateProfileActivity.this,Prefs.IMG_KEY,imgURL);
-                    runOnUiThread(()-> Picasso.get().load(imgURL).into(imgAdminProfile));
-                    runOnUiThread(()->Toast.makeText(this, "Profile picture updated successfully.", Toast.LENGTH_LONG).show());
+                    Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.IMG_KEY, imgURL);
+                    runOnUiThread(() -> Picasso.get().load(imgURL).into(imgAdminProfile));
+                    runOnUiThread(() -> Toast.makeText(this, "Profile picture updated successfully.", Toast.LENGTH_LONG).show());
                 } else {
-                    runOnUiThread(()->Toast.makeText(this, "Failed to update image. Please try again.", Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> Toast.makeText(this, "Failed to update image. Please try again.", Toast.LENGTH_LONG).show());
                 }
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-                runOnUiThread(()->Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show());
+                runOnUiThread(() -> Toast.makeText(this, "Failed to communicate with server. Please try again.", Toast.LENGTH_LONG).show());
             } finally {
-                runOnUiThread(()->{
-                    if(null != progressDialog) progressDialog.dismiss();
+                runOnUiThread(() -> {
+                    if (null != progressDialog) progressDialog.dismiss();
                 });
             }
         }).start();
 
     }
+
+    public void loadEmergencyContacts() {
+        progressDialog = Helper.getInstance().progressDialog(UpdateProfileActivity.this, "Loading User's Information.");
+        progressDialog.show();
+        new Thread(() -> {
+            VolleyHttp volleyHttp = new VolleyHttp("", null, "contacts", UpdateProfileActivity.this);
+            JSONObject volleyObject = volleyHttp.getJsonResponse(true);
+            runOnUiThread(() -> {
+                progressDialog.dismiss();
+                if (volleyObject == null) {
+                    Toast.makeText(this, "Failed to retrieve list of contact. Please try again.", Toast.LENGTH_LONG).show();
+                    finish();
+                } else {
+                    try {
+                        Helper.getInstance().resetEmergencyContacts();
+                        JSONObject contactObject = volleyObject.getJSONObject("data");
+                        JSONArray rescueArray = contactObject.optJSONArray("rescueGroups");
+                        JSONArray emergencyArray = contactObject.optJSONArray("emergencyContacts");
+                        for (int i = 0; i < rescueArray.length(); i++) {
+                            JSONObject rescueObj = rescueArray.getJSONObject(i);
+                            EmergencyContact emergencyContact = new EmergencyContact(rescueObj.getString("name"),"",rescueObj.getString("contact"),true);
+                            Helper.getInstance().addTempEmergencyContact(emergencyContact);
+                        }
+
+                        for (int i = 0; i < emergencyArray.length(); i++) {
+                            JSONObject emergencyObj = emergencyArray.getJSONObject(i);
+                            StringBuffer stringBuffer = new StringBuffer();
+                            stringBuffer.append(emergencyObj.getString("firstname"));
+                            if (emergencyObj.has("lastname") && !emergencyObj.isNull("lastname")) {
+                                stringBuffer.append(" ");
+                                stringBuffer.append(emergencyObj.getString("lastname"));
+                            }
+                            EmergencyContact emergencyContact = new EmergencyContact(stringBuffer.toString(),"",emergencyObj.getString("contact"),false);
+                            Helper.getInstance().addTempEmergencyContact(emergencyContact);
+                        }
+                    } catch (JSONException e) {
+                        Log.d(Helper.getInstance().log_code, "loadContacts: " + e.getMessage());
+                    }
+
+                }
+                txEmergencyCount.setText(
+                        Helper.getInstance().getTempEmergencySet().size() == 0 ? "No Contact Added" :
+                                String.valueOf(Helper.getInstance().getTempEmergencySet().size()).concat(" Contact(s) Added")
+                );
+            });
+        }).start();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        txEmergencyCount.setText(
-                Helper.getInstance().getTempEmergencySet().size() == 0 ? "No Contact Added":
-                        String.valueOf(Helper.getInstance().getTempEmergencySet().size()).concat(" Contact(s) Added")
-        );
+        loadEmergencyContacts();
     }
 }
