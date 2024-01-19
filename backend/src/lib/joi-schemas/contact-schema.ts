@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 
 const createEmergencyContactSchema = Joi.object({
   firstname: Joi.string().trim().required(),
-  lastname: Joi.string().trim().required(),
+  lastname: Joi.string().trim().optional(),
   contact: Joi.string().trim().min(11).max(11).required(),
 });
 

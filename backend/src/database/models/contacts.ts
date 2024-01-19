@@ -1,6 +1,6 @@
 export type TEmergencyContact = {
   firstname: string;
-  lastname: string;
+  lastname?: string;
   contact: string;
 };
 

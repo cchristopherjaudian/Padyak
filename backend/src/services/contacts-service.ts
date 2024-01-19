@@ -25,7 +25,7 @@ class EmergencyContacts {
 
     hasUser.emergencyContacts?.push({
       firstname: payload.firstname,
-      lastname: payload.lastname,
+      lastname: payload?.lastname,
       contact: payload.contact,
     });
     return this._userRepository.update(hasUser);
