@@ -47,6 +47,7 @@ public class frmAlertSend extends AppCompatActivity {
     public static frmAlertSend frmAlertSend;
     FusedLocationProviderClient fusedLocationClient;
     ProgressDialog progressDialog;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,16 +63,20 @@ public class frmAlertSend extends AppCompatActivity {
 
         txAlertLevel.setText("Level " + alertLevel);
         txAlertDescription.setText(alertDescription);
-
+        intent = new Intent(frmAlertSend.this, frmAlertGroup.class);
         btnAlertGroup.setOnClickListener(v -> {
-            Intent intent = new Intent(frmAlertSend.this, frmAlertGroup.class);
             Bundle bundleAlert = new Bundle();
             bundleAlert.putInt("level",alertLevel);
+            bundleAlert.putString("receiver","GROUP");
             intent.putExtras(bundleAlert);
             startActivity(intent);
         });
         btnSendContact.setOnClickListener(v -> {
-
+            Bundle bundleAlert = new Bundle();
+            bundleAlert.putInt("level",alertLevel);
+            bundleAlert.putString("receiver","RESCUE");
+            intent.putExtras(bundleAlert);
+            startActivity(intent);
         });
     }
 }

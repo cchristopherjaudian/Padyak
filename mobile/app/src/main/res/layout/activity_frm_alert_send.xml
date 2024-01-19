@@ -72,7 +72,9 @@
         <Button
             android:id="@+id/btnSendContact"
             android:layout_width="0dp"
-            android:layout_height="@dimen/button_size"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="10dp"
             android:layout_marginStart="80dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="80dp"

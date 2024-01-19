@@ -39,7 +39,8 @@ public class adapterAlertGroup extends RecyclerView.Adapter<adapterAlertGroup.vi
         //holder.txRowName.setText(contact.get(position).getUserName());
         holder.txRowName.setText(contact.get(position).getUserName());
         holder.checkBox.setChecked(contact.get(position).isSelected());
-        Picasso.get().load(contact.get(position).getUserImage()).into(holder.img);
+        if(!contact.get(position).getUserImage().isEmpty()) Picasso.get().load(contact.get(position).getUserImage()).into(holder.img);
+
     }
     public String getChecked(){
         List<String> checkedNumbers = new ArrayList<>();

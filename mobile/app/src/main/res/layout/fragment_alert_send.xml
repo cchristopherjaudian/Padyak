@@ -6,41 +6,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="50dp"
-    android:background="@drawable/main_bg"
     tools:context=".fragment.AlertSendFragment">
+
     <ImageView
         android:id="@+id/imageView19"
         android:layout_width="150dp"
         android:layout_height="160dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="100dp"
         android:scaleType="fitXY"
         android:src="@drawable/alertlogo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:id="@+id/textView61"
-        android:layout_width="wrap_content"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
         android:layout_marginTop="20dp"
-        android:fontFamily="@font/coolvetica"
-        android:text="PADYAK ALERT SENT SUCCESSFULLY!"
-        android:textColor="#1C1C1C"
-        android:textSize="@dimen/form_header_size"
+        android:background="@drawable/rounded_white_layout"
+        android:paddingBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView19" />
-    <Button
-        android:id="@+id/btnAlertAck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/rounded_red_button"
-        android:text="OKAY"
-        android:textColor="#FFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView61" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView19">
+
+        <TextView
+            android:id="@+id/textView61"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/coolvetica"
+            android:gravity="center"
+            android:text="PADYAK ALERT SENT SUCCESSFULLY!"
+            android:textColor="#1C1C1C"
+            android:textSize="17dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnAlertAck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rounded_red_button"
+            android:text="OKAY"
+            android:textColor="#FFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView61" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

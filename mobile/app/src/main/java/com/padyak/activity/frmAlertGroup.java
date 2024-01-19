@@ -3,6 +3,7 @@ package com.padyak.activity;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.padyak.R;
 import com.padyak.adapter.adapterAlertGroup;
 import com.padyak.dto.GroupContact;
+import com.padyak.fragment.AlertSendFragment;
+import com.padyak.fragment.ContactSelectFragment;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -47,10 +50,14 @@ public class frmAlertGroup extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationClient;
     int alertLevel;
     ProgressDialog progressDialog;
+    String receiver;
+    public static frmAlertGroup frmAlertGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frm_alert_group);
+        frmAlertGroup = this;
+        receiver = getIntent().getStringExtra("receiver");
         alertLevel = getIntent().getIntExtra("level",0);
         chkSelectAll = findViewById(R.id.chkSelectAll);
         btnSendGroup = findViewById(R.id.btnSendGroup);
@@ -60,9 +67,11 @@ public class frmAlertGroup extends AppCompatActivity {
         rvAlertGroup.setLayoutManager(linearLayoutManager);
 
         btnSendGroup.setOnClickListener(v -> {
+
+
             String selectedUsers = adapterAlertGroup.getChecked();
             if(selectedUsers.isEmpty()){
-                Toast.makeText(this, "Please select atleast 1 cyclist from the list.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Please select atleast 1 contact from the list.", Toast.LENGTH_LONG).show();
                 return;
             }
             AlertDialog alertDialog = new AlertDialog.Builder(frmAlertGroup.this).create();
@@ -90,35 +99,69 @@ public class frmAlertGroup extends AppCompatActivity {
     }
 
     public void loadContacts() {
-        progressDialog = Helper.getInstance().progressDialog(frmAlertGroup.this,"Retrieving list of cyclists.");
+        progressDialog = Helper.getInstance().progressDialog(frmAlertGroup.this,"Retrieving list of contact.");
         progressDialog.show();
-
-
         new Thread(()->{
-            VolleyHttp volleyHttp = new VolleyHttp("",null,"user", frmAlertGroup.this);
+            String endpoint = receiver.equals("RESCUE") ? "contacts" : "user";
+            VolleyHttp volleyHttp = new VolleyHttp("",null,endpoint, frmAlertGroup.this);
             JSONObject volleyObject = volleyHttp.getJsonResponse(true);
             runOnUiThread(()->{
                 if(volleyObject == null){
-                    Toast.makeText(this, "Failed to retrieve list of cyclists. Please try again.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Failed to retrieve list of contact. Please try again.", Toast.LENGTH_LONG).show();
                     finish();
                 } else{
                     groupContacts = new ArrayList<>();
-                    JSONArray cyclistArray = volleyObject.optJSONArray("data");
-                    for(int i = 0; i < cyclistArray.length(); i++){
+                    if(receiver.equals("RESCUE")){
                         try {
-                            JSONObject cyclistObject = cyclistArray.getJSONObject(i);
-                            if(cyclistObject.getString("id").equals(LoggedUser.getInstance().getUuid())) continue;
-                            GroupContact groupContact = new GroupContact();
-                            groupContact.setSelected(false);
-                            groupContact.setUserName(cyclistObject.getString("firstname").concat(" ").concat(cyclistObject.getString("lastname")));
-                            groupContact.setUserImage(cyclistObject.getString("photoUrl"));
-                            groupContact.setUserContact(cyclistObject.getString("contactNumber"));
-                            groupContacts.add(groupContact);
+                            JSONObject contactObject = volleyObject.getJSONObject("data");
+                            JSONArray rescueArray = contactObject.optJSONArray("rescueGroups");
+                            JSONArray emergencyArray = contactObject.optJSONArray("emergencyContacts");
+                            for(int i = 0; i < rescueArray.length(); i++){
+                                JSONObject rescueObj = rescueArray.getJSONObject(i);
+                                GroupContact groupContact = new GroupContact();
+                                groupContact.setSelected(false);
+                                groupContact.setUserName(rescueObj.getString("name"));
+                                groupContact.setUserImage("");
+                                groupContact.setUserContact(rescueObj.getString("contact"));
+                                groupContacts.add(groupContact);
+                            }
+
+                            for(int i = 0; i < emergencyArray.length(); i++){
+                                JSONObject emergencyObj = emergencyArray.getJSONObject(i);
+                                StringBuffer stringBuffer = new StringBuffer();
+                                stringBuffer.append(emergencyObj.getString("firstname"));
+                                if(emergencyObj.has("lastname") && !emergencyObj.isNull("lastname")){
+                                    stringBuffer.append(" ");
+                                    stringBuffer.append(emergencyObj.getString("lastname"));
+                                }
+                                GroupContact groupContact = new GroupContact();
+                                groupContact.setSelected(false);
+                                groupContact.setUserName(stringBuffer.toString());
+                                groupContact.setUserImage("");
+                                groupContact.setUserContact(emergencyObj.getString("contact"));
+                                groupContacts.add(groupContact);
+                            }
                         } catch (JSONException e) {
                             Log.d(Helper.getInstance().log_code, "loadContacts: " + e.getMessage());
                         }
-
+                    } else{
+                        JSONArray cyclistArray = volleyObject.optJSONArray("data");
+                        for(int i = 0; i < cyclistArray.length(); i++){
+                            try {
+                                JSONObject cyclistObject = cyclistArray.getJSONObject(i);
+                                if(cyclistObject.getString("id").equals(LoggedUser.getInstance().getUuid())) continue;
+                                GroupContact groupContact = new GroupContact();
+                                groupContact.setSelected(false);
+                                groupContact.setUserName(cyclistObject.getString("firstname").concat(" ").concat(cyclistObject.getString("lastname")));
+                                groupContact.setUserImage(cyclistObject.getString("photoUrl"));
+                                groupContact.setUserContact(cyclistObject.getString("contactNumber"));
+                                groupContacts.add(groupContact);
+                            } catch (JSONException e) {
+                                Log.d(Helper.getInstance().log_code, "loadContacts: " + e.getMessage());
+                            }
+                        }
                     }
+
                 }
                 adapterAlertGroup = new adapterAlertGroup(groupContacts);
                 rvAlertGroup.setAdapter(adapterAlertGroup);
@@ -162,10 +205,12 @@ public class frmAlertGroup extends AppCompatActivity {
                                 if(responseJSON == null){
                                     Toast.makeText(frmAlertGroup.this, "Failed to send alert. Please try again", Toast.LENGTH_LONG).show();
                                 } else{
-                                    Toast.makeText(frmAlertGroup.this, "Alert sent successfully.", Toast.LENGTH_LONG).show();
                                     frmAlertInfo.frmAlertInfo.finish();
                                     frmAlertSend.frmAlertSend.finish();
-                                    finish();
+                                    FragmentManager fm = getSupportFragmentManager();
+                                    AlertSendFragment alertSendFragment = AlertSendFragment.newInstance();
+                                    alertSendFragment.setCancelable(false);
+                                    alertSendFragment.show(fm, "AlertSendFragment");
                                 }
                             });
 

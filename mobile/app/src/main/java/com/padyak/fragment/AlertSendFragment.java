@@ -1,49 +1,50 @@
 package com.padyak.fragment;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.padyak.R;
+import com.padyak.activity.frmAlertGroup;
 
 
-public class AlertSendFragment extends Fragment {
-
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
-
+public class AlertSendFragment extends DialogFragment {
     public AlertSendFragment() {
 
     }
 
-    public static AlertSendFragment newInstance(String param1, String param2) {
+    public static AlertSendFragment newInstance() {
         AlertSendFragment fragment = new AlertSendFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
+
+    Button btnAlertAck;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_alert_send, container, false);
+        View v = inflater.inflate(R.layout.fragment_alert_send, container, false);
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        btnAlertAck = v.findViewById(R.id.btnAlertAck);
+        btnAlertAck.setOnClickListener(l->{
+            frmAlertGroup.frmAlertGroup.finish();
+            dismiss();
+        });
+        return v;
     }
 }
