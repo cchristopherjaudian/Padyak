@@ -6,10 +6,14 @@ const date = DateUtils.getInstance();
 
 class EventMapper {
   createEvent(payload: TCreateEvent) {
-    const mappedRescueGroup = payload.rescueGroup.map((rescuer, index) => ({
-      contact: rescuer.contact,
-      name: `Rescue Group ${index + 1}`,
-    }));
+    const rawRescueGroup = payload.rescueGroup as string;
+    const mappedRescueGroup = rawRescueGroup
+      .split(',')
+      .map((rescuer, index) => ({
+        contact: rescuer,
+        name: `Rescue Group ${index + 1}`,
+      }));
+
     return {
       ...payload,
       id: uuidv4(),

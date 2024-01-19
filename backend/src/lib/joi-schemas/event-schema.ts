@@ -18,13 +18,9 @@ const createEventSchema = Joi.object({
   endTime: Joi.string().required(),
   award: Joi.string().required(),
   registeredUser: Joi.array().optional().default([]),
-  rescueGroup: Joi.array()
-    .items(
-      Joi.object().keys({
-        contact: Joi.string().trim().required(),
-      })
-    )
-    .min(1)
+  rescueGroup: Joi.string()
+    .trim()
+    .pattern(/^09\d{9}(?:,09\d{9})*$/, 'Add a valid contact number.')
     .required(),
 });
 

@@ -18,7 +18,7 @@ export type TCreateEvent = {
   award: string;
   registeredUser?: IRegisteredUser[];
   author: Pick<IUserModel, 'id'>;
-  rescueGroup: TRescueGroup[];
+  rescueGroup: TRescueGroup[] | string;
 };
 
 export type TEventListQuery = {
