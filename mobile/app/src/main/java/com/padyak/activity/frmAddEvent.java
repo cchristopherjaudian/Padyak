@@ -42,15 +42,19 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class frmAddEvent extends AppCompatActivity {
 
     Button btnEventRegister, btnEventCancel;
     EditText txAddEventDate, txAddEventStart, txAddEventEnd, txAddEventAward, txAddEventDescription, txAddEventTitle;
+    EditText etRG1,etRG2,etRG3;
     ImageView imgAddEvent;
     String selectedYear, selectedMonth;
     Bitmap bitmapEvent;
@@ -61,7 +65,7 @@ public class frmAddEvent extends AppCompatActivity {
     ProgressDialog progressDialog;
     boolean data_inserted;
     String startTime,endTime;
-
+    String rescueGroupNumbers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +84,9 @@ public class frmAddEvent extends AppCompatActivity {
         txAddEventAward = findViewById(R.id.txAddEventAward);
         txAddEventDescription = findViewById(R.id.txAddEventDescription);
 
+        etRG1 = findViewById(R.id.etRG1);
+        etRG2 = findViewById(R.id.etRG2);
+        etRG3 = findViewById(R.id.etRG3);
 
         imgAddEvent = findViewById(R.id.imgAddEvent);
 
@@ -96,12 +103,7 @@ public class frmAddEvent extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), 814);
         });
         txAddEventDate.setOnClickListener(v -> {
-            final DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    txAddEventDate.setText(year + "-" + String.format("%02d", monthOfYear + 1) + "-" + String.format("%02d", dayOfMonth));
-                }
-            };
+            final DatePickerDialog.OnDateSetListener datePickerListener = (view, year, monthOfYear, dayOfMonth) -> txAddEventDate.setText(year + "-" + String.format("%02d", monthOfYear + 1) + "-" + String.format("%02d", dayOfMonth));
             Calendar c = Calendar.getInstance();
             int mYear = c.get(Calendar.YEAR);
             int mMonth = c.get(Calendar.MONTH);
@@ -126,30 +128,12 @@ public class frmAddEvent extends AppCompatActivity {
             int mYear = mcurrentTime.get(Calendar.YEAR);
             String catDate = String.valueOf(mYear) + "-" + String.format("%02d", mMonth + 1) + "-" + String.format("%02d", mDay);
             CustomTimePicker mTimePicker;
-            mTimePicker = new CustomTimePicker(frmAddEvent.this, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                    startTime = String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + ":00";
-                    String timeSuffix = "";
-                    timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
-                    selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
-                    txAddEventStart.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
-//                    if (catDate.equals(txAddEventStart.getText().toString().trim())) {
-//                        if (selectedHour < hour) {
-//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_LONG).show();
-//                            return;
-//                        }
-//                        if (selectedHour == hour && selectedMinute <= minute) {
-//                            Toast.makeText(frmAddEvent.this, "Please select a valid time", Toast.LENGTH_LONG).show();
-//                            return;
-//                        }
-//                    }
-//                    String timeSuffix = "";
-//                    timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
-//                    selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
-//                    txAddEventStart.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
-
-                }
+            mTimePicker = new CustomTimePicker(frmAddEvent.this, (timePicker, selectedHour, selectedMinute) -> {
+                startTime = String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + ":00";
+                String timeSuffix = "";
+                timeSuffix = (selectedHour >= 12) ? " PM" : " AM";
+                selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
+                txAddEventStart.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
             }, hour, minute, false);
             mTimePicker.show();
         });
@@ -167,7 +151,7 @@ public class frmAddEvent extends AppCompatActivity {
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                     endTime = String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + ":00";
                     String timeSuffix = "";
-                    timeSuffix = (selectedHour >= 12) ? "PM" : "AM";
+                    timeSuffix = (selectedHour >= 12) ? " PM" : " AM";
                     selectedHour = (selectedHour > 12) ? selectedHour - 12 : selectedHour;
                     txAddEventEnd.setText(String.format("%02d", selectedHour) + ":" + String.format("%02d", selectedMinute) + timeSuffix);
                 }
@@ -200,6 +184,21 @@ public class frmAddEvent extends AppCompatActivity {
                 Toast.makeText(this, "Please input an event start date", Toast.LENGTH_LONG).show();
                 return;
             }
+            List<EditText> rgList = new ArrayList<>();
+            rgList.add(etRG1);
+            rgList.add(etRG2);
+            rgList.add(etRG3);
+            String rgNumbers = rgList.stream()
+                    .filter(rg -> rg.getText().toString().length() == 11)
+                    .map(rg -> rg.getText().toString())
+                    .collect(Collectors.joining(","));
+            if(rgNumbers.isEmpty()){
+                Toast.makeText(this, "Please provide atleast (1) Rescue Group", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            rescueGroupNumbers = rgNumbers;
+
             AlertDialog alertDialog = new AlertDialog.Builder(frmAddEvent.this).create();
             alertDialog.setTitle("Event Registration");
             alertDialog.setCancelable(false);
@@ -224,23 +223,12 @@ public class frmAddEvent extends AppCompatActivity {
                                 bitmapEvent.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                                 data = baos.toByteArray();
                                 uploadTask = eventRef.putBytes(data);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                uploadTask.addOnFailureListener(exception -> saveEvent("")).addOnSuccessListener(taskSnapshot -> taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        saveEvent("");
+                                    public void onSuccess(Uri uri) {
+                                        saveEvent(uri.toString());
                                     }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                            @Override
-                                            public void onSuccess(Uri uri) {
-                                                saveEvent(uri.toString());
-                                            }
-                                        });
-
-                                    }
-                                });
+                                }));
                             } else {
                                 saveEvent("n/a");
                             }
@@ -256,6 +244,8 @@ public class frmAddEvent extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_LONG).show());
                 return;
             }
+
+
             String etDate = txAddEventDate.getText().toString();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate dateTime = LocalDate.parse(etDate, formatter);
@@ -280,7 +270,7 @@ public class frmAddEvent extends AppCompatActivity {
             payload.put("photoUrl", imgURL);
             payload.put("eventDescription", eventDescription);
             payload.put("award", eventAward);
-
+            payload.put("rescueGroup",rescueGroupNumbers);
             VolleyHttp volleyHttp = new VolleyHttp("", payload, "event", frmAddEvent.this);
             String response = volleyHttp.getResponseBody(true);
             data_inserted = false;

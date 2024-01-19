@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.frmAddEvent">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:paddingBottom="10dp"
+        android:paddingBottom="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -245,12 +245,102 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView49" />
 
+        <TextView
+            android:id="@+id/txRG1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="Rescue Group 1"
+            android:textColor="#000"
+            android:textSize="@dimen/subheader_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txAddEventAward" />
+
+        <EditText
+            android:id="@+id/etRG1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/et_rounded"
+            android:fontFamily="@font/coolvetica"
+            android:gravity="start"
+            android:inputType="number"
+            android:maxLength="11"
+            android:padding="7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txRG1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txRG2"
+            app:layout_constraintTop_toTopOf="@+id/txRG1" />
+
+        <TextView
+            android:id="@+id/txRG2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="Rescue Group 2"
+            android:textColor="#000"
+            android:textSize="@dimen/subheader_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etRG1" />
+
+        <EditText
+            android:id="@+id/etRG2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/et_rounded"
+            android:fontFamily="@font/coolvetica"
+            android:gravity="start"
+            android:inputType="number"
+            android:maxLength="11"
+            android:padding="7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txRG2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txRG2"
+            app:layout_constraintTop_toTopOf="@+id/txRG2" />
+
+        <TextView
+            android:id="@+id/txRG3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/coolvetica"
+            android:text="Rescue Group 3"
+            android:textColor="#000"
+            android:textSize="@dimen/subheader_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etRG2" />
+
+        <EditText
+            android:id="@+id/etRG3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/et_rounded"
+            android:fontFamily="@font/coolvetica"
+            android:gravity="start"
+            android:inputType="number"
+            android:maxLength="11"
+            android:padding="7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txRG3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txRG3"
+            app:layout_constraintTop_toTopOf="@+id/txRG3" />
+
         <Button
             android:id="@+id/btnEventRegister"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/rounded_affirmative_button"
             android:fontFamily="@font/coolvetica"
@@ -258,7 +348,7 @@
             android:textColor="#FFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txAddEventAward" />
+            app:layout_constraintTop_toBottomOf="@+id/etRG3" />
 
         <Button
             android:id="@+id/btnEventCancel"
