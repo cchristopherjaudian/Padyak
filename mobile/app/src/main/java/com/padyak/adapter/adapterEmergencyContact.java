@@ -49,6 +49,7 @@ public class adapterEmergencyContact extends RecyclerView.Adapter<adapterEmergen
                         .concat(" ")
                         .concat(emergencyContactList.get(position).getLastname() == null ? "" : emergencyContactList.get(position).getLastname()));
         holder.txRowMessage.setText(emergencyContactList.get(position).getContact());
+        holder.imgDelete.setVisibility(emergencyContactList.get(position).isRescue() ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override

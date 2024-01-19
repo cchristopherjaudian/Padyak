@@ -79,7 +79,7 @@ public class AddEmergencyActivity extends AppCompatActivity {
 
                 if(data_inserted){
                     runOnUiThread(()->{
-                        EmergencyContact emergencyContact = new EmergencyContact(firstName,lastName,phoneNumber);
+                        EmergencyContact emergencyContact = new EmergencyContact(firstName,lastName,phoneNumber,false);
                         Helper.getInstance().addTempEmergencyContact(emergencyContact);
                         Gson gson = new Gson();
                         String updatedEmergency = gson.toJson(Helper.getInstance().getTempEmergencySet());

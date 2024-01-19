@@ -49,6 +49,9 @@ public class Helper {
     public boolean checkTempContact(String phoneNumber){
         return tempEmergencySet.stream().anyMatch(contact -> contact.getContact().equals(phoneNumber));
     }
+    public void resetEmergencyContacts(){
+        tempEmergencySet = new HashSet<>();
+    }
     public boolean checkString(String input) {
         String pattern = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$";
         Pattern r = Pattern.compile(pattern);

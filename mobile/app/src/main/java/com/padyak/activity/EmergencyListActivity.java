@@ -201,7 +201,7 @@ public class EmergencyListActivity extends AppCompatActivity {
 
                         if(data_inserted){
                             runOnUiThread(()->{
-                                EmergencyContact emergencyContact = new EmergencyContact(phonebookName,"",phonebookNumber);
+                                EmergencyContact emergencyContact = new EmergencyContact(phonebookName,"",phonebookNumber,false);
                                 Helper.getInstance().addTempEmergencyContact(emergencyContact);
                                 Gson gson = new Gson();
                                 String updatedEmergency = gson.toJson(Helper.getInstance().getTempEmergencySet());

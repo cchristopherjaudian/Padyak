@@ -226,7 +226,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                             List<EmergencyContact> emergencyContactList = Arrays.asList(emergencyContacts);
                             emergencyContactList.forEach(contact ->{
                                 Helper.getInstance().addTempEmergencyContact(
-                                        new EmergencyContact(contact.getFirstname(),contact.getLastname(),contact.getContact())
+                                        new EmergencyContact(contact.getFirstname(),contact.getLastname(),contact.getContact(),false)
                                 );
                             });
 

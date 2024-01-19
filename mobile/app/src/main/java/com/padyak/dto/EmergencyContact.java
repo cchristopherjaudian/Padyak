@@ -4,11 +4,13 @@ import java.util.Objects;
 
 public class EmergencyContact {
     public String firstname, lastname, contact;
+    public boolean isRescue;
 
-    public EmergencyContact(String firstname, String lastname, String contact) {
+    public EmergencyContact(String firstname, String lastname, String contact, boolean isRescue) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.contact = contact;
+        this.isRescue = isRescue;
     }
 
     public EmergencyContact() {
@@ -20,6 +22,7 @@ public class EmergencyContact {
                 "firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", contact='" + contact + '\'' +
+                ", isRescue=" + isRescue +
                 '}';
     }
 
@@ -28,12 +31,20 @@ public class EmergencyContact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EmergencyContact that = (EmergencyContact) o;
-        return Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(contact, that.contact);
+        return isRescue == that.isRescue && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(contact, that.contact);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstname, lastname, contact);
+        return Objects.hash(firstname, lastname, contact, isRescue);
+    }
+
+    public boolean isRescue() {
+        return isRescue;
+    }
+
+    public void setRescue(boolean rescue) {
+        isRescue = rescue;
     }
 
     public String getFirstname() {
