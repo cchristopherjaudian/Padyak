@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -16,6 +17,8 @@ import com.padyak.R;
 import com.padyak.activity.AddEmergencyActivity;
 import com.padyak.activity.EmergencyListActivity;
 import com.padyak.activity.frmMemberAlertInfo;
+import com.padyak.activity.frmRide;
+import com.padyak.activity.frmSaveRide;
 import com.padyak.dto.EmergencyContact;
 import com.padyak.dto.MemberAlert;
 import com.padyak.utility.Helper;
@@ -62,9 +65,21 @@ public class adapterEmergencyContact extends RecyclerView.Adapter<adapterEmergen
             imgDelete = itemView.findViewById(R.id.imgDeleteContact);
 
             imgDelete.setOnClickListener(v->{
-                EmergencyListActivity.emergencyListActivity.removeEmergencyContact(
-                        emergencyContactList.get(getAdapterPosition()).getContact()
-                );
+                AlertDialog alertDialog = new AlertDialog.Builder(itemView.getContext()).create();
+                alertDialog.setTitle("Delete Emergency Contact");
+                alertDialog.setCancelable(false);
+                alertDialog.setMessage("Are you sure you want to delete " + emergencyContactList.get(getAdapterPosition()).getFirstname() + " from your list?");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                        (d,w)->{
+                            EmergencyListActivity.emergencyListActivity.removeEmergencyContact(
+                                    emergencyContactList.get(getAdapterPosition()).getContact()
+                            );
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
+
+                });
+                alertDialog.show();
+
             });
         }
     }
