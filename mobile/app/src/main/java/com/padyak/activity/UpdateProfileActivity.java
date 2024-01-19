@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -29,6 +30,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
@@ -53,6 +55,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
     ImageView imgAdminProfile;
     ImageView imgShowPassword;
     TextView txSave, txCreatePassword;
+    TextView txEmergencyCount;
+    ConstraintLayout constraintLayout4;
     ArrayAdapter<String> aaGender,aaHeightUnit;
     EditText etCreatePassword, etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateBirthdate, etCreateHeight, etCreateWeight;
     Spinner etCreateGender,etHeightUnit;
@@ -87,6 +91,9 @@ public class UpdateProfileActivity extends AppCompatActivity {
         etCreateWeight = findViewById(R.id.etCreateWeight);
         etCreateGender = findViewById(R.id.etCreateGender);
         etHeightUnit = findViewById(R.id.etHeightUnit);
+
+        constraintLayout4 = findViewById(R.id.constraintLayout4);
+        txEmergencyCount = findViewById(R.id.txEmergencyCount);
 
         aaHeightUnit = new ArrayAdapter<String>(UpdateProfileActivity.this, R.layout.sp_format, heightUnit);
         aaHeightUnit.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -134,6 +141,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
             });
             alertDialog.show();
+        });
+        constraintLayout4.setOnClickListener(v->{
+            Intent intent = new Intent(UpdateProfileActivity.this, EmergencyListActivity.class);
+            startActivity(intent);
         });
         txSave.setOnClickListener(v -> {
             EditText[] editTexts = {etCreateEmail, etCreateFirstName, etCreateLastName, etCreateContact, etCreateHeight, etCreateWeight};
@@ -238,6 +249,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
             JSONObject reader = new JSONObject(json);
             int responseStatus = reader.getInt("status");
             if (responseStatus == 200) {
+                Gson gson = new Gson();
+
                 if (!LoggedUser.getInstance().getAuth().equals("SSO"))
                     Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.PASSWORD_KEY, etCreatePassword.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.FN_KEY, etCreateFirstName.getText().toString().trim());
@@ -248,7 +261,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.PHONE_KEY, etCreateContact.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.WEIGHT_KEY, etCreateWeight.getText().toString().trim());
                 Prefs.getInstance().setUser(UpdateProfileActivity.this, Prefs.HEIGHT_KEY, etCreateHeight.getText().toString().trim() + "@" + etHeightUnit.getSelectedItem().toString());
-
+                Prefs.getInstance().setUser(UpdateProfileActivity.this,Prefs.EMERGENCY,gson.toJson(Helper.getInstance().getTempEmergencySet()));
                 Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_LONG).show();
                 finish();
             } else {
@@ -408,5 +421,13 @@ public class UpdateProfileActivity extends AppCompatActivity {
             }
         }).start();
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        txEmergencyCount.setText(
+                Helper.getInstance().getTempEmergencySet().size() == 0 ? "No Contact Added":
+                        String.valueOf(Helper.getInstance().getTempEmergencySet().size()).concat(" Contact(s) Added")
+        );
     }
 }

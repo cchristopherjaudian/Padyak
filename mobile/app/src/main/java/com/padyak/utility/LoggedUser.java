@@ -17,6 +17,7 @@ public class LoggedUser {
     private String height;
     private String refreshToken;
     private String auth;
+    private String emergencyContacts;
 
     public static LoggedUser loggedUser;
 
@@ -27,7 +28,7 @@ public class LoggedUser {
     public LoggedUser() {
     }
 
-    public LoggedUser(boolean is_admin, String uuid, String password, String imgUrl, String firstName, String lastName, String email, String gender, String birthDate, String phoneNumber, String weight, String height, String refreshToken, String auth) {
+    public LoggedUser(boolean is_admin, String uuid, String password, String imgUrl, String firstName, String lastName, String email, String gender, String birthDate, String phoneNumber, String weight, String height, String refreshToken, String auth, String emergencyContacts) {
         this.is_admin = is_admin;
         this.uuid = uuid;
         this.password = password;
@@ -42,6 +43,7 @@ public class LoggedUser {
         this.height = height;
         this.refreshToken = refreshToken;
         this.auth = auth;
+        this.emergencyContacts = emergencyContacts;
     }
 
     public String getPassword() {
@@ -164,6 +166,14 @@ public class LoggedUser {
         this.height = height;
     }
 
+    public String getEmergencyContacts() {
+        return emergencyContacts;
+    }
+
+    public void setEmergencyContacts(String emergencyContacts) {
+        this.emergencyContacts = emergencyContacts;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -194,6 +204,7 @@ public class LoggedUser {
                 ", height='" + height + '\'' +
                 ", refreshToken='" + refreshToken + '\'' +
                 ", auth='" + auth + '\'' +
+                ", emergencyContacts='" + emergencyContacts + '\'' +
                 '}';
     }
 }

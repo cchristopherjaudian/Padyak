@@ -26,20 +26,25 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
 import com.padyak.R;
+import com.padyak.dto.EmergencyContact;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.Prefs;
 import com.padyak.utility.VolleyHttp;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SsoLoginActivity extends AppCompatActivity {
@@ -213,7 +218,18 @@ public class SsoLoginActivity extends AppCompatActivity {
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.ID_KEY, userObject.getString(Prefs.ID_KEY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.GENDER_KEY, userObject.getString(Prefs.GENDER_KEY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.EMAIL_KEY, userObject.getString(Prefs.EMAIL_KEY));
+                            Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.EMERGENCY, userObject.getString(Prefs.EMERGENCY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.AUTH, "IN_APP");
+
+                            Gson gson = new Gson();
+                            EmergencyContact[] emergencyContacts = gson.fromJson(userObject.getString(Prefs.EMERGENCY), EmergencyContact[].class);
+                            List<EmergencyContact> emergencyContactList = Arrays.asList(emergencyContacts);
+                            emergencyContactList.forEach(contact ->{
+                                Helper.getInstance().addTempEmergencyContact(
+                                        new EmergencyContact(contact.getFirstname(),contact.getLastname(),contact.getContact())
+                                );
+                            });
+
                             Log.d(Helper.getInstance().log_code, "authInApp LoggedUser: " +LoggedUser.getLoggedUser().toString());
                             Log.d(Helper.getInstance().log_code, "authInApp LoggedUser: " +LoggedUser.getLoggedUser().toString());
                             startActivity(intent);
