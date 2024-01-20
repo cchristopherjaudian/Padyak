@@ -18,6 +18,7 @@ import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnCalendarPageChangeListener;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
+import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.dto.CalendarEvent;
 import com.padyak.utility.Helper;
@@ -45,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class frmEventCalendar extends AppCompatActivity {
     ProgressDialog progressDialog;
@@ -58,6 +60,7 @@ public class frmEventCalendar extends AppCompatActivity {
     List<Calendar> calendars;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     Map<String, CalendarEvent> calendarMap;
+    List<CalendarEvent> calendarEventList;
     String selectedCalendarDate;
 
     @SuppressLint("ResourceType")
@@ -84,10 +87,20 @@ public class frmEventCalendar extends AppCompatActivity {
         btnViewEvent.setOnClickListener((e) -> {
             if (selectedCalendarDate.isEmpty()) return;
             if (calendarMap.get(selectedCalendarDate) == null) return;
-
-            Intent intent = new Intent(frmEventCalendar.this, frmEventInfo.class);
+            List<CalendarEvent> filteredList = calendarEventList.stream()
+                    .filter(c -> c.getEventDate().equals(selectedCalendarDate))
+                    .collect(Collectors.toList());
+            Intent intent;
             Bundle bundle = new Bundle();
-            bundle.putString("eventId", calendarMap.get(selectedCalendarDate).getEventId());
+            if(filteredList.size() > 1){
+                intent = new Intent(frmEventCalendar.this, EventListActivity.class);
+                Gson gson = new Gson();
+                String filtererListJson = gson.toJson(filteredList);
+                bundle.putString("filtererListJson", filtererListJson);
+            } else{
+                intent = new Intent(frmEventCalendar.this, frmEventInfo.class);
+                bundle.putString("eventId", calendarMap.get(selectedCalendarDate).getEventId());
+            }
             intent.putExtras(bundle);
             startActivity(intent);
         });
@@ -114,19 +127,27 @@ public class frmEventCalendar extends AppCompatActivity {
     }
 
     private void loadEvent(Date d) {
-        Log.d("Log_Padyak", "Starting loadEvent");
         selectedCalendarDate = simpleDateFormat.format(d);
-        if (calendarMap.containsKey(selectedCalendarDate)) {
-            CalendarEvent findEvent = calendarMap.get(selectedCalendarDate);
-            txCalendarEventTitle.setText(findEvent.getEventName());
-        } else {
-            txCalendarEventTitle.setText("No event registered");
+        List<CalendarEvent> filteredList = calendarEventList.stream()
+                .filter(c -> c.getEventDate().equals(selectedCalendarDate))
+                .collect(Collectors.toList());
+        if(filteredList.size() > 1){
+            txCalendarEventTitle.setText(String.valueOf(filteredList.size()).concat(" events registered"));
+        } else{
+            if (calendarMap.containsKey(selectedCalendarDate)) {
+                CalendarEvent findEvent = calendarMap.get(selectedCalendarDate);
+                txCalendarEventTitle.setText(findEvent.getEventName());
+            } else {
+                txCalendarEventTitle.setText("No event registered");
+            }
         }
-        Log.d("Log_Padyak", "Ending loadEvent");
+
+
+
     }
 
     private void loadCalendar() {
-        Log.d("Log_Padyak", "Starting loadCalendar");
+
         progressDialog = Helper.getInstance().progressDialog(frmEventCalendar.this, "Retrieving events.");
         progressDialog.show();
         calendarView.setOnForwardPageChangeListener(null);
@@ -136,6 +157,7 @@ public class frmEventCalendar extends AppCompatActivity {
             events = new ArrayList<>();
             calendars = new ArrayList<>();
             calendarMap = new HashMap<>();
+            calendarEventList = new ArrayList<>();
 
             String selectedYear = String.valueOf(calendarView.getCurrentPageDate().get(Calendar.YEAR));
             String monthName = Helper.getInstance().toTitleCase(Month.of(calendarView.getCurrentPageDate().get(Calendar.MONTH) + 1).toString().toLowerCase());
@@ -164,6 +186,7 @@ public class frmEventCalendar extends AppCompatActivity {
                     calendarEvent.setIs_done(false);
                     calendarEvent.setEventRegistrar(null);
                     calendarMap.put(eventObject.getString("eventDate"), calendarEvent);
+                    calendarEventList.add(calendarEvent);
                 }
                 runOnUiThread(() -> {
                     calendarView.setHighlightedDays(calendars);
