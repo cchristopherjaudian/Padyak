@@ -61,7 +61,6 @@ public class adapterEventList extends RecyclerView.Adapter<adapterEventList.view
 
     public class viewHolder extends RecyclerView.ViewHolder {
         TextView txEventTitle, txEventDate;
-        CheckBox chkSelect;
         ImageView imgEventImage;
 
         public viewHolder(@NonNull View itemView) {

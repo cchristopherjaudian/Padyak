@@ -27,17 +27,17 @@ import java.util.regex.*;
 public class Helper {
     static Helper helper;
     final public String log_code = "Log_Padyak";
-    static Set<EmergencyContact> tempEmergencySet;
+    static List<EmergencyContact> tempEmergencySet;
     public Helper() {
     }
 
 
     public static Helper getInstance(){
         if(helper == null) helper = new Helper();
-        if(tempEmergencySet == null) tempEmergencySet = new HashSet<>();
+        if(tempEmergencySet == null) tempEmergencySet = new ArrayList<>();
         return helper;
     }
-    public Set<EmergencyContact> getTempEmergencySet(){
+    public List<EmergencyContact> getTempEmergencySet(){
         return tempEmergencySet;
     }
     public void addTempEmergencyContact(EmergencyContact emergencyContact){
@@ -50,7 +50,7 @@ public class Helper {
         return tempEmergencySet.stream().anyMatch(contact -> contact.getContact().equals(phoneNumber));
     }
     public void resetEmergencyContacts(){
-        tempEmergencySet = new HashSet<>();
+        tempEmergencySet = new ArrayList<>();
     }
     public boolean checkString(String input) {
         String pattern = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$";
