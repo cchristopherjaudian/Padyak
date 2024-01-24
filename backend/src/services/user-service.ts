@@ -1,261 +1,298 @@
 import bcrypt from 'bcrypt';
 import {
-    AuthSource,
-    IUserModel,
-    TCreateInappProfile,
-    TInappAuth,
-    TUserProfile,
+  AuthSource,
+  IUserModel,
+  TCreateInappProfile,
+  TInappAuth,
+  TUserProfile,
 } from '../database/models/user';
 import JsonWebToken from './token-service';
 import UserRepository, {
-    TForgotPasssword,
-    TUpdateUser,
+  TForgotPasssword,
+  TUpdateUser,
 } from '../repositories/user-repository';
 import UserMapper from '../lib/mappers/user-mapper';
 import {
-    AuthenticationError,
-    BadRequestError,
-    NotFoundError,
-    ResourceConflictError,
+  AuthenticationError,
+  BadRequestError,
+  NotFoundError,
+  ResourceConflictError,
 } from '../lib/custom-errors/class-errors';
 
+// // Imports the Google Cloud Tasks library.
+// import { CloudTasksClient } from '@google-cloud/tasks';
+
+// // Instantiates a client.
+// const client = new CloudTasksClient();
+
+// // TODO(developer): Uncomment these lines and replace with your values.
+// const project = 'padyak-playground';
+// const queue = 'test-qeue';
+// const location = 'asia-east1';
+// const testPayload = 'hello';
+
+// // Construct the fully qualified queue name.
+// const parent = client.queuePath(project, location, queue);
+
 class UserService {
-    private _repository = new UserRepository();
-    private _mapper = new UserMapper();
+  private _repository = new UserRepository();
+  private _mapper = new UserMapper();
 
-    public async getUsers() {
-        try {
-            return await this._repository.list();
-        } catch (error) {
-            throw error;
-        }
+  public async getUsers() {
+    try {
+      return await this._repository.list();
+    } catch (error) {
+      throw error;
     }
+  }
 
-    public async updateUser(payload: TUpdateUser) {
-        try {
-            if (payload?.password) {
-                payload.password = await bcrypt.hashSync(payload.password, 10);
-            }
-            const updatedUser = await this._repository.update(payload);
-            return updatedUser;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    public async forgotPassword(payload: TForgotPasssword) {
-        try {
-            const user = await this._repository.getUserByContact(
-                payload.contactNumber as string,
-                AuthSource.IN_APP
-            );
-            if (payload?.password) {
-                payload.password = await bcrypt.hashSync(payload.password, 10);
-            }
-
-            const updatedUser = await this._repository.update({
-                ...user,
-                ...payload,
-            });
-            return updatedUser;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    public async createInappProfile(payload: TCreateInappProfile) {
-        const hasEmail = await this._repository.findUserByEmail(
-            payload.emailAddress,
-            payload.source
-        );
-        if (hasEmail) throw new ResourceConflictError('Email already exists.');
-
-        return this._repository.update(payload);
-    }
-
-    public async createUserProfile(payload: TUserProfile) {
-        const isExists = await this._repository.getUserByContact(
-            payload.contactNumber,
-            payload.source
-        );
-        if (isExists) throw new ResourceConflictError('User already exists.');
-
-        const isEmailExists = await this._repository.findUserByEmail(
-            payload.emailAddress,
-            payload.source
-        );
-        if (isEmailExists) {
-            throw new ResourceConflictError('User already exists.');
-        }
-
+  public async updateUser(payload: TUpdateUser) {
+    try {
+      if (payload?.password) {
         payload.password = await bcrypt.hashSync(payload.password, 10);
-        const newUser = await this._repository.create(
-            this._mapper.createUser(payload) as IUserModel
-        );
-
-        return newUser;
+      }
+      const updatedUser = await this._repository.update(payload);
+      return updatedUser;
+    } catch (error) {
+      throw error;
     }
+  }
+
+  public async forgotPassword(payload: TForgotPasssword) {
+    try {
+      const user = await this._repository.getUserByContact(
+        payload.contactNumber as string,
+        AuthSource.IN_APP
+      );
+      if (payload?.password) {
+        payload.password = await bcrypt.hashSync(payload.password, 10);
+      }
+
+      const updatedUser = await this._repository.update({
+        ...user,
+        ...payload,
+      });
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async createInappProfile(payload: TCreateInappProfile) {
+    const hasEmail = await this._repository.findUserByEmail(
+      payload.emailAddress,
+      payload.source
+    );
+    if (hasEmail) throw new ResourceConflictError('Email already exists.');
+
+    return this._repository.update(payload);
+  }
+
+  public async createUserProfile(payload: TUserProfile) {
+    const isExists = await this._repository.getUserByContact(
+      payload.contactNumber,
+      payload.source
+    );
+    if (isExists) throw new ResourceConflictError('User already exists.');
+
+    const isEmailExists = await this._repository.findUserByEmail(
+      payload.emailAddress,
+      payload.source
+    );
+    if (isEmailExists) {
+      throw new ResourceConflictError('User already exists.');
+    }
+
+    payload.password = await bcrypt.hashSync(payload.password, 10);
+    const newUser = await this._repository.create(
+      this._mapper.createUser(payload) as IUserModel
+    );
+
+    return newUser;
+  }
 }
 
 class UserAuthService {
-    private _repo = new UserRepository();
-    private _jwt = new JsonWebToken();
-    private _mapper = new UserMapper();
+  private _repo = new UserRepository();
+  private _jwt = new JsonWebToken();
+  private _mapper = new UserMapper();
 
-    public async getUserSsoEmail(email: string, source: AuthSource) {
-        try {
-            const user = await this._repo.findUserByEmail(email, source);
+  public async getUserSsoEmail(email: string, source: AuthSource) {
+    try {
+      const user = await this._repo.findUserByEmail(email, source);
 
-            if (!user) throw new NotFoundError('User does not exists.');
+      if (!user) throw new NotFoundError('User does not exists.');
 
-            const token = await this._jwt.sign({
-                id: user.id,
-                source: user.source,
-            });
+      const token = await this._jwt.sign({
+        id: user.id,
+        source: user.source,
+      });
 
-            return {
-                user,
-                token,
-            };
-        } catch (error) {
-            throw error;
-        }
+      return {
+        user,
+        token,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getInappAuth(payload: Record<string, unknown>) {
+    try {
+      console.log('payload', payload);
+      const user = await this._repo.getInappUser(payload.contact as string);
+
+      if (!user) throw new NotFoundError('User does not exists.');
+
+      const { isAdmin, ...userObject } = user;
+      const isMatched = await bcrypt.compareSync(
+        payload.password as string,
+        user.password as string
+      );
+      if (!isMatched) {
+        throw new AuthenticationError('Wrong contact or password');
+      }
+
+      const admin = {} as { isAdmin: boolean };
+      if (isAdmin) {
+        admin.isAdmin = isAdmin;
+      }
+
+      const token = await this._jwt.sign({
+        id: user.id,
+        source: user.source,
+      });
+
+      return { user: { ...userObject, ...admin }, token };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async signupInapp(payload: TInappAuth) {
+    const isExists = await this._repo.getUserByContact(
+      payload.contactNumber,
+      payload.source
+    );
+    if (isExists) throw new NotFoundError('User already exists.');
+    payload.password = await bcrypt.hashSync(payload.password, 10);
+    const newUser = await this._repo.create(
+      this._mapper.createUser(payload) as IUserModel
+    );
+
+    const token = await this._jwt.sign({
+      id: newUser.id,
+      source: newUser.source,
+    });
+
+    return {
+      token,
+      user: {
+        contactNumber: payload.contactNumber,
+        source: payload.source,
+      },
+    };
+  }
+
+  public async login(payload: TInappAuth) {
+    const user = await this._repo.getUserByContact(
+      payload.contactNumber,
+      payload.source
+    );
+    if (!user) {
+      throw new BadRequestError('Wrong username or password.');
     }
 
-    public async getInappAuth(payload: Record<string, unknown>) {
-        try {
-            console.log('payload', payload);
-            const user = await this._repo.getInappUser(
-                payload.contact as string
-            );
-
-            if (!user) throw new NotFoundError('User does not exists.');
-
-            const { isAdmin, ...userObject } = user;
-            const isMatched = await bcrypt.compareSync(
-                payload.password as string,
-                user.password as string
-            );
-            if (!isMatched) {
-                throw new AuthenticationError('Wrong contact or password');
-            }
-
-            const admin = {} as { isAdmin: boolean };
-            if (isAdmin) {
-                admin.isAdmin = isAdmin;
-            }
-
-            const token = await this._jwt.sign({
-                id: user.id,
-                source: user.source,
-            });
-
-            return { user: { ...userObject, ...admin }, token };
-        } catch (error) {
-            throw error;
-        }
+    const isMatched = await bcrypt.compareSync(
+      payload.password,
+      user?.password as string
+    );
+    if (!isMatched) {
+      throw new BadRequestError('Wrong username or password.');
     }
 
-    public async signupInapp(payload: TInappAuth) {
-        const isExists = await this._repo.getUserByContact(
-            payload.contactNumber,
-            payload.source
-        );
-        if (isExists) throw new NotFoundError('User already exists.');
-        payload.password = await bcrypt.hashSync(payload.password, 10);
-        const newUser = await this._repo.create(
-            this._mapper.createUser(payload) as IUserModel
-        );
+    // const task = {
+    //   httpRequest: {
+    //     httpMethod: 'GET',
+    //     url: 'https://v2-xzkjwxqioa-de.a.run.app/users/test',
+    //   },
+    //   scheduleTime: {},
+    // };
 
-        const token = await this._jwt.sign({
-            id: newUser.id,
-            source: newUser.source,
-        });
+    // const now = Date.now();
+    // console.log('now', (now + 100000) / 1000);
+    // task.scheduleTime = {
+    //   seconds: (now + 100000) / 1000,
+    // };
 
+    // const request = {
+    //   parent: parent,
+    //   task: task,
+    // };
+
+    // console.log('Sending task:');
+    // console.log(task);
+    // // Send create task request.
+    // const [response] = await client.createTask(request as any);
+    // const name = response.name;
+    // console.log(`Created task ${name}`);
+
+    const token = await this._jwt.sign({
+      id: user.id,
+      source: user.source,
+    });
+    return {
+      token,
+      hasProfile: user?.firstname ? true : false,
+      user: {
+        contactNumber: payload.contactNumber,
+        source: payload.source,
+      },
+    };
+  }
+
+  public async authSso(payload: IUserModel): Promise<Record<string, any>> {
+    try {
+      const hasAccount = await this._repo.findUserByEmail(
+        payload.emailAddress,
+        payload.source
+      );
+      if (!hasAccount) {
+        const mappedPayload = this._mapper.createUser(payload);
+        const newUser = await this._repo.create(mappedPayload as IUserModel);
+        const token = await this._jwt.sign({ id: newUser.id });
         return {
-            token,
-            user: {
-                contactNumber: payload.contactNumber,
-                source: payload.source,
-            },
+          auth: true,
+          newData: true,
+          token,
+          user: {
+            firstname: newUser.firstname,
+            photoUrl: newUser.photoUrl,
+            lastname: newUser.lastname,
+            isAdmin: newUser.isAdmin,
+          },
         };
+      }
+
+      const token = await this._jwt.sign({
+        id: hasAccount.id,
+        source: payload.source,
+      });
+      return {
+        auth: true,
+        newData: false,
+        token,
+        user: {
+          firstname: hasAccount.firstname,
+          photoUrl: hasAccount.photoUrl,
+          lastname: hasAccount.lastname,
+          isAdmin: hasAccount.isAdmin,
+        },
+      };
+    } catch (error) {
+      throw error;
     }
-
-    public async login(payload: TInappAuth) {
-        const user = await this._repo.getUserByContact(
-            payload.contactNumber,
-            payload.source
-        );
-        if (!user) {
-            throw new BadRequestError('Wrong username or password.');
-        }
-
-        const isMatched = await bcrypt.compareSync(
-            payload.password,
-            user?.password as string
-        );
-        if (!isMatched) {
-            throw new BadRequestError('Wrong username or password.');
-        }
-
-        const token = await this._jwt.sign({
-            id: user.id,
-            source: user.source,
-        });
-        return {
-            token,
-            hasProfile: user?.firstname ? true : false,
-            user: {
-                contactNumber: payload.contactNumber,
-                source: payload.source,
-            },
-        };
-    }
-
-    public async authSso(payload: IUserModel): Promise<Record<string, any>> {
-        try {
-            const hasAccount = await this._repo.findUserByEmail(
-                payload.emailAddress,
-                payload.source
-            );
-            if (!hasAccount) {
-                const mappedPayload = this._mapper.createUser(payload);
-                const newUser = await this._repo.create(
-                    mappedPayload as IUserModel
-                );
-                const token = await this._jwt.sign({ id: newUser.id });
-                return {
-                    auth: true,
-                    newData: true,
-                    token,
-                    user: {
-                        firstname: newUser.firstname,
-                        photoUrl: newUser.photoUrl,
-                        lastname: newUser.lastname,
-                        isAdmin: newUser.isAdmin,
-                    },
-                };
-            }
-
-            const token = await this._jwt.sign({
-                id: hasAccount.id,
-                source: payload.source,
-            });
-            return {
-                auth: true,
-                newData: false,
-                token,
-                user: {
-                    firstname: hasAccount.firstname,
-                    photoUrl: hasAccount.photoUrl,
-                    lastname: hasAccount.lastname,
-                    isAdmin: hasAccount.isAdmin,
-                },
-            };
-        } catch (error) {
-            throw error;
-        }
-    }
+  }
 }
 
 export { UserService, UserAuthService };
