@@ -32,6 +32,21 @@ export type TRawSendAlert = {
   sender: Pick<IUserModel, 'id' | 'firstname' | 'lastname' | 'photoUrl'>;
 };
 
+export type TNotifyAdmin = {
+  id: string;
+  createdAt: string;
+  to: string;
+  displayName: string;
+  level: string;
+  location: string;
+  uid: string;
+  longitude: string;
+  latitude: string;
+  status: IAlertStatuses;
+  // stringified user object props {id| firstname | lastname|photoUrl}
+  sender: string;
+};
+
 export type TUpdateAlertStatus = {
   id: string;
   status: IAlertStatuses;

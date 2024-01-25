@@ -6,6 +6,7 @@ import {
   getUserAlerts,
   patchAlertSchema,
   sendAlertSchema,
+  sendNotificationSchema,
 } from '../lib/joi-schemas/alert-schema';
 
 const router = express.Router();
@@ -24,9 +25,18 @@ router.post(
   '/admin/notify',
   [
     tokenMiddleware.endUserValidate as any,
-    // requestSchemaValidate(sendAlertSchema),
+    requestSchemaValidate(sendAlertSchema),
   ],
   alertController.notifyAdmin
+);
+
+router.post(
+  '/notify',
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(sendNotificationSchema),
+  ],
+  alertController.sendNotification
 );
 
 router.patch(

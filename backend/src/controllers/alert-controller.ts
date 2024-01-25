@@ -56,14 +56,38 @@ const getUserAlerts = catchAsync(async (req: Request, res: Response) => {
 });
 
 const notifyAdmin = catchAsync(async (req: Request, res: Response) => {
-  const alerts = await userAlertsService.notifyAdmin();
+  const request = req as IRequestWithUser;
+  const { id, firstname, lastname, photoUrl } = request.user;
+  const alerts = await userAlertsService.notifyAdmin({
+    ...req.body,
+    uid: request.user.id,
+    displayName: `${request.user.firstname} ${request.user.firstname}`,
+    sender: JSON.stringify({ id, firstname, lastname, photoUrl }),
+  });
 
   responseObject.createResponse(
     res,
     httpStatus.OK,
-    ResponseCodes.DATA_RETRIEVED,
+    ResponseCodes.ALERT_CREATED,
     alerts
   );
 });
 
-export default { sendAlert, updateAlertStatus, getUserAlerts, notifyAdmin };
+const sendNotification = catchAsync(async (req: Request, res: Response) => {
+  const alerts = await userAlertsService.sendNotif(req.body);
+
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.ALERT_CREATED,
+    alerts
+  );
+});
+
+export default {
+  sendAlert,
+  updateAlertStatus,
+  getUserAlerts,
+  notifyAdmin,
+  sendNotification,
+};

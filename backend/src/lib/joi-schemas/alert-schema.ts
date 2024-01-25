@@ -1,27 +1,37 @@
 import * as Joi from 'joi';
 
 const sendAlertSchema = Joi.object({
-    to: Joi.string().required(),
-    level: Joi.number().required(),
-    location: Joi.string().required(),
-    longitude: Joi.any().required(),
-    latitude: Joi.any().required(),
-    status: Joi.string()
-        .valid(...['ACTIVE', 'COMPLETED'])
-        .optional()
-        .default('ACTIVE'),
+  to: Joi.string().required(),
+  level: Joi.any().required(),
+  location: Joi.string().required(),
+  longitude: Joi.any().required(),
+  latitude: Joi.any().required(),
+  status: Joi.string()
+    .valid(...['ACTIVE', 'COMPLETED'])
+    .optional()
+    .default('ACTIVE'),
 });
 
 const patchAlertSchema = Joi.object({
-    status: Joi.string()
-        .valid(...['ACTIVE', 'COMPLETED'])
-        .required(),
+  status: Joi.string()
+    .valid(...['ACTIVE', 'COMPLETED'])
+    .required(),
 });
 
 const getUserAlerts = Joi.object({
-    status: Joi.string()
-        .valid(...['ACTIVE', 'COMPLETED'])
-        .optional(),
+  status: Joi.string()
+    .valid(...['ACTIVE', 'COMPLETED'])
+    .optional(),
 });
 
-export { sendAlertSchema, patchAlertSchema, getUserAlerts };
+const sendNotificationSchema = Joi.object({
+  message: Joi.string().trim().required(),
+  topic: Joi.string().trim().required(),
+});
+
+export {
+  sendAlertSchema,
+  patchAlertSchema,
+  getUserAlerts,
+  sendNotificationSchema,
+};

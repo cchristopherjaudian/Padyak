@@ -4,6 +4,7 @@ import UserAlertsMapper from '../lib/mappers/user-alerts-mapper';
 import AlertRepository from '../repositories/alerts-repository';
 import UserAlertsRepository, {
   TListUserAlerts,
+  TNotifyAdmin,
   TRawSendAlert,
   TUpdateAlertStatus,
   TUserSendAlert,
@@ -53,20 +54,36 @@ class UserAlerts {
     }
   }
 
-  public async notifyAdmin() {
+  public async notifyAdmin(payload: TNotifyAdmin) {
+    console.log('xxxxxx', payload);
     const sent = await firebaseAdmin
       .app()
       .messaging()
       .send({
         android: {
           data: {
-            title: 'Portugal vs. Denmark',
-            body: 'great match!',
+            ...payload,
           },
         },
         topic: 'admin-ack',
       });
     console.log('sentxxxxxx', sent);
+
+    return { sent };
+  }
+
+  public async sendNotif(payload: { message: string; topic: string }) {
+    const sent = await firebaseAdmin
+      .app()
+      .messaging()
+      .send({
+        android: {
+          data: {
+            message: payload.message,
+          },
+        },
+        topic: payload.topic,
+      });
 
     return { sent };
   }
