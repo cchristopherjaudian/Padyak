@@ -107,9 +107,16 @@ class UserAlerts {
       });
 
       await this._repository.create(mappedUserAlert);
+      const users = payload.to.split(',');
       const alerted = await this._alert.sendAlert(sms, {
-        to: payload.to.split(',').map((k) => '63' + k.substring(1)),
+        to: users.map((k) => '63' + k.substring(1)),
         message: message,
+      });
+
+      users.forEach(async (user) => {
+        const sent = await this.sendNotif({ message, topic: user });
+
+        console.log('sent notif', sent);
       });
 
       return alerted;
