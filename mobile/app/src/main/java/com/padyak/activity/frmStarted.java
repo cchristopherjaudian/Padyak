@@ -1,5 +1,7 @@
 package com.padyak.activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -8,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +55,7 @@ public class frmStarted extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
+
         });
         btnAgree.setOnClickListener(v->{
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -61,7 +65,7 @@ public class frmStarted extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-
+            askNotificationPermission();
         });
 
         Prefs.getInstance().getUser(this);
@@ -72,6 +76,12 @@ public class frmStarted extends AppCompatActivity {
         }
 
     }
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (!isGranted) {
+                    Toast.makeText(this, "Padyak will no longer send notifications", Toast.LENGTH_LONG).show();
+                }
+            });
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -85,6 +95,14 @@ public class frmStarted extends AppCompatActivity {
             finish();
         }
 
+    }
+    private void askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
     @Override
     public void onBackPressed() {
