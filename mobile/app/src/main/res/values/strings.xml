@@ -11,4 +11,9 @@
     <string name="trackURL">https://padyak-playground-default-rtdb.asia-southeast1.firebasedatabase.app</string>
     <string name="imgPlaceholder">https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png</string>
     <string name="alert_acknowledge">Your alert has been acknowledged. Please stay where you are and wait for the rescue to arrive</string>
+    <string name="default_notification_channel_id">211</string>
+
+    <string name="admin_alert_topic">admin-ack</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
