@@ -24,13 +24,17 @@ import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.dto.EmergencyContact;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
+import com.padyak.utility.MessagingHelper;
 import com.padyak.utility.Prefs;
 import com.padyak.utility.VolleyHttp;
 
@@ -60,6 +64,8 @@ public class SsoLoginActivity extends AppCompatActivity {
     private BeginSignInRequest signInRequest;
     private static final int REQ_ONE_TAP = 2;
     public static SsoLoginActivity sso;
+    MessagingHelper messagingHelper = MessagingHelper.getInstance();
+    String fcmToken = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,6 +210,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                                 if(userObject.getBoolean("isAdmin") == false){
                                     intent = new Intent(SsoLoginActivity.this, frmMain.class);
                                 } else{
+                                    messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_alert_topic));
                                     intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
                                 }
                                 Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.ADMIN_KEY, userObject.getBoolean(Prefs.ADMIN_KEY));
@@ -220,7 +227,8 @@ public class SsoLoginActivity extends AppCompatActivity {
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.EMAIL_KEY, userObject.getString(Prefs.EMAIL_KEY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.EMERGENCY, userObject.getString(Prefs.EMERGENCY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.AUTH, "IN_APP");
-
+                            requestMessagingToken();
+                            messagingHelper.subscribeMessageTopic(userObject.getString(Prefs.ID_KEY));
                             Gson gson = new Gson();
                             EmergencyContact[] emergencyContacts = gson.fromJson(userObject.getString(Prefs.EMERGENCY), EmergencyContact[].class);
                             List<EmergencyContact> emergencyContactList = Arrays.asList(emergencyContacts);
@@ -244,7 +252,19 @@ public class SsoLoginActivity extends AppCompatActivity {
             }
         }).start();
     }
-
+    public String requestMessagingToken(){
+        fcmToken = "";
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(Helper.getInstance().log_code, "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+                    fcmToken = task.getResult();
+                    Log.d(Helper.getInstance().log_code, "requestMessagingToken: " + fcmToken);
+                });
+        return fcmToken;
+    }
     protected void onActivityResult(int requestCode, int resultCode,
                                     @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -356,6 +376,8 @@ public class SsoLoginActivity extends AppCompatActivity {
                     Log.d(Helper.getInstance().log_code, "validateLogin: " + LoggedUser.getInstance().toString());
                     Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY,userObject.getString("photoUrl"));
                     Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.ADMIN_KEY,false);
+                    requestMessagingToken();
+                    messagingHelper.subscribeMessageTopic(userObject.getString(Prefs.ID_KEY));
                     if(userObject.has("isAdmin")){
                         if(!userObject.getBoolean("isAdmin")){
                             intent = new Intent(SsoLoginActivity.this, frmMain.class);
@@ -363,6 +385,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                             if(userObject.getBoolean("isAdmin") == false){
                                 intent = new Intent(SsoLoginActivity.this, frmMain.class);
                             } else{
+                                messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_alert_topic));
                                 intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
                             }
                         }

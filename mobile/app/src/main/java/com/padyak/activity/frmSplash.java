@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.padyak.R;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
+import com.padyak.utility.MessagingHelper;
 import com.padyak.utility.Prefs;
 import com.padyak.utility.VolleyHttp;
 
@@ -54,6 +55,7 @@ public class frmSplash extends AppCompatActivity {
     private BeginSignInRequest signInRequest;
     private static final int REQ_ONE_TAP = 2;
     ProgressDialog progressDialog;
+    MessagingHelper messagingHelper = MessagingHelper.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
