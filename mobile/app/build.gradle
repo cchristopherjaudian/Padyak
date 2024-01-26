@@ -55,4 +55,5 @@ dependencies {
     implementation 'com.ethanhua:skeleton:1.1.2'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation "com.google.firebase:firebase-auth"
+    implementation 'com.github.abdularis:TapHoldUpButton:0.1.2'
 }
