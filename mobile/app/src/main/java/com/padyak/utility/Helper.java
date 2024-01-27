@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.*;
 public class Helper {
@@ -36,6 +37,11 @@ public class Helper {
         if(helper == null) helper = new Helper();
         if(tempEmergencySet == null) tempEmergencySet = new ArrayList<>();
         return helper;
+    }
+    public String generatePinCode(){
+        Random random = new Random();
+        int number = random.nextInt(9000) + 1000;
+        return String.valueOf(number);
     }
     public List<EmergencyContact> getTempEmergencySet(){
         return tempEmergencySet;
