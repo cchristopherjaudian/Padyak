@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.padyak.R;
+import com.padyak.dto.FindLocation;
 import com.padyak.dto.Location;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
@@ -112,102 +113,89 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
         progressDialog.show();
         new Thread(()->{
             fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(this, new OnSuccessListener<android.location.Location>() {
-                        @Override
-                        public void onSuccess(android.location.Location location) {
-                            if (location != null) {
-                                double _lat = location.getLatitude();
-                                double _long = location.getLongitude();
-                                myPos = new LatLng(_lat, _long);
-
-                                List<Location> registeredLocations = new ArrayList<>();
-                                VolleyHttp volleyHttp = new VolleyHttp("",null,"location",frmFindLocation.this);
-                                JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-                                JSONArray dataArray = responseJSON.optJSONArray("data");
-                                for(int i = 0;i < dataArray.length();i++){
-                                    try {
-                                        JSONObject locationObject = dataArray.getJSONObject(i);
-                                        if(locationObject.get("type").equals(findCode)){
-                                            Location locationClass = new Location();
-                                            locationClass.setId(locationObject.getString("id"));
-                                            locationClass.setType(locationObject.getString("type"));
-                                            locationClass.setLatitude(locationObject.getDouble("latitude"));
-                                            locationClass.setLongitude(locationObject.getDouble("longitude"));
-                                            locationClass.setName(locationObject.getString("name"));
-                                            locationClass.setPhotoUrl(locationObject.getString("photoUrl"));
-                                            registeredLocations.add(locationClass);
-                                        }
-                                    } catch (JSONException e) {
-                                        Log.d(Helper.getInstance().log_code, "loadNearest: " + e.getMessage());
+                    .addOnSuccessListener(this, location -> {
+                        if (location != null) {
+                            double _lat = location.getLatitude();
+                            double _long = location.getLongitude();
+                            myPos = new LatLng(_lat, _long);
+                            List<FindLocation> findLocationList = new ArrayList<>();
+                            List<Location> registeredLocations = new ArrayList<>();
+                            VolleyHttp volleyHttp = new VolleyHttp("",null,"location",frmFindLocation.this);
+                            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+                            JSONArray dataArray = responseJSON.optJSONArray("data");
+                            for(int i = 0;i < dataArray.length();i++){
+                                try {
+                                    JSONObject locationObject = dataArray.getJSONObject(i);
+                                    if(locationObject.get("type").equals(findCode)){
+                                        Location locationClass = new Location();
+                                        locationClass.setId(locationObject.getString("id"));
+                                        locationClass.setType(locationObject.getString("type"));
+                                        locationClass.setLatitude(locationObject.getDouble("latitude"));
+                                        locationClass.setLongitude(locationObject.getDouble("longitude"));
+                                        locationClass.setName(locationObject.getString("name"));
+                                        locationClass.setPhotoUrl(locationObject.getString("photoUrl"));
+                                        registeredLocations.add(locationClass);
                                     }
+                                } catch (JSONException e) {
+                                    Log.d(Helper.getInstance().log_code, "loadNearest: " + e.getMessage());
                                 }
-                                registeredLocations.forEach(l->{
-
-                                    String fromLocationURL = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + l.getLatitude() + "%2C" + l.getLongitude() + "&origins=" + myPos.latitude + "%2C" + myPos.longitude + "&mode=walking&key=" + getString(R.string.maps_publicapi);
-                                    VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmFindLocation.this);
-                                    JSONObject distanceObject = fromVolley.getJsonResponse(false);
-                                    computed = 0d;
-
-                                    try {
-                                        JSONObject distance = distanceObject.getJSONArray("rows")
-                                                .getJSONObject(0)
-                                                .getJSONArray("elements")
-                                                .getJSONObject(0)
-                                                .getJSONObject("distance");
-                                        JSONObject duration = distanceObject.getJSONArray("rows")
-                                                .getJSONObject(0)
-                                                .getJSONArray("elements")
-                                                .getJSONObject(0)
-                                                .getJSONObject("duration");
-
-                                        computed = distance.getDouble("value") / 1000;
-                                        distanceTimeRaw = duration.getInt("value")/60/60;
-                                        distanceTime = "<" + String.format("%.1f",distanceTimeRaw) + " hr(s)";
-                                    }catch (JSONException e) {
-                                        Log.d(Helper.getInstance().log_code, "onSuccess: " + e.getMessage());
-                                    }
-
-
-                                    //computed = Helper.getInstance().calculateDistance(myPos, new LatLng(l.getLatitude(),l.getLongitude()));
-
-                                    if(lowestDistance == 0d){
-                                        lowestDistance = computed;
-                                        nearestLocation = l;
-                                        lowestDistanceTime = distanceTime;
-                                    } else{
-                                        if(computed < lowestDistance){
-                                            lowestDistance = computed;
-                                            nearestLocation = l;
-                                            lowestDistanceTime = distanceTime;
-                                        }
-                                    }
-                                });
-                                runOnUiThread(()->{
-                                    progressDialog.dismiss();
-                                    txNearestAddress.setText(nearestLocation.getName());
-                                    txNearestDistance.setText(String.format("%.2f",lowestDistance) + " km");
-                                    txNearestTime.setText(lowestDistanceTime);
-                                    nearestLatLng = new LatLng(nearestLocation.getLatitude(),nearestLocation.getLongitude());
-                                    Picasso.get().load(nearestLocation.getPhotoUrl()).into(imgNearestImage);
-                                    gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestLatLng, 12f));
-
-                                    Marker markerStart = gMap.addMarker(new MarkerOptions()
-                                            .position(myPos).title("Current Location"));
-                                    Marker markerDestination = gMap.addMarker(new MarkerOptions()
-                                            .position(nearestLatLng)
-                                            .title("Destination")
-                                            .snippet(nearestLocation.getName()));
-                                    markerDestination.showInfoWindow();
-                                });
-
-                            } else{
-                                runOnUiThread(()->{
-                                    progressDialog.dismiss();
-                                    Toast.makeText(frmFindLocation.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
-                                    finish();
-                                });
-
                             }
+                            registeredLocations.forEach(l->{
+
+                                String fromLocationURL = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + l.getLatitude() + "%2C" + l.getLongitude() + "&origins=" + myPos.latitude + "%2C" + myPos.longitude + "&mode=walking&key=" + getString(R.string.maps_publicapi);
+                                VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmFindLocation.this);
+                                JSONObject distanceObject = fromVolley.getJsonResponse(false);
+                                computed = 0d;
+
+                                try {
+                                    JSONObject distance = distanceObject.getJSONArray("rows")
+                                            .getJSONObject(0)
+                                            .getJSONArray("elements")
+                                            .getJSONObject(0)
+                                            .getJSONObject("distance");
+                                    JSONObject duration = distanceObject.getJSONArray("rows")
+                                            .getJSONObject(0)
+                                            .getJSONArray("elements")
+                                            .getJSONObject(0)
+                                            .getJSONObject("duration");
+
+                                    computed = distance.getDouble("value") / 1000;
+                                    distanceTimeRaw = duration.getInt("value")/60/60;
+                                    distanceTime = "<" + String.format("%.1f",distanceTimeRaw) + " hr(s)";
+                                    if(computed <= 1d){
+                                        findLocationList.add(
+                                                new FindLocation(l.getLatitude(),l.getLongitude(),l.getName(),l.getPhotoUrl(),computed,distanceTime)
+                                        );
+                                    }
+                                }catch (JSONException e) {
+                                    Log.d(Helper.getInstance().log_code, "onSuccess: " + e.getMessage());
+                                }
+                            });
+                            runOnUiThread(()->{
+                                progressDialog.dismiss();
+                                if(findLocationList.size() == 0){
+                                    Toast.makeText(this, "No nearby " + findCategory + " found", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else{
+                                    findLocationList.forEach(find->{
+                                        LatLng findLatLng = new LatLng(find.getLatitude(),find.getLongitude());
+                                        gMap.addMarker(new MarkerOptions()
+                                                        .position(findLatLng)
+                                                        .title(find.getLocationName())
+                                                        .snippet(find.getLocationName()))
+                                                .showInfoWindow();
+                                    });
+                                    gMap.addMarker(new MarkerOptions()
+                                            .position(myPos).title("Current Location"));
+                                }
+                            });
+                        } else{
+                            runOnUiThread(()->{
+                                progressDialog.dismiss();
+                                Toast.makeText(frmFindLocation.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
+                                finish();
+                            });
+
                         }
                     });
         }).start();
@@ -217,6 +205,7 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
+        gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         loadNearest();
     }
 
