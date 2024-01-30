@@ -6,6 +6,7 @@ import UserAlertsRepository, {
   TListUserAlerts,
   TNotifyAdmin,
   TRawSendAlert,
+  TSender,
   TUpdateAlertStatus,
   TUserSendAlert,
 } from '../repositories/user-alerts-repository';
@@ -55,7 +56,6 @@ class UserAlerts {
   }
 
   public async notifyAdmin(payload: TNotifyAdmin) {
-    console.log('xxxxxx', payload);
     const sent = await firebaseAdmin
       .app()
       .messaging()
@@ -91,6 +91,8 @@ class UserAlerts {
   public async sendAlert(sms: ISmsAlert, payload: TRawSendAlert) {
     try {
       const alert = await this._alert.getAlert(payload.level);
+      const sender = JSON.parse(payload.sender as string) as TSender;
+      payload.displayName = `${sender.firstname} ${sender.lastname}`;
       const message = `${this.baseMessage(payload)}, ${alert.message} ${
         payload.location
       }`;
@@ -103,7 +105,7 @@ class UserAlerts {
         longitude: payload.longitude,
         latitude: payload.latitude,
         status: payload.status,
-        sender: payload.sender,
+        sender,
       });
 
       await this._repository.create(mappedUserAlert);

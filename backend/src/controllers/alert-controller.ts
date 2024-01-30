@@ -18,8 +18,6 @@ const sendAlert = catchAsync(async (req: Request, res: Response) => {
   const alert = await userAlertsService.sendAlert(smsInstance, {
     ...req.body,
     uid: request.user.id,
-    displayName: `${request.user.firstname} ${request.user.firstname}`,
-    sender: { id, firstname, lastname, photoUrl },
   });
 
   responseObject.createResponse(

@@ -10,6 +10,7 @@ const sendAlertSchema = Joi.object({
     .valid(...['ACTIVE', 'COMPLETED'])
     .optional()
     .default('ACTIVE'),
+  sender: Joi.string().trim().required(),
 });
 
 const patchAlertSchema = Joi.object({

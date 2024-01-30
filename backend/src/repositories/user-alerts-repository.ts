@@ -4,6 +4,10 @@ import { IAlertStatuses } from '../database/models/alert';
 import { IUserAlerts } from '../database/models/user-alerts';
 import { IUserModel } from '../database/models/user';
 
+export type TSender = Pick<
+  IUserModel,
+  'id' | 'firstname' | 'lastname' | 'photoUrl'
+>;
 export type TUserSendAlert = {
   id: string;
   createdAt: string;
@@ -15,7 +19,7 @@ export type TUserSendAlert = {
   longitude: number;
   latitude: number;
   status: IAlertStatuses;
-  sender: Pick<IUserModel, 'id' | 'firstname' | 'lastname' | 'photoUrl'>;
+  sender: TSender;
 };
 
 export type TRawSendAlert = {
@@ -29,7 +33,7 @@ export type TRawSendAlert = {
   longitude: number;
   latitude: number;
   status: IAlertStatuses;
-  sender: Pick<IUserModel, 'id' | 'firstname' | 'lastname' | 'photoUrl'>;
+  sender: TSender | string;
 };
 
 export type TNotifyAdmin = {
