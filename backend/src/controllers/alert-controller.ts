@@ -14,7 +14,6 @@ const smsInstance = VonageSMS.getInstance();
 
 const sendAlert = catchAsync(async (req: Request, res: Response) => {
   const request = req as IRequestWithUser;
-  const { id, firstname, lastname, photoUrl } = request.user;
   const alert = await userAlertsService.sendAlert(smsInstance, {
     ...req.body,
     uid: request.user.id,
