@@ -92,6 +92,10 @@ class UserAlerts {
     try {
       const alert = await this._alert.getAlert(payload.level);
       const sender = JSON.parse(payload.sender as string) as TSender;
+      payload.level =
+        typeof payload.level === 'string'
+          ? parseInt(payload.level)
+          : payload.level;
       payload.displayName = `${sender.firstname} ${sender.lastname}`;
       const message = `${this.baseMessage(payload)}, ${alert.message} ${
         payload.location
