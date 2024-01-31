@@ -211,6 +211,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                                     intent = new Intent(SsoLoginActivity.this, frmMain.class);
                                 } else{
                                     messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_alert_topic));
+                                    messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_review_topic));
                                     intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
                                 }
                                 Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.ADMIN_KEY, userObject.getBoolean(Prefs.ADMIN_KEY));
@@ -228,7 +229,8 @@ public class SsoLoginActivity extends AppCompatActivity {
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.EMERGENCY, userObject.getString(Prefs.EMERGENCY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.AUTH, "IN_APP");
                             requestMessagingToken();
-                            messagingHelper.subscribeMessageTopic(userObject.getString(Prefs.ID_KEY));
+                            messagingHelper.subscribeMessageTopic(username);
+                            messagingHelper.subscribeMessageTopic(username.replaceFirst("0","63"));
                             Gson gson = new Gson();
                             EmergencyContact[] emergencyContacts = gson.fromJson(userObject.getString(Prefs.EMERGENCY), EmergencyContact[].class);
                             List<EmergencyContact> emergencyContactList = Arrays.asList(emergencyContacts);
@@ -377,7 +379,8 @@ public class SsoLoginActivity extends AppCompatActivity {
                     Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY,userObject.getString("photoUrl"));
                     Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.ADMIN_KEY,false);
                     requestMessagingToken();
-                    messagingHelper.subscribeMessageTopic(userObject.getString(Prefs.ID_KEY));
+                    messagingHelper.subscribeMessageTopic(LoggedUser.getInstance().getPhoneNumber());
+                    messagingHelper.subscribeMessageTopic(LoggedUser.getInstance().getPhoneNumber().replaceFirst("0","63"));
                     if(userObject.has("isAdmin")){
                         if(!userObject.getBoolean("isAdmin")){
                             intent = new Intent(SsoLoginActivity.this, frmMain.class);
@@ -386,10 +389,11 @@ public class SsoLoginActivity extends AppCompatActivity {
                                 intent = new Intent(SsoLoginActivity.this, frmMain.class);
                             } else{
                                 messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_alert_topic));
+                                messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_review_topic));
                                 intent = new Intent(SsoLoginActivity.this, AdminMainActivity.class);
                             }
                         }
-                        Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY, userObject.getBoolean("isAdmin"));
+                        Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.ADMIN_KEY, userObject.getBoolean("isAdmin"));
                     } else{
                         intent = new Intent(SsoLoginActivity.this, frmMain.class);
                     }
@@ -402,7 +406,8 @@ public class SsoLoginActivity extends AppCompatActivity {
 
             } catch (Exception e) {
                 Log.d(Helper.getInstance().log_code, "onCreate: " + e.getMessage());
-                Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_LONG).show();
+                runOnUiThread(()->Toast.makeText(this, "Failed to authenticate account. Please try again", Toast.LENGTH_LONG).show());
+
             } finally {
                 runOnUiThread(() -> {
                     progressDialog.dismiss();
