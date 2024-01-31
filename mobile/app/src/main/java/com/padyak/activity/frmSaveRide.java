@@ -249,7 +249,7 @@ ProgressDialog progressDialog;
 
         LatLng startPos = new LatLng(startPosLat, startPosLong);
         LatLng endPos = new LatLng(endPosLat, endPosLong);
-
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(endPos, 14.0f));
         Marker markerStart = googleMap.addMarker(new MarkerOptions()
                 .position(startPos));
