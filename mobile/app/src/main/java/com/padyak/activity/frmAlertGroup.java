@@ -22,11 +22,15 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.adapter.adapterAlertGroup;
 import com.padyak.dto.GroupContact;
+import com.padyak.dto.UserAlert;
+import com.padyak.dto.UserAlertLevel;
 import com.padyak.fragment.AlertSendFragment;
 import com.padyak.fragment.ContactSelectFragment;
+import com.padyak.utility.Constants;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -35,10 +39,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class frmAlertGroup extends AppCompatActivity {
     CheckBox chkSelectAll;
@@ -181,47 +187,43 @@ public class frmAlertGroup extends AppCompatActivity {
         progressDialog = Helper.getInstance().progressDialog(frmAlertGroup.this,"Sending alert.");
         progressDialog.show();
         new Thread(()->{
-            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
-                    .addOnSuccessListener(this, location -> {
-                        if (location != null) {
-                            double _lat = location.getLatitude();
-                            double _long = location.getLongitude();
-                            String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + getString(R.string.maps_publicapi);
-                            VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmAlertGroup.this);
-                            String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
+            try {
+                CompletableFuture<Map<String,Object>> locationFuture = Helper.getInstance().getCurrentLocation(frmAlertGroup.this);
+                UserAlertLevel userAlertLevel = new UserAlertLevel(
+                        LoggedUser.getLoggedUser().getUuid(),
+                        Helper.getInstance().formatDate(LocalDateTime.now().toLocalDate().toString()),
+                        Helper.getInstance().formatTime(LocalDateTime.now().toLocalTime().toString()),
+                        LoggedUser.getLoggedUser().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()),
+                        locationFuture.get().get("name").toString(),
+                        Double.parseDouble(locationFuture.get().get("latitude").toString()),
+                        Double.parseDouble(locationFuture.get().get("longitude").toString()),
+                        Constants.alertMap.get(alertLevel),
+                        alertLevel,
+                        recipients,
+                        LoggedUser.getLoggedUser().getImgUrl()
+                );
+                String userAlertPayload = new Gson().toJson(userAlertLevel);
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("message",userAlertPayload);
+                payload.put("topic",getString(R.string.admin_review_topic));
+                Log.d(Helper.getInstance().log_code, "sendSOS: " + payload);
+                VolleyHttp volleyHttp = new VolleyHttp("/notify",payload,"alert",frmAlertGroup.this);
+                String response = volleyHttp.getResponseBody(true);
+                JSONObject reader = new JSONObject(response);
+                int responseStatus = reader.getInt("status");
+                runOnUiThread(()->progressDialog.dismiss());
+                if(responseStatus != 200) throw new Exception("Response Status: " + responseStatus);
+                runOnUiThread(()->{
+                    frmAlertSend.frmAlertSend.finish();
+                    frmAlertInfo.frmAlertInfo.finish();
+                    frmMain.frmMain.showAlert = 1;
+                    finish();
+                });
 
-
-                            Map<String, Object> payload = new HashMap<>();
-                            payload.put("to",recipients);
-                            payload.put("level",alertLevel-1);
-                            payload.put("location",alertAddress);
-                            payload.put("latitude",_lat);
-                            payload.put("longitude",_long);
-
-                            VolleyHttp volleyHttp = new VolleyHttp("",payload,"alert", frmAlertGroup.this);
-                            JSONObject responseJSON = volleyHttp.getJsonResponse(true);
-                            runOnUiThread(()->{
-                                progressDialog.dismiss();
-                                if(responseJSON == null){
-                                    Toast.makeText(frmAlertGroup.this, "Failed to send alert. Please try again", Toast.LENGTH_LONG).show();
-                                } else{
-                                    frmAlertInfo.frmAlertInfo.finish();
-                                    frmAlertSend.frmAlertSend.finish();
-                                    FragmentManager fm = getSupportFragmentManager();
-                                    AlertSendFragment alertSendFragment = AlertSendFragment.newInstance();
-                                    alertSendFragment.setCancelable(false);
-                                    alertSendFragment.show(fm, "AlertSendFragment");
-                                }
-                            });
-
-                        } else{
-                            runOnUiThread(()->{
-                                progressDialog.dismiss();
-                                Toast.makeText(frmAlertGroup.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
-                            });
-
-                        }
-                    });
+            } catch (Exception e) {
+                Log.d(Helper.getInstance().log_code, "sendSOS: " + e.getMessage());
+                runOnUiThread(()-> Toast.makeText(this, "Failed to send SOS. Please try again.", Toast.LENGTH_LONG).show());
+            }
         }).start();
 
     }

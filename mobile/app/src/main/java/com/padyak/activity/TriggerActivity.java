@@ -19,13 +19,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aar.tapholdupbutton.TapHoldUpButton;
+import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.dto.EmergencyContact;
+import com.padyak.dto.UserAlert;
 import com.padyak.fragment.AlertCancelFragment;
 import com.padyak.fragment.ContactSelectFragment;
 import com.padyak.utility.Helper;
+import com.padyak.utility.LoggedUser;
+import com.padyak.utility.VolleyHttp;
 
+import org.json.JSONObject;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class TriggerActivity extends AppCompatActivity {
 
@@ -37,6 +47,7 @@ public class TriggerActivity extends AppCompatActivity {
     TextView txPinCode;
     String generatedOtp;
     ProgressDialog progressDialog;
+    String responseMessage = "";
     public static TriggerActivity triggerActivity;
     List<EmergencyContact> emergencyContactSet = Helper.getInstance().getTempEmergencySet();
     @Override
@@ -46,7 +57,7 @@ public class TriggerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_trigger);
         triggerActivity = this;
 
-        progressDialog = Helper.getInstance().progressDialog(triggerActivity,"Retrieving emergency contacts. Please wait...");
+        progressDialog = Helper.getInstance().progressDialog(triggerActivity,"Retrieving emergency contacts.");
         clMain = findViewById(R.id.clMain);
         clPin = findViewById(R.id.clPin);
         txPinCode = findViewById(R.id.txPinCode);
@@ -56,7 +67,7 @@ public class TriggerActivity extends AppCompatActivity {
         btnTrigger = findViewById(R.id.btnTrigger);
         txRecipients = findViewById(R.id.txRecipients);
         llRecipients = findViewById(R.id.llRecipients);
-        txRecipients.setText("Your SOS will be sent to " + emergencyContactSet.size() + ((emergencyContactSet.size() > 1) ? "people" : "person"));
+        txRecipients.setText("Your SOS will be sent to " + emergencyContactSet.size() + ((emergencyContactSet.size() > 1) ? " people" : " person"));
         btnTrigger.setOnButtonClickListener(new TapHoldUpButton.OnButtonClickListener() {
             @Override
             public void onLongHoldStart(View v) {
@@ -84,17 +95,50 @@ public class TriggerActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
     public void sendSOS(){
         Log.d(Helper.getInstance().log_code, "sendSOS");
+
         ProgressDialog progressDialog = Helper.getInstance().progressDialog(TriggerActivity.this,"Sending SOS. Please wait...");
         progressDialog.show();
         new Thread(()->{
             try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
+                CompletableFuture<Map<String,Object>> locationFuture = Helper.getInstance().getCurrentLocation(TriggerActivity.this);
+
+                UserAlert userAlert = new UserAlert(
+                        LoggedUser.getLoggedUser().getUuid(),
+                        Helper.getInstance().formatDate(LocalDateTime.now().toLocalDate().toString()),
+                        Helper.getInstance().formatTime(LocalDateTime.now().toLocalTime().toString()),
+                        LoggedUser.getLoggedUser().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()),
+                        locationFuture.get().get("name").toString(),
+                        Double.parseDouble(locationFuture.get().get("latitude").toString()),
+                        Double.parseDouble(locationFuture.get().get("longitude").toString())
+                );
+
+                String userAlertPayload = new Gson().toJson(userAlert);
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("message",userAlertPayload);
+                payload.put("topic","admin-ack");
+                Log.d(Helper.getInstance().log_code, "sendSOS: " + payload);
+                VolleyHttp volleyHttp = new VolleyHttp("/notify",payload,"alert",TriggerActivity.this);
+                String response = volleyHttp.getResponseBody(true);
+                JSONObject reader = new JSONObject(response);
+                int responseStatus = reader.getInt("status");
+                if(responseStatus != 200) throw new Exception("Response Status: " + responseStatus);
+                responseMessage = "Alert sent successfully";
+            } catch (Exception e) {
                 Log.d(Helper.getInstance().log_code, "sendSOS: " + e.getMessage());
+                responseMessage = "Failed to send SOS. Please try again.";
+
             } finally {
+                runOnUiThread(()-> Toast.makeText(this, responseMessage, Toast.LENGTH_LONG).show());
                 progressDialog.dismiss();
+                finish();
             }
         }).start();
     }

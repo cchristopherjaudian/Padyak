@@ -151,7 +151,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/rounded_affirmative_button"
                 android:fontFamily="@font/coolvetica"
-                android:text="Confirm Alert"
+                android:text="Acknowledge Alert"
                 android:textColor="#FFF"
                 app:layout_constraintBottom_toTopOf="@+id/btnCancelAlert"
                 app:layout_constraintEnd_toEndOf="parent"

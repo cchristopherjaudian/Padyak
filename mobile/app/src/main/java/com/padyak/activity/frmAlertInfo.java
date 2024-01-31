@@ -36,25 +36,19 @@ public class frmAlertInfo extends AppCompatActivity {
         alertLevelList.add(new AlertLevel(4, "I had an accident and I need help."));
 
         intent = new Intent(frmAlertInfo.this, frmAlertSend.class);
-        cl1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bundle =new Bundle();
-                bundle.putInt("level",alertLevelList.get(0).getLevel());
-                bundle.putString("Description",alertLevelList.get(0).getDescription());
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        cl1.setOnClickListener(v -> {
+            bundle =new Bundle();
+            bundle.putInt("level",alertLevelList.get(0).getLevel());
+            bundle.putString("Description",alertLevelList.get(0).getDescription());
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
-        cl2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bundle =new Bundle();
-                bundle.putInt("level",alertLevelList.get(1).getLevel());
-                bundle.putString("Description",alertLevelList.get(1).getDescription());
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        cl2.setOnClickListener(v -> {
+            bundle =new Bundle();
+            bundle.putInt("level",alertLevelList.get(1).getLevel());
+            bundle.putString("Description",alertLevelList.get(1).getDescription());
+            intent.putExtras(bundle);
+            startActivity(intent);
         });
         cl3.setOnClickListener(new View.OnClickListener() {
             @Override
