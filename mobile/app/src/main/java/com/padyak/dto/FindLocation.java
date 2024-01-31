@@ -5,19 +5,20 @@ import java.util.Objects;
 public class FindLocation {
 
     double latitude, longitude;
-    String locationName,photoUrl,travelTime;
+    String locationName,photoUrl,travelTime,id,rating;
     double distance;
 
     public FindLocation() {
     }
 
-    public FindLocation(double latitude, double longitude, String locationName, String photoUrl, double distance, String travelTime) {
+    public FindLocation(double latitude, double longitude, String locationName, String photoUrl, String travelTime, String id, double distance) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.locationName = locationName;
         this.photoUrl = photoUrl;
-        this.distance = distance;
         this.travelTime = travelTime;
+        this.id = id;
+        this.distance = distance;
     }
 
     @Override
@@ -43,6 +44,14 @@ public class FindLocation {
     @Override
     public int hashCode() {
         return Objects.hash(latitude, longitude, locationName, photoUrl, distance, travelTime);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getLatitude() {
