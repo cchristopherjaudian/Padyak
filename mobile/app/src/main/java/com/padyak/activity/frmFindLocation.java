@@ -43,13 +43,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class frmFindLocation extends AppCompatActivity implements OnMapsSdkInitializedCallback, OnMapReadyCallback {
     FusedLocationProviderClient fusedLocationClient;
-    TextView txNearestCategory, txNearestAddress, txFindNearestTitle, txFindTitle,txNearestDistance,txNearestTime;
+    TextView txNearestCategory, txNearestAddress, txFindNearestTitle, txFindTitle, txNearestDistance, txNearestTime;
     Button btnFindDirection;
     String findCategory, findCode;
-    LatLng myPos,nearestLatLng;
+    LatLng myPos, nearestLatLng;
     GoogleMap gMap;
     ImageView imgNearestImage;
     Location nearestLocation = null;
@@ -59,6 +62,7 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
     double distanceTimeRaw = 0d;
     String lowestDistanceTime = "";
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +97,7 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
         txFindNearestTitle.setText("Nearest " + findCategory);
         txFindTitle.setText("Find " + findCategory);
 
-        btnFindDirection.setOnClickListener(v->{
+        btnFindDirection.setOnClickListener(v -> {
             Uri uri = Uri.parse("http://maps.google.com/maps?daddr=" + nearestLatLng.latitude + "," + nearestLatLng.longitude + "&dirflg=w");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -109,9 +113,9 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
             finish();
             return;
         }
-        progressDialog = Helper.getInstance().progressDialog(frmFindLocation.this,"Searching for nearest " + findCategory + ".");
+        progressDialog = Helper.getInstance().progressDialog(frmFindLocation.this, "Searching for nearby " + findCategory + "s.");
         progressDialog.show();
-        new Thread(()->{
+        new Thread(() -> {
             fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener(this, location -> {
                         if (location != null) {
@@ -120,13 +124,13 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
                             myPos = new LatLng(_lat, _long);
                             List<FindLocation> findLocationList = new ArrayList<>();
                             List<Location> registeredLocations = new ArrayList<>();
-                            VolleyHttp volleyHttp = new VolleyHttp("",null,"location",frmFindLocation.this);
+                            VolleyHttp volleyHttp = new VolleyHttp("", null, "location", frmFindLocation.this);
                             JSONObject responseJSON = volleyHttp.getJsonResponse(true);
                             JSONArray dataArray = responseJSON.optJSONArray("data");
-                            for(int i = 0;i < dataArray.length();i++){
+                            for (int i = 0; i < dataArray.length(); i++) {
                                 try {
                                     JSONObject locationObject = dataArray.getJSONObject(i);
-                                    if(locationObject.get("type").equals(findCode)){
+                                    if (locationObject.get("type").equals(findCode)) {
                                         Location locationClass = new Location();
                                         locationClass.setId(locationObject.getString("id"));
                                         locationClass.setType(locationObject.getString("type"));
@@ -140,7 +144,7 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
                                     Log.d(Helper.getInstance().log_code, "loadNearest: " + e.getMessage());
                                 }
                             }
-                            registeredLocations.forEach(l->{
+                            registeredLocations.forEach(l -> {
 
                                 String fromLocationURL = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=" + l.getLatitude() + "%2C" + l.getLongitude() + "&origins=" + myPos.latitude + "%2C" + myPos.longitude + "&mode=walking&key=" + getString(R.string.maps_publicapi);
                                 VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", frmFindLocation.this);
@@ -160,37 +164,37 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
                                             .getJSONObject("duration");
 
                                     computed = distance.getDouble("value") / 1000;
-                                    distanceTimeRaw = duration.getInt("value")/60/60;
-                                    distanceTime = "<" + String.format("%.1f",distanceTimeRaw) + " hr(s)";
-                                    if(computed <= 1d){
+                                    distanceTimeRaw = duration.getInt("value") / 60 / 60;
+                                    distanceTime = "<" + String.format("%.1f", distanceTimeRaw) + " hr(s)";
+                                    if (computed <= 1d) {
                                         findLocationList.add(
-                                                new FindLocation(l.getLatitude(),l.getLongitude(),l.getName(),l.getPhotoUrl(),computed,distanceTime)
+                                                new FindLocation(l.getLatitude(), l.getLongitude(), l.getName(), l.getPhotoUrl(), distanceTime, l.getId(), computed)
                                         );
                                     }
-                                }catch (JSONException e) {
+                                } catch (JSONException e) {
                                     Log.d(Helper.getInstance().log_code, "onSuccess: " + e.getMessage());
                                 }
                             });
-                            runOnUiThread(()->{
+                            runOnUiThread(() -> {
                                 progressDialog.dismiss();
-                                if(findLocationList.size() == 0){
+                                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15f));
+                                if (findLocationList.size() == 0) {
                                     Toast.makeText(this, "No nearby " + findCategory + " found", Toast.LENGTH_SHORT).show();
                                     finish();
-                                } else{
-                                    findLocationList.forEach(find->{
-                                        LatLng findLatLng = new LatLng(find.getLatitude(),find.getLongitude());
+                                } else {
+                                    findLocationList.forEach(find -> {
+                                        LatLng findLatLng = new LatLng(find.getLatitude(), find.getLongitude());
                                         gMap.addMarker(new MarkerOptions()
-                                                        .position(findLatLng)
-                                                        .title(find.getLocationName())
-                                                        .snippet(find.getLocationName()))
-                                                .showInfoWindow();
+                                                .position(findLatLng)
+                                                .title(find.getLocationName())
+                                                .snippet(find.getId())
+                                        );
+
                                     });
-                                    gMap.addMarker(new MarkerOptions()
-                                            .position(myPos).title("Current Location"));
                                 }
                             });
-                        } else{
-                            runOnUiThread(()->{
+                        } else {
+                            runOnUiThread(() -> {
                                 progressDialog.dismiss();
                                 Toast.makeText(frmFindLocation.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
                                 finish();
@@ -202,6 +206,7 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
 
 
     }
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
