@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapsSdkInitializedCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -118,7 +119,7 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                         if(!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())){
                             Marker newMarker = gMap.addMarker(new MarkerOptions()
                                     .title(name)
-                                    .position(new LatLng(_lat,_long)));
+                                    .position(new LatLng(_lat,_long)));;
                             participantMarkers.put(uuid,newMarker);
                         } else {
                             Marker moveMarker = participantMarkers.get(uuid);
@@ -129,7 +130,6 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                             } else{
                                 moveMarker.setPosition(new LatLng(_lat,_long));
                             }
-
                             participantMarkers.put(uuid,moveMarker);
                         }
                     }
@@ -153,6 +153,7 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                         Marker moveMarker = participantMarkers.get(uuid);
                         Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
                         moveMarker.setPosition(new LatLng(_lat,_long));
+                        if(!moveMarker.isInfoWindowShown()) moveMarker.showInfoWindow();
                         participantMarkers.put(uuid,moveMarker);
                         Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
                     }
@@ -178,7 +179,9 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
         })   ;
 
     }
+    public void moveMapToCyclist(String userId){
 
+    }
     public void loadMap() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -211,11 +214,13 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
 
                     if(myMarker == null){
                         myMarker = gMap.addMarker(new MarkerOptions()
+                                .title("Me")
                                 .position(new LatLng(location.getLatitude(),location.getLongitude())));
 
                     } else{
                         myMarker.setPosition(new LatLng(location.getLatitude(),location.getLongitude()));
                     }
+                    if(!myMarker.isInfoWindowShown()) myMarker.showInfoWindow();
                 }
 
             }
@@ -281,6 +286,7 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
+        gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         loadParticipants();
         loadMap();
     }
