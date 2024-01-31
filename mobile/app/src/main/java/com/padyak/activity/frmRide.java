@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,6 +47,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.padyak.R;
+import com.padyak.service.TrackingService;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 
@@ -81,21 +83,24 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     LocationCallback locationCallback;
     FusedLocationProviderClient fusedLocationClient;
     public static frmRide instance;
-
+    String eventId = "";
     ProgressDialog progressDialog;
     int tempCounter = 0;
-
+    boolean isMinimized;
     FirebaseDatabase database;
     DatabaseReference myRef;
     DatabaseReference eventRef;
 
     boolean isPaused = false;
-
+    String notifDistance = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, frmRide.this);
         setContentView(R.layout.activity_frm_ride);
+        if(getIntent().hasExtra("eventId")){
+            eventId = getIntent().getStringExtra("eventId");
+        }
         instance = this;
         participantMarkers = new HashMap<>();
         cardView8 = findViewById(R.id.cardView8);
@@ -110,7 +115,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                 getSupportFragmentManager().findFragmentById(R.id.mapRides);
         mapFragment.getMapAsync(this);
         imgSOS.setOnClickListener(v->{
-            Intent intent = new Intent(frmRide.this, frmAlertInfo.class);
+            Intent intent = new Intent(frmRide.this, TriggerActivity.class);
             startActivity(intent);
         });
         btnPlayRide.setOnClickListener(v -> {
@@ -148,6 +153,14 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                     try {
                         Log.d("Padyak_Time", "onCreate: timeStart " + timeStart);
                         Log.d("Padyak_Time", "onCreate: timeEnd " + timeEnd);
+                        if(isMinimized){
+                            Intent intent = new Intent(frmRide.this, TrackingService.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("distance",notifDistance.concat("km"));
+                            bundle.putString("time",instantFormat);
+                            intent.putExtras(bundle);
+                            startService(intent);
+                        }
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
 
@@ -157,6 +170,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
         });
         btnStopRide.setOnClickListener(v -> {
+            isMinimized = false;
             isPaused = false;
             cardView8.setVisibility(View.INVISIBLE);
             btnPlayRide.setVisibility(View.VISIBLE);
@@ -164,7 +178,8 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             startTracking = false;
             endPosLat = marker.getPosition().latitude;
             endPosLong = marker.getPosition().longitude;
-            database.goOffline();
+            if(database != null) database.goOffline();
+
             myRef = null;
             database = null;
             eventRef = null;
@@ -208,70 +223,73 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             ActivityCompat.requestPermissions(frmRide.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
         } else {
-            database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
-            eventRef = database.getReference();
-            myRef = database.getReference(LoggedUser.loggedUser.getUuid());
-            myRef.onDisconnect().removeValue();
-            eventRef.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    Object object = snapshot.getValue();
-                    String json = new Gson().toJson(object);
-                    try {
-                        JSONObject jObject = new JSONObject(json);
-                        Log.d("Firebase_Location", "onChildAdded: " + jObject);
-                        String uuid = jObject.getString("id");
-                        String name = jObject.getString("name");
-                        double _lat = jObject.getDouble("latitude");
-                        double _long = jObject.getDouble("longitude");
-                        if (!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())) {
-                            Marker newMarker = googleMap.addMarker(new MarkerOptions()
-                                    .title(name)
-                                    .position(new LatLng(_lat, _long)));
-                            participantMarkers.put(uuid, newMarker);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    Object object = snapshot.getValue();
-                    String json = new Gson().toJson(object);
-                    try {
-                        JSONObject jObject = new JSONObject(json);
-                        Log.d("Firebase_Location", "onChildChanged: " + jObject);
-                        String uuid = jObject.getString("id");
-                        if (!uuid.equals(LoggedUser.getLoggedUser().getUuid())) {
+            if(!eventId.isEmpty()){
+                database = FirebaseDatabase.getInstance(getString(R.string.trackURL).concat("/").concat(eventId));
+                eventRef = database.getReference();
+                myRef = database.getReference(LoggedUser.loggedUser.getUuid());
+                myRef.onDisconnect().removeValue();
+                eventRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        Object object = snapshot.getValue();
+                        String json = new Gson().toJson(object);
+                        try {
+                            JSONObject jObject = new JSONObject(json);
+                            Log.d("Firebase_Location", "onChildAdded: " + jObject);
+                            String uuid = jObject.getString("id");
+                            String name = jObject.getString("name");
                             double _lat = jObject.getDouble("latitude");
                             double _long = jObject.getDouble("longitude");
-                            Marker moveMarker = participantMarkers.get(uuid);
-                            Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
-                            moveMarker.setPosition(new LatLng(_lat, _long));
-                            participantMarkers.put(uuid, moveMarker);
-                            Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                            if (!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())) {
+                                Marker newMarker = googleMap.addMarker(new MarkerOptions()
+                                        .title(name)
+                                        .position(new LatLng(_lat, _long)));
+                                participantMarkers.put(uuid, newMarker);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                }
 
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        Object object = snapshot.getValue();
+                        String json = new Gson().toJson(object);
+                        try {
+                            JSONObject jObject = new JSONObject(json);
+                            Log.d("Firebase_Location", "onChildChanged: " + jObject);
+                            String uuid = jObject.getString("id");
+                            if (!uuid.equals(LoggedUser.getLoggedUser().getUuid())) {
+                                double _lat = jObject.getDouble("latitude");
+                                double _long = jObject.getDouble("longitude");
+                                Marker moveMarker = participantMarkers.get(uuid);
+                                Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                                moveMarker.setPosition(new LatLng(_lat, _long));
+                                participantMarkers.put(uuid, moveMarker);
+                                Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                }
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    }
 
-                }
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                    }
 
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY)
                     .setIntervalMillis(3000)
@@ -291,24 +309,28 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                         for (Location location : locationResult.getLocations()) {
                             if (marker == null) {
                                 marker = googleMap.addMarker(new MarkerOptions()
-                                        .position(previousLocation)
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.bicycle)));
+                                        .title("Me")
+                                        .position(previousLocation));
                             }
                             previousLocation = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
                             newLocation = new LatLng(location.getLatitude(), location.getLongitude());
                             rideDistance += helper.calculateDistance(previousLocation, newLocation);
-                            txDistance.setText(String.format("%.4f", rideDistance));
+                            notifDistance = String.format("%.4f", rideDistance);
+                            txDistance.setText(notifDistance);
 
-                            new Thread(() -> {
-                                payload = new HashMap<>();
-                                payload.put("id", LoggedUser.getInstance().getUuid());
-                                payload.put("name", LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.loggedUser.getLastName()));
-                                payload.put("photoUrl", LoggedUser.getInstance().getImgUrl());
-                                payload.put("latitude", newLocation.latitude);
-                                payload.put("longitude", newLocation.longitude);
-                                myRef.setValue(payload);
-                                Log.d(Helper.getInstance().log_code, "onLocationResult: Payload sent " + payload);
-                            }).start();
+                            if(!eventId.isEmpty()){
+                                new Thread(() -> {
+                                    payload = new HashMap<>();
+                                    payload.put("id", LoggedUser.getInstance().getUuid());
+                                    payload.put("name", LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.loggedUser.getLastName()));
+                                    payload.put("photoUrl", LoggedUser.getInstance().getImgUrl());
+                                    payload.put("latitude", newLocation.latitude);
+                                    payload.put("longitude", newLocation.longitude);
+                                    myRef.setValue(payload);
+                                    Log.d(Helper.getInstance().log_code, "onLocationResult: Payload sent " + payload);
+                                }).start();
+                            }
+
 
                             Log.d(Helper.getInstance().log_code, "onLocationResult: previousLocation " + previousLocation.latitude + " @ " + previousLocation.longitude);
                             Log.d(Helper.getInstance().log_code, "onLocationResult: newLocation " + newLocation.latitude + " @ " + newLocation.longitude);
@@ -323,12 +345,13 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                 float deltaStep = (Float) animation1.getAnimatedValue() - previousStep[0];
                                 previousStep[0] = (Float) animation1.getAnimatedValue();
                                 marker.setPosition(new LatLng(marker.getPosition().latitude + deltaLatitude * deltaStep * 1 / 100, marker.getPosition().longitude + deltaStep * deltaLongitude * 1 / 100));
+                                if(!marker.isInfoWindowShown()) marker.showInfoWindow();
                             });
                             animation.start();
                             tempCounter++;
                             if (tempCounter >= 10) {
                                 tempCounter = 0;
-                                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, gMap.getCameraPosition().zoom));
+                                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 16.0f));
                             }
 
                         }
@@ -347,7 +370,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                                 startPosLong = location.getLongitude();
                                 LatLng myPos = new LatLng(startPosLat, startPosLong);
                                 previousLocation = myPos;
-                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 15.0f));
+                                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 16.0f));
                             } else {
                                 Toast.makeText(frmRide.this, "Failed to retrieve current location. Please try again.", Toast.LENGTH_LONG).show();
                                 finish();
@@ -369,6 +392,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         gMap = googleMap;
+        gMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         progressDialog = Helper.getInstance().progressDialog(frmRide.this, "Retrieving current location.");
         progressDialog.show();
         getLocation(gMap);
@@ -377,6 +401,28 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     @Override
     public void onMapsSdkInitialized(@NonNull MapsInitializer.Renderer renderer) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        Log.d(Helper.getInstance().log_code, "onUserLeaveHint: Minimized");
+        isMinimized = true;
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isMinimized = false;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(Integer.parseInt(getString(R.string.foreground_notif_channel)));
     }
 
     @Override
