@@ -1,17 +1,33 @@
 package com.padyak.utility;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.padyak.R;
+import com.padyak.activity.frmAlertGroup;
+import com.padyak.activity.frmAlertInfo;
+import com.padyak.activity.frmAlertSend;
 import com.padyak.dto.AlertLevel;
 import com.padyak.dto.EmergencyContact;
+import com.padyak.fragment.AlertSendFragment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
@@ -20,10 +36,13 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.*;
 public class Helper {
     static Helper helper;
@@ -38,6 +57,61 @@ public class Helper {
         if(tempEmergencySet == null) tempEmergencySet = new ArrayList<>();
         return helper;
     }
+    public String formatDate(String dateString){
+        String formatted = "";
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            date = parser.parse(dateString);
+            SimpleDateFormat formatter = new SimpleDateFormat("MMMM dd yyyy");
+            formatted = formatter.format(date);
+        } catch (ParseException e) {
+            Log.d(Helper.getInstance().log_code, "formatDate: " + e.getMessage());
+        }
+        return formatted;
+    }
+    public String formatTime(String timeString){
+        String formatted = "";
+        try {
+            SimpleDateFormat parser = new SimpleDateFormat("HH:mm:ss.SSS");
+            Date date = parser.parse(timeString.substring(0, 12));
+            SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
+            formatted = formatter.format(date);
+        } catch (ParseException e) {
+            Log.d(Helper.getInstance().log_code, "formatTime: " + e.getMessage());
+        }
+        return formatted;
+    }
+    public CompletableFuture<Map<String, Object>> getCurrentLocation(Activity activity) {
+        CompletableFuture<Map<String, Object>> future = new CompletableFuture<>();
+        Map<String, Object> returnMap = new HashMap<>();
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            returnMap.put("error","permission not granted");
+            return CompletableFuture.completedFuture(returnMap);
+        }
+
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        double _lat = location.getLatitude();
+                        double _long = location.getLongitude();
+                        String fromLocationURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + _lat + "," + _long + "&key=" + activity.getString(R.string.maps_publicapi);
+                        VolleyHttp fromVolley = new VolleyHttp(fromLocationURL, null, "MAP", activity);
+                        String alertAddress = Helper.getInstance().generateAddress(fromVolley.getResponseBody(false));
+                        returnMap.put("name",alertAddress);
+                        returnMap.put("latitude",_lat);
+                        returnMap.put("longitude",_long);
+                        future.complete(returnMap);
+                    } else {
+                        returnMap.put("error","location is null");
+                        future.complete(returnMap);
+                    }
+                })
+                .addOnFailureListener(future::completeExceptionally);
+        return future;
+    }
+
     public String generatePinCode(){
         Random random = new Random();
         int number = random.nextInt(9000) + 1000;
