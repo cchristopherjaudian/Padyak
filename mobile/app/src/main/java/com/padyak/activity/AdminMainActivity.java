@@ -2,9 +2,15 @@ package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -12,7 +18,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.padyak.R;
+import com.padyak.dto.UserAlert;
+import com.padyak.fragment.AlertSendFragment;
+import com.padyak.fragment.ContactSelectFragment;
+import com.padyak.fragment.StaticAlertFragment;
+import com.padyak.fragment.fragmentAlertAck;
+import com.padyak.fragment.fragmentAlertLevel;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -33,7 +46,20 @@ public class AdminMainActivity extends AppCompatActivity {
     ImageView imgAdminProfile;
     ProgressDialog progressDialog;
     Intent intent;
+    public int showMessage = 0;
     public static AdminMainActivity adminMainActivity;
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            try {
+                showDialog(message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,13 +135,42 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
         txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
         Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgAdminProfile);
         LocalDate dateNow = LocalDate.now();
         String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
         txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
+        if(showMessage == 1){
+            showMessage();
+        }
+    }
+
+    public void showDialog(String message) throws JSONException {
+        FragmentManager fm = getSupportFragmentManager();
+        DialogFragment dialogFragment;
+        if(message.contains("receivers")){
+            dialogFragment = fragmentAlertLevel.newInstance(message);
+        } else{
+            dialogFragment = StaticAlertFragment.newInstance(message);
+        }
+        dialogFragment.setCancelable(false);
+        dialogFragment.show(fm, "dialogFragment");
+    }
+    public void showMessage(){
+        showMessage = 0;
+        FragmentManager fm = getSupportFragmentManager();
+        AlertSendFragment alertSendFragment = AlertSendFragment.newInstance("Acknowledgement Successfully Sent");
+        alertSendFragment.setCancelable(false);
+        alertSendFragment.show(fm, "AlertSendFragment");
     }
 }

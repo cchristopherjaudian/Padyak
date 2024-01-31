@@ -3,13 +3,19 @@ package com.padyak.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +36,10 @@ import com.padyak.dto.CoverPhoto;
 import com.padyak.dto.Like;
 import com.padyak.dto.Newsfeed;
 import com.padyak.dto.PostAuthor;
+import com.padyak.fragment.AlertCancelFragment;
+import com.padyak.fragment.AlertSendFragment;
+import com.padyak.fragment.StaticAlertFragment;
+import com.padyak.fragment.fragmentAlertLevel;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -73,7 +83,19 @@ public class frmMain extends AppCompatActivity {
     Intent intent;
     ProgressDialog progressDialog;
     public static frmMain frmMain;
-
+    int showAlert = 0;
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            try {
+                showMessageAlert(message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,51 +213,56 @@ public class frmMain extends AppCompatActivity {
     }
 
     public void loadCoverPhoto() {
-        progressDialog = Helper.getInstance().progressDialog(frmMain, "Retrieving latest post.");
-        progressDialog.show();
-        new Thread(() -> {
-            VolleyHttp volleyHttp = new VolleyHttp("?uid=".concat(LoggedUser.getInstance().getUuid()).concat("&limit=1"), null, "post", frmMain);
-            String response = volleyHttp.getResponseBody(true);
+        try{
+            progressDialog = Helper.getInstance().progressDialog(frmMain, "Retrieving latest post.");
+            progressDialog.show();
+            new Thread(() -> {
+                VolleyHttp volleyHttp = new VolleyHttp("?uid=".concat(LoggedUser.getInstance().getUuid()).concat("&limit=1"), null, "post", frmMain);
+                String response = volleyHttp.getResponseBody(true);
 
-            runOnUiThread(() -> {
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    int responseCode = jsonResponse.getInt("status");
-                    if (responseCode != 200) throw new Exception("Response Code " + responseCode);
-                    JSONArray postArray = jsonResponse.optJSONArray("data");
-                    if (postArray.length() > 0) {
-                        JSONObject postObject = postArray.getJSONObject(0);
-                        JSONArray commentArray = postObject.optJSONArray("comments");
-                        JSONArray likeArray = postObject.optJSONArray("likes");
+                runOnUiThread(() -> {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        int responseCode = jsonResponse.getInt("status");
+                        if (responseCode != 200) throw new Exception("Response Code " + responseCode);
+                        JSONArray postArray = jsonResponse.optJSONArray("data");
+                        if (postArray.length() > 0) {
+                            JSONObject postObject = postArray.getJSONObject(0);
+                            JSONArray commentArray = postObject.optJSONArray("comments");
+                            JSONArray likeArray = postObject.optJSONArray("likes");
 
-                        textView6.setText(postObject.getString("post"));
-                        txProfileDistance.setText(postObject.getString("distance"));
-                        txProfileTime.setText(postObject.getString("movingTime"));
+                            textView6.setText(postObject.getString("post"));
+                            txProfileDistance.setText(postObject.getString("distance"));
+                            txProfileTime.setText(postObject.getString("movingTime"));
 
-                        textView9.setText(String.valueOf(commentArray.length()));
-                        textView5.setText(String.valueOf(likeArray.length()));
-                        txLastSeen.setText(postObject.getString("createdAt")
-                                .replace("+08:00", " | ")
-                                .replace("T", " ")
-                                .concat(postObject.getString("toLocation")));
+                            textView9.setText(String.valueOf(commentArray.length()));
+                            textView5.setText(String.valueOf(likeArray.length()));
+                            txLastSeen.setText(postObject.getString("createdAt")
+                                    .replace("+08:00", " | ")
+                                    .replace("T", " ")
+                                    .concat(postObject.getString("toLocation")));
 
-                        String postImgUrl = postObject.getString("photoUrl");
-                        coverPhotoList = new ArrayList<>();
-                        coverPhotoList.add(new CoverPhoto(postImgUrl));
-                        adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
-                        rvCoverPhoto.setAdapter(adapterCoverPhoto);
-                    } else {
-                        textView6.setText("No recent post yet.");
+                            String postImgUrl = postObject.getString("photoUrl");
+                            coverPhotoList = new ArrayList<>();
+                            coverPhotoList.add(new CoverPhoto(postImgUrl));
+                            adapterCoverPhoto = new adapterCoverPhoto(coverPhotoList);
+                            rvCoverPhoto.setAdapter(adapterCoverPhoto);
+                        } else {
+                            textView6.setText("No recent post yet.");
+                        }
+                    } catch (JSONException e) {
+                        Log.d(Helper.getInstance().log_code, "loadCoverPhoto JSONException: " + e.getMessage());
+                    } catch (Exception ee) {
+                        Log.d(Helper.getInstance().log_code, "loadCoverPhoto Exception: " + ee.getMessage());
+                    } finally {
+                        progressDialog.dismiss();
                     }
-                } catch (JSONException e) {
-                    Log.d(Helper.getInstance().log_code, "loadCoverPhoto JSONException: " + e.getMessage());
-                } catch (Exception ee) {
-                    Log.d(Helper.getInstance().log_code, "loadCoverPhoto Exception: " + ee.getMessage());
-                } finally {
-                    progressDialog.dismiss();
-                }
-            });
-        }).start();
+                });
+            }).start();
+        }catch (Exception l){
+            Log.d(Helper.getInstance().log_code, "loadCoverPhoto: " + l.getMessage());
+        }
+
     }
 
     public void loadNewsfeed() {
@@ -326,10 +353,12 @@ public class frmMain extends AppCompatActivity {
         }).start();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
         try {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
             txMainProfileName.setText("Hey ".concat(LoggedUser.getInstance().getFirstName()));
             txProfileName.setText(LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.getInstance().getLastName()));
             LocalDate dateNow = LocalDate.now();
@@ -338,6 +367,12 @@ public class frmMain extends AppCompatActivity {
             txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgProfileDP);
             Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgMainProfileDP);
+
+            switch (showAlert){
+                case 1: //Alert Success Sent
+                    showAlertSuccess();
+                    break;
+            }
         } catch (Exception e) {
             finish();
         }
@@ -346,5 +381,28 @@ public class frmMain extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+    public void showMessageAlert(String message) throws JSONException {
+        FragmentManager fm = getSupportFragmentManager();
+        DialogFragment dialogFragment;
+        if(message.contains("receivers")){
+            dialogFragment = fragmentAlertLevel.newInstance(message);
+        } else{
+            dialogFragment = StaticAlertFragment.newInstance(message);
+        }
+        dialogFragment.setCancelable(false);
+        dialogFragment.show(fm, "dialogFragment");
+    }
+    public void showAlertSuccess(){
+        showAlert = 0;
+        FragmentManager fm = getSupportFragmentManager();
+        AlertSendFragment alertSendFragment = AlertSendFragment.newInstance("PADYAK ALERT SENT SUCCESSFULLY!");
+        alertSendFragment.setCancelable(false);
+        alertSendFragment.show(fm, "AlertSendFragment");
     }
 }
