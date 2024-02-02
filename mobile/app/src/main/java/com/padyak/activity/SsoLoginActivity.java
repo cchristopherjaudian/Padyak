@@ -208,6 +208,7 @@ public class SsoLoginActivity extends AppCompatActivity {
 
                             if(userObject.has("isAdmin")){
                                 if(userObject.getBoolean("isAdmin") == false){
+                                    messagingHelper.subscribeMessageTopic(username);
                                     intent = new Intent(SsoLoginActivity.this, frmMain.class);
                                 } else{
                                     messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_alert_topic));
@@ -216,6 +217,7 @@ public class SsoLoginActivity extends AppCompatActivity {
                                 }
                                 Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.ADMIN_KEY, userObject.getBoolean(Prefs.ADMIN_KEY));
                             } else{
+                                messagingHelper.subscribeMessageTopic(username);
                                 intent = new Intent(SsoLoginActivity.this, frmMain.class);
                             }
 
@@ -229,8 +231,8 @@ public class SsoLoginActivity extends AppCompatActivity {
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.EMERGENCY, userObject.getString(Prefs.EMERGENCY));
                             Prefs.getInstance().setUser(SsoLoginActivity.this, Prefs.AUTH, "IN_APP");
                             requestMessagingToken();
-                            messagingHelper.subscribeMessageTopic(username);
-                            messagingHelper.subscribeMessageTopic(username.replaceFirst("0","63"));
+                            //
+                            //messagingHelper.subscribeMessageTopic(username.replaceFirst("0","63"));
                             Gson gson = new Gson();
                             EmergencyContact[] emergencyContacts = gson.fromJson(userObject.getString(Prefs.EMERGENCY), EmergencyContact[].class);
                             List<EmergencyContact> emergencyContactList = Arrays.asList(emergencyContacts);
@@ -379,13 +381,15 @@ public class SsoLoginActivity extends AppCompatActivity {
                     Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.IMG_KEY,userObject.getString("photoUrl"));
                     Prefs.getInstance().setUser(SsoLoginActivity.this,Prefs.ADMIN_KEY,false);
                     requestMessagingToken();
-                    messagingHelper.subscribeMessageTopic(LoggedUser.getInstance().getPhoneNumber());
-                    messagingHelper.subscribeMessageTopic(LoggedUser.getInstance().getPhoneNumber().replaceFirst("0","63"));
+
+                    //messagingHelper.subscribeMessageTopic(LoggedUser.getInstance().getPhoneNumber().replaceFirst("0","63"));
                     if(userObject.has("isAdmin")){
                         if(!userObject.getBoolean("isAdmin")){
+                            messagingHelper.subscribeMessageTopic(LoggedUser.getInstance().getPhoneNumber());
                             intent = new Intent(SsoLoginActivity.this, frmMain.class);
                         } else{
                             if(userObject.getBoolean("isAdmin") == false){
+                                messagingHelper.subscribeMessageTopic(LoggedUser.getInstance().getPhoneNumber());
                                 intent = new Intent(SsoLoginActivity.this, frmMain.class);
                             } else{
                                 messagingHelper.subscribeMessageTopic(SsoLoginActivity.this.getString(R.string.admin_alert_topic));
