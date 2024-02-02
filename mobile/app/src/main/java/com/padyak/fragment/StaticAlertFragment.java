@@ -35,10 +35,15 @@ public class StaticAlertFragment extends DialogFragment {
             JSONObject jsonMessage = jsonObject.getJSONObject("message");
             newMessage = jsonMessage.toString();
         }catch (Exception err){
-            newMessage = message.replaceFirst("message=","");
-            newMessage = newMessage.substring(1, newMessage.length() -1);
+            if(message.contains("message=")){
+                newMessage = message.replaceFirst("message=","");
+                newMessage = newMessage.substring(1, newMessage.length() -1);
+            } else{
+                newMessage = message;
+            }
         }
         Log.d(Helper.getInstance().log_code, "newInstance: " + newMessage);
+        if(newMessage.startsWith("null")) return null;
         bundle.putString("message", newMessage);
         StaticAlertFragment dialogFragment = new StaticAlertFragment();
         dialogFragment.setArguments(bundle);
@@ -67,6 +72,7 @@ public class StaticAlertFragment extends DialogFragment {
             Gson gson = new Gson();
             UserAlert userAlert = gson.fromJson(receivedMessage, UserAlert.class);
             Log.d(Helper.getInstance().log_code, "onCreateView: " + userAlert);
+            if(userAlert.getUserId() == null) throw new Exception("Invalid message");
             StringBuffer sbf = new StringBuffer();
             sbf.append(userAlert.getAlertDate());
             sbf.append(" At ").append(userAlert.getAlertTime());

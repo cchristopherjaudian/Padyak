@@ -40,10 +40,12 @@ public class fragmentAlertLevel extends DialogFragment {
             JSONObject jsonMessage = jsonObject.getJSONObject("message");
             newMessage = jsonMessage.toString();
         }catch (Exception err){
-            newMessage = message.replaceFirst("message=","");
-            newMessage = newMessage.substring(1, newMessage.length() -1);
+            if(newMessage.contains("message=")){
+                newMessage = message.replaceFirst("message=","");
+                newMessage = newMessage.substring(1, newMessage.length() -1);
+            }
         }
-
+        if(newMessage.startsWith("null")) return null;
         Log.d(Helper.getInstance().log_code, "newInstance: " + newMessage);
         bundle.putString("message", newMessage);
         fragmentAlertLevel fragment = new fragmentAlertLevel();
@@ -68,15 +70,23 @@ public class fragmentAlertLevel extends DialogFragment {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
         String receivedMessage = getArguments().getString("message");
-        Gson gson = new Gson();
-        UserAlertLevel userAlertLevel = gson.fromJson(receivedMessage, UserAlertLevel.class);
-        Log.d(Helper.getInstance().log_code, "onCreateView: " + userAlertLevel);
+        Log.d(Helper.getInstance().log_code, "onCreateView receivedMessage: " + receivedMessage);
+        try {
+            Gson gson = new Gson();
+            UserAlertLevel userAlertLevel = gson.fromJson(receivedMessage, UserAlertLevel.class);
+            Log.d(Helper.getInstance().log_code, "onCreateView: " + userAlertLevel);
 
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(userAlertLevel.getUserName());
-        stringBuffer.append(" sent an Alert Level ");
-        stringBuffer.append(userAlertLevel.getAlertLevel());
-        textView62.setText(stringBuffer.toString());
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append(userAlertLevel.getUserName());
+            stringBuffer.append(" sent an Alert Level ");
+            stringBuffer.append(userAlertLevel.getAlertLevel());
+            textView62.setText(stringBuffer.toString());
+        }catch (Exception errx){
+            Log.d(Helper.getInstance().log_code, "onCreateView Exception: " + errx.getMessage());
+            textView62.setText(receivedMessage);
+        }
+
+
 
         btnAlertAck.setOnClickListener(l->{
             Intent intent = new Intent(v.getContext(), frmMemberAlertInfo.class);

@@ -10,7 +10,9 @@ public class UserAlertLevel {
     int alertLevel;
     String receivers;
     String photoUrl;
-    public UserAlertLevel(String userId, String alertDate, String alertTime, String userName, String addressName, double latitude, double longitude, String alertMessage, int alertLevel, String receivers, String photoUrl) {
+    String contactNumber;
+
+    public UserAlertLevel(String userId, String alertDate, String alertTime, String userName, String addressName, double latitude, double longitude, String alertMessage, int alertLevel, String receivers, String photoUrl, String contactNumber) {
         this.userId = userId;
         this.alertDate = alertDate;
         this.alertTime = alertTime;
@@ -22,6 +24,7 @@ public class UserAlertLevel {
         this.alertLevel = alertLevel;
         this.receivers = receivers;
         this.photoUrl = photoUrl;
+        this.contactNumber = contactNumber;
     }
 
     public UserAlertLevel() {
@@ -54,6 +57,14 @@ public class UserAlertLevel {
                 ", alertLevel=" + alertLevel +
                 ", receivers='" + receivers + '\'' +
                 '}';
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     public String getPhotoUrl() {

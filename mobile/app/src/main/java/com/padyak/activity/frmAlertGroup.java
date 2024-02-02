@@ -200,12 +200,13 @@ public class frmAlertGroup extends AppCompatActivity {
                         Constants.alertMap.get(alertLevel),
                         alertLevel,
                         recipients,
-                        LoggedUser.getLoggedUser().getImgUrl()
+                        LoggedUser.getLoggedUser().getImgUrl(),
+                        LoggedUser.getLoggedUser().getPhoneNumber()
                 );
                 String userAlertPayload = new Gson().toJson(userAlertLevel);
                 Map<String, Object> payload = new HashMap<>();
                 payload.put("message",userAlertPayload);
-                payload.put("topic",getString(R.string.admin_review_topic));
+                payload.put("topic","admin-review");
                 Log.d(Helper.getInstance().log_code, "sendSOS: " + payload);
                 VolleyHttp volleyHttp = new VolleyHttp("/notify",payload,"alert",frmAlertGroup.this);
                 String response = volleyHttp.getResponseBody(true);

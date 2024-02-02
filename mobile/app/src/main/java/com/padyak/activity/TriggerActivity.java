@@ -121,15 +121,19 @@ public class TriggerActivity extends AppCompatActivity {
                 );
 
                 String userAlertPayload = new Gson().toJson(userAlert);
-                Map<String, Object> payload = new HashMap<>();
-                payload.put("message",userAlertPayload);
-                payload.put("topic","admin-ack");
-                Log.d(Helper.getInstance().log_code, "sendSOS: " + payload);
-                VolleyHttp volleyHttp = new VolleyHttp("/notify",payload,"alert",TriggerActivity.this);
-                String response = volleyHttp.getResponseBody(true);
-                JSONObject reader = new JSONObject(response);
-                int responseStatus = reader.getInt("status");
-                if(responseStatus != 200) throw new Exception("Response Status: " + responseStatus);
+                List<EmergencyContact> emergencyContacts = Helper.getInstance().getTempEmergencySet();
+                emergencyContacts.forEach(em->{
+                    Map<String, Object> payload = new HashMap<>();
+                    payload.put("message",userAlertPayload);
+                    payload.put("topic",em.getContact());
+                    Log.d(Helper.getInstance().log_code, "sendSOS: " + payload);
+                    VolleyHttp volleyHttp = new VolleyHttp("/notify",payload,"alert",TriggerActivity.this);
+                    String response = volleyHttp.getResponseBody(true);
+                    Log.d(Helper.getInstance().log_code, "sendSOS: " + response);
+                });
+
+                //int responseStatus = reader.getInt("status");
+                //if(responseStatus != 200) throw new Exception("Response Status: " + responseStatus);
                 responseMessage = "Alert sent successfully";
             } catch (Exception e) {
                 Log.d(Helper.getInstance().log_code, "sendSOS: " + e.getMessage());

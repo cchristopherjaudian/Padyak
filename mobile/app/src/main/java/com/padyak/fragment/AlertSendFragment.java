@@ -48,7 +48,7 @@ TextView textView61;
         textView61 = v.findViewById(R.id.textView61);
         textView61.setText(getArguments().getString("message"));
         btnAlertAck.setOnClickListener(l->{
-            frmAlertGroup.frmAlertGroup.finish();
+            if(frmAlertGroup.frmAlertGroup != null) frmAlertGroup.frmAlertGroup.finish();
             dismiss();
         });
         return v;

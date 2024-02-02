@@ -51,6 +51,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
     double longitude;
     int alertLevel;
     String memberName, locationName,receivers;
+    String username;
     String alertTime;
     String photoUrl;
     ProgressDialog progressDialog;
@@ -63,7 +64,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
         if(getIntent().hasExtra("message")){
             Gson gson = new Gson();
             userAlertLevel = gson.fromJson(getIntent().getStringExtra("message"), UserAlertLevel.class);
-
+            username = userAlertLevel.getContactNumber();
             latitude = userAlertLevel.getLatitude();
             longitude = userAlertLevel.getLongitude();
             memberName = userAlertLevel.getUserName();
@@ -131,7 +132,7 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
 
         LatLng myPos = new LatLng(latitude, longitude);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPos, 16.0f));
-
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(myPos)
@@ -161,10 +162,19 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
 
             VolleyHttp volleyHttp = new VolleyHttp("",payload,"alert", frmMemberAlertInfo.this);
             JSONObject responseJSON = volleyHttp.getJsonResponse(true);
+
+            Map<String, Object> backPayload = new HashMap<>();
+            backPayload.put("message","Your alert has been acknowledged please stay where you are and wait for the rescue to arrive!");
+            backPayload.put("topic",username);
+            Log.d(Helper.getInstance().log_code, "acknowledgeAlert: " + username);
+            Log.d(Helper.getInstance().log_code, "sendSOS: " + backPayload);
+            VolleyHttp volleyBackHttp = new VolleyHttp("/notify",backPayload,"alert",frmMemberAlertInfo.this);
+            String response = volleyBackHttp.getResponseBody(true);
+
             runOnUiThread(()->{
                 progressDialog.dismiss();
                 if(responseJSON == null){
-                    Toast.makeText(frmMemberAlertInfo.this, "Failed to send alert. Please try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(frmMemberAlertInfo.this, "Failed to acknowledge alert. Please try again", Toast.LENGTH_LONG).show();
                 } else{
                     AdminMainActivity.adminMainActivity.showMessage = 1;
                     frmMemberAlertInfo.this.finish();
