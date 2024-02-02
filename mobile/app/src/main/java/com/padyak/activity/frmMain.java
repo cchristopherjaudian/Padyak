@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.padyak.R;
 import com.padyak.adapter.adapterCoverPhoto;
 import com.padyak.adapter.adapterNewsfeed;
@@ -50,6 +52,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -88,6 +91,7 @@ public class frmMain extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
             try {
                 showMessageAlert(message);
             } catch (JSONException e) {
@@ -390,11 +394,21 @@ public class frmMain extends AppCompatActivity {
     public void showMessageAlert(String message) throws JSONException {
         FragmentManager fm = getSupportFragmentManager();
         DialogFragment dialogFragment;
+        Log.d(Helper.getInstance().log_code, "showMessageAlert: " + message);
         if(message.contains("receivers")){
-            dialogFragment = fragmentAlertLevel.newInstance(message);
+            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            JSONObject jsonObject = new JSONObject(message);
+            String messageObject = jsonObject.getString("message");
+            Map<String, Object> messageMap = new Gson().fromJson(messageObject,type);
+            String receivers = messageMap.get("receivers").toString();
+            if(!receivers.contains(LoggedUser.getLoggedUser().getPhoneNumber())) return;
+            dialogFragment = StaticAlertFragment.newInstance(messageMap.get("message").toString());
+            //dialogFragment = fragmentAlertLevel.newInstance(messageMap.get("message").toString());
         } else{
             dialogFragment = StaticAlertFragment.newInstance(message);
         }
+
+        if(dialogFragment == null) return;
         dialogFragment.setCancelable(false);
         dialogFragment.show(fm, "dialogFragment");
     }

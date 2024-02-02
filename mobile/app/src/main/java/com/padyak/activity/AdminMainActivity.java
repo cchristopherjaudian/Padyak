@@ -157,12 +157,14 @@ public class AdminMainActivity extends AppCompatActivity {
 
     public void showDialog(String message) throws JSONException {
         FragmentManager fm = getSupportFragmentManager();
-        DialogFragment dialogFragment;
-        if(message.contains("receivers")){
+        DialogFragment dialogFragment = null;
+        if(message.contains("receivers")) {
             dialogFragment = fragmentAlertLevel.newInstance(message);
-        } else{
-            dialogFragment = StaticAlertFragment.newInstance(message);
         }
+//        } else{
+//            dialogFragment = StaticAlertFragment.newInstance(message);
+//        }
+        if(dialogFragment == null) return;
         dialogFragment.setCancelable(false);
         dialogFragment.show(fm, "dialogFragment");
     }
