@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.padyak.R;
+import com.padyak.activity.frmParticipate;
 import com.padyak.dto.Participants;
 import com.squareup.picasso.Picasso;
 
@@ -52,6 +53,10 @@ public class adapterParticipant extends RecyclerView.Adapter<adapterParticipant.
             txRowNumber = itemView.findViewById(R.id.txRowNumber);
             txRowName = itemView.findViewById(R.id.txRowName);
             txRowDistance = itemView.findViewById(R.id.txRowDistance);
+
+            itemView.setOnClickListener(v->{
+                frmParticipate.f.navigateCyclist(participants.get(getAdapterPosition()).getUserId());
+            });
         }
     }
 }
