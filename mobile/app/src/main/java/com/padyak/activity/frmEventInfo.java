@@ -76,9 +76,14 @@ public class frmEventInfo extends AppCompatActivity {
             AlertDialog alertDialog = new AlertDialog.Builder(frmEventInfo.this).create();
             alertDialog.setCancelable(false);
             alertDialog.setTitle("Event");
-            alertDialog.setMessage("You can now start your ride. Press OK to continue");
+            alertDialog.setMessage("You can now start your ride. Press OK to proceed");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     (d, w) -> {
+                        Intent intent = new Intent(frmEventInfo, frmRide.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("eventId",eventId);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                         finish();
                     });
             alertDialog.show();
