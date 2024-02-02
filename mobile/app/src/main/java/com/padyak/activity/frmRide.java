@@ -406,17 +406,22 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
     @Override
     public void onBackPressed() {
-        
+        moveTaskToBack(true);
     }
 
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
-        Log.d(Helper.getInstance().log_code, "onUserLeaveHint: Minimized");
-        isMinimized = true;
+
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(Helper.getInstance().log_code, "onUserLeaveHint: Minimized");
+        isMinimized = true;
+    }
 
     @Override
     protected void onResume() {

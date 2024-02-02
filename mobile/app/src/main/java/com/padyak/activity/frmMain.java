@@ -173,9 +173,9 @@ public class frmMain extends AppCompatActivity {
             startActivity(intent);
         });
         rlEvents.setOnClickListener(v -> {
-
-            intent = new Intent(frmMain.this, frmRide.class);
-            startActivity(intent);
+            Intent rideIntent = new Intent(this, frmRide.class);
+            rideIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(rideIntent);
         });
         rlAlert.setOnClickListener(v -> {
             intent = new Intent(frmMain.this, frmAlertInfo.class);
