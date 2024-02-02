@@ -2,13 +2,22 @@ package com.padyak.dto;
 
 public class Participants {
     private String userName,userImage;
-
-    public Participants(String userName, String userImage) {
+    private String userId;
+    public Participants(String userName, String userImage, String userId) {
         this.userName = userName;
         this.userImage = userImage;
+        this.userId = userId;
     }
 
     public Participants() {
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserName() {
