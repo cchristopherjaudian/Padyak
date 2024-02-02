@@ -79,9 +79,11 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
     DatabaseReference eventRef;
     Map<String,Marker> participantMarkers;
     Marker myMarker;
+    public static frmParticipate f;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        f = this;
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, frmParticipate.this);
         setContentView(R.layout.activity_frm_participate);
         SupportMapFragment mapFragment = (SupportMapFragment)
@@ -90,8 +92,8 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
         eventId = getIntent().getStringExtra("eventId");
         eventName = getIntent().getStringExtra("eventName");
         database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
-        myRef = database.getReference(LoggedUser.loggedUser.getUuid());
-        eventRef = database.getReference();
+        myRef = database.getReference(eventId.concat("/").concat(LoggedUser.getLoggedUser().getUuid()));
+        eventRef = database.getReference(eventId);
         myRef.onDisconnect().removeValue();
         txEventTitle = findViewById(R.id.txEventTitle);
         rvParticipants = findViewById(R.id.rvParticipants);
@@ -265,6 +267,7 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                 for (int i = 0; i < participantJSON.length(); i++) {
                     JSONObject participantObject = participantJSON.getJSONObject(i).getJSONObject("user");
                     Participants participants = new Participants();
+                    participants.setUserId(participantObject.getString("id"));
                     participants.setUserImage(participantObject.getString("photoUrl"));
                     participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
                     participantsList.add(participants);
@@ -281,7 +284,17 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
             }
         }).start();
     }
-
+    public void navigateCyclist(String uuid){
+        double _lat,_long;
+        if(participantMarkers.get(uuid) != null){
+            _lat = participantMarkers.get(uuid).getPosition().latitude;
+            _long = participantMarkers.get(uuid).getPosition().longitude;
+            LatLng newLocation = new LatLng(_lat,_long);
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 19.0f));
+        } else{
+            Toast.makeText(f, "Cyclist is not yet participating in this event", Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {

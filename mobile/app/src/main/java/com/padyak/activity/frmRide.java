@@ -101,6 +101,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
         if(getIntent().hasExtra("eventId")){
             eventId = getIntent().getStringExtra("eventId");
         }
+        Log.d(Helper.getInstance().log_code, "onCreate eventInfo: " + eventId);
         instance = this;
         participantMarkers = new HashMap<>();
         cardView8 = findViewById(R.id.cardView8);
@@ -224,9 +225,9 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
         } else {
             if(!eventId.isEmpty()){
-                database = FirebaseDatabase.getInstance(getString(R.string.trackURL).concat("/").concat(eventId));
-                eventRef = database.getReference();
-                myRef = database.getReference(LoggedUser.loggedUser.getUuid());
+                database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
+                eventRef = database.getReference(eventId);
+                myRef = database.getReference(eventId.concat("/").concat(LoggedUser.loggedUser.getUuid()));
                 myRef.onDisconnect().removeValue();
                 eventRef.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -405,7 +406,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
     @Override
     public void onBackPressed() {
-
+        
     }
 
     @Override
