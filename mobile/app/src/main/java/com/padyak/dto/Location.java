@@ -4,19 +4,37 @@ import java.util.Objects;
 
 public class Location {
 
-    private String photoUrl,name,id,type;
+    private String photoUrl,name,id,type,rating,contact;
     private double longitude,latitude;
 
-    public Location(String photoUrl, String name, String id, String type, double longitude, double latitude) {
+    public Location(String photoUrl, String name, String id, String type, double longitude, double latitude,String rating,String contact) {
         this.photoUrl = photoUrl;
         this.name = name;
         this.id = id;
         this.type = type;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.rating = rating;
+        this.contact = contact;
     }
 
     public Location() {
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     public String getPhotoUrl() {
