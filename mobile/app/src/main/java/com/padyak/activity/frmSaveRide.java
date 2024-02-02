@@ -104,6 +104,9 @@ ProgressDialog progressDialog;
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
                     (d,w)->{
                         frmRide.instance.finish();
+                        Intent rideIntent = new Intent(this, frmMain.class);
+                        rideIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(rideIntent);
                         finish();
                     });
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", (dialog, which) -> {
