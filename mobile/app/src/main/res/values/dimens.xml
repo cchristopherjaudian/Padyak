@@ -21,4 +21,5 @@
     <dimen name="wide_button_size">30dp</dimen>
     <dimen name="dp_circle_size">40dp</dimen>
     <dimen name="icon_size">30dp</dimen>
+    <dimen name="star_dp">20dp</dimen>
 </resources>
