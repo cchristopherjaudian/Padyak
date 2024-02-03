@@ -30,8 +30,8 @@ export type TRawSendAlert = {
   level: number;
   location: string;
   uid: string;
-  longitude: number;
-  latitude: number;
+  longitude: number | string;
+  latitude: number | string;
   status: IAlertStatuses;
   sender: TSender | string;
 };

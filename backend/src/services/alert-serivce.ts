@@ -60,10 +60,8 @@ class UserAlerts {
       .app()
       .messaging()
       .send({
-        android: {
-          data: {
-            ...payload,
-          },
+        data: {
+          ...payload,
         },
         topic: 'admin-ack',
       });
@@ -73,22 +71,23 @@ class UserAlerts {
   }
 
   public async sendNotif(payload: { message: string; topic: string }) {
+    console.log('message', payload.message);
+    console.log('topic', payload.topic);
     const sent = await firebaseAdmin
       .app()
       .messaging()
       .send({
-        android: {
-          data: {
-            message: payload.message,
-          },
+        data: {
+          message: payload.message,
         },
-        topic: payload.topic,
+        condition: `'${payload.topic}' in topics`,
       });
 
     return { sent };
   }
 
   public async sendAlert(sms: ISmsAlert, payload: TRawSendAlert) {
+    console.log('payload', payload);
     try {
       const alert = await this._alert.getAlert(payload.level);
       const sender = JSON.parse(payload.sender as string) as TSender;
@@ -97,7 +96,7 @@ class UserAlerts {
           ? parseInt(payload.level)
           : payload.level;
       payload.displayName = `${sender.firstname} ${sender.lastname}`;
-      const message = `${this.baseMessage(payload)}, ${alert.message} ${
+      const message = `${this.baseMessage(payload)} ${alert.message} ${
         payload.location
       }`;
 
@@ -106,8 +105,8 @@ class UserAlerts {
         uid: payload.uid,
         level: payload.level,
         location: payload.location,
-        longitude: payload.longitude,
-        latitude: payload.latitude,
+        longitude: parseFloat(payload.longitude as string),
+        latitude: parseFloat(payload.latitude as string),
         status: payload.status,
         sender,
       });
@@ -120,7 +119,12 @@ class UserAlerts {
       });
 
       users.forEach(async (user) => {
-        const sent = await this.sendNotif({ message, topic: user });
+        console.log('user', user);
+        const sent = await this.sendNotif({
+          message: JSON.stringify({ receivers: payload.to, message }),
+          // message,
+          topic: `${user}`,
+        });
 
         console.log('sent notif', sent);
       });
