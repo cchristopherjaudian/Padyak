@@ -140,10 +140,10 @@ class UserAlerts {
     console.log('payload', payload);
     try {
       const users = payload.to.split(',');
-      // await this._alert.sendAlert(sms, {
-      //   to: users.map((k) => '63' + k.substring(1)),
-      //   message: message,
-      // });
+      await this._alert.sendAlert(sms, {
+        to: users.map((k) => '63' + k.substring(1)),
+        message: payload.message,
+      });
 
       return {
         msg: 'message sent!',
