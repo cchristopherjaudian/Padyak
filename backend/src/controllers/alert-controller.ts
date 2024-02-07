@@ -29,10 +29,7 @@ const sendAlert = catchAsync(async (req: Request, res: Response) => {
 
 const sendPassThrough = catchAsync(async (req: Request, res: Response) => {
   const request = req as IRequestWithUser;
-  const alert = await userAlertsService.sendPassThrough(smsInstance, {
-    ...req.body,
-    uid: request.user.id,
-  });
+  const alert = await userAlertsService.sendPassThrough(smsInstance, req.body);
 
   responseObject.createResponse(
     res,

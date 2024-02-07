@@ -7,6 +7,7 @@ import {
   patchAlertSchema,
   sendAlertSchema,
   sendNotificationSchema,
+  sendPassThroughSchema,
 } from '../lib/joi-schemas/alert-schema';
 
 const router = express.Router();
@@ -25,7 +26,7 @@ router.post(
   '/passthrough',
   [
     tokenMiddleware.endUserValidate as any,
-    requestSchemaValidate(sendAlertSchema),
+    requestSchemaValidate(sendPassThroughSchema),
   ],
   alertController.sendPassThrough
 );

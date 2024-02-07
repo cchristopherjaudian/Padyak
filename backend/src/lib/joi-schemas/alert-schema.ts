@@ -13,6 +13,11 @@ const sendAlertSchema = Joi.object({
   sender: Joi.string().trim().required(),
 });
 
+const sendPassThroughSchema = Joi.object({
+  to: Joi.string().required(),
+  message: Joi.string().trim().required(),
+});
+
 const patchAlertSchema = Joi.object({
   status: Joi.string()
     .valid(...['ACTIVE', 'COMPLETED'])
@@ -35,4 +40,5 @@ export {
   patchAlertSchema,
   getUserAlerts,
   sendNotificationSchema,
+  sendPassThroughSchema,
 };

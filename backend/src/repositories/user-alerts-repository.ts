@@ -36,6 +36,11 @@ export type TRawSendAlert = {
   sender: TSender | string;
 };
 
+export type TSendPassthrough = {
+  to: string;
+  message: string;
+};
+
 export type TNotifyAdmin = {
   id: string;
   createdAt: string;
