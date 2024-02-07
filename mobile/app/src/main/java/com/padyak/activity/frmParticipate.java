@@ -4,13 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -48,6 +54,7 @@ import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.adapter.adapterParticipant;
 import com.padyak.dto.Participants;
+import com.padyak.utility.AdminHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -63,12 +70,14 @@ import java.util.Map;
 
 public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitializedCallback, OnMapReadyCallback {
     TextView txEventTitle;
+    String eventColor;
+    float[] hsv = new float[3];
     RecyclerView rvParticipants;
     Button btnCloseEvent;
     LinearLayoutManager linearLayoutManager;
     com.padyak.adapter.adapterParticipant adapterParticipant;
     ProgressDialog progressDialog;
-    String eventId,eventName;
+    String eventId, eventName;
     GoogleMap gMap;
     Map<String, Object> payload;
     FusedLocationProviderClient fusedLocationClient;
@@ -77,9 +86,10 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
     FirebaseDatabase database;
     DatabaseReference myRef;
     DatabaseReference eventRef;
-    Map<String,Marker> participantMarkers;
+    Map<String, Marker> participantMarkers;
     Marker myMarker;
     public static frmParticipate f;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,10 +101,8 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
         mapFragment.getMapAsync(this);
         eventId = getIntent().getStringExtra("eventId");
         eventName = getIntent().getStringExtra("eventName");
-        database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
-        myRef = database.getReference(eventId.concat("/").concat(LoggedUser.getLoggedUser().getUuid()));
-        eventRef = database.getReference(eventId);
-        myRef.onDisconnect().removeValue();
+        eventColor = getIntent().getStringExtra("eventColor");
+        Color.colorToHSV(Color.parseColor(eventColor), hsv);
         txEventTitle = findViewById(R.id.txEventTitle);
         rvParticipants = findViewById(R.id.rvParticipants);
         btnCloseEvent = findViewById(R.id.btnCloseEvent);
@@ -103,87 +111,12 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
         rvParticipants.setLayoutManager(linearLayoutManager);
 
         txEventTitle.setText(eventName);
-        btnCloseEvent.setOnClickListener(v -> finish());
-
-        eventRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Object object = snapshot.getValue();
-                String json = new Gson().toJson(object);
-                try {
-                    JSONObject jObject = new JSONObject(json);
-                    Log.d("Firebase_Location", "onChildAdded: " + jObject);
-                    String uuid = jObject.getString("id");
-                    String name = jObject.getString("name");
-                    double _lat = jObject.getDouble("latitude");
-                    double _long = jObject.getDouble("longitude");
-                    if(participantMarkers != null){
-                        if(!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())){
-                            Marker newMarker = gMap.addMarker(new MarkerOptions()
-                                    .title(name)
-                                    .position(new LatLng(_lat,_long)));;
-                            participantMarkers.put(uuid,newMarker);
-                        } else {
-                            Marker moveMarker = participantMarkers.get(uuid);
-                            if(moveMarker == null){
-                                moveMarker = gMap.addMarker(new MarkerOptions()
-                                        .title(name)
-                                        .position(new LatLng(_lat,_long)));
-                            } else{
-                                moveMarker.setPosition(new LatLng(_lat,_long));
-                            }
-                            participantMarkers.put(uuid,moveMarker);
-                        }
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Object object = snapshot.getValue();
-                String json = new Gson().toJson(object);
-                try {
-                    JSONObject jObject = new JSONObject(json);
-                    Log.d("Firebase_Location", "onChildChanged: " + jObject);
-                    String uuid = jObject.getString("id");
-                    if(!uuid.equals(LoggedUser.getLoggedUser().getUuid())){
-                        double _lat = jObject.getDouble("latitude");
-                        double _long = jObject.getDouble("longitude");
-                        Marker moveMarker = participantMarkers.get(uuid);
-                        Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
-                        moveMarker.setPosition(new LatLng(_lat,_long));
-                        if(!moveMarker.isInfoWindowShown()) moveMarker.showInfoWindow();
-                        participantMarkers.put(uuid,moveMarker);
-                        Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        })   ;
-
+        btnCloseEvent.setOnClickListener(v -> {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+            finish();
+        });
     }
-    public void moveMapToCyclist(String userId){
 
-    }
     public void loadMap() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -204,25 +137,26 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
 
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
-
+                if(myRef == null) return;
                 for (Location location : locationResult.getLocations()) {
                     payload = new HashMap<>();
-                    payload.put("id",LoggedUser.getInstance().getUuid());
+                    payload.put("id", LoggedUser.getInstance().getUuid());
                     payload.put("name", LoggedUser.getInstance().getFirstName().concat(" ").concat(LoggedUser.loggedUser.getLastName()));
                     payload.put("photoUrl", LoggedUser.getInstance().getImgUrl());
                     payload.put("latitude", location.getLatitude());
                     payload.put("longitude", location.getLongitude());
                     myRef.setValue(payload);
 
-                    if(myMarker == null){
+                    if (myMarker == null) {
                         myMarker = gMap.addMarker(new MarkerOptions()
+                                .icon(BitmapDescriptorFactory.defaultMarker(hsv[0]))
                                 .title("Me")
-                                .position(new LatLng(location.getLatitude(),location.getLongitude())));
+                                .position(new LatLng(location.getLatitude(), location.getLongitude())));
 
-                    } else{
-                        myMarker.setPosition(new LatLng(location.getLatitude(),location.getLongitude()));
+                    } else {
+                        myMarker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
                     }
-                    if(!myMarker.isInfoWindowShown()) myMarker.showInfoWindow();
+                    //if (!myMarker.isInfoWindowShown()) myMarker.showInfoWindow();
                 }
 
             }
@@ -243,6 +177,7 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                 locationCallback,
                 Looper.getMainLooper());
     }
+
     public void loadParticipants() {
 
 
@@ -259,7 +194,7 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                 if (responseJSON == null) throw new Exception("responseJSON is null");
                 JSONObject eventObject = responseJSON.getJSONObject("data");
                 JSONArray participantJSON = eventObject.optJSONArray("registeredUser");
-                runOnUiThread(()->{
+                runOnUiThread(() -> {
 
                 });
                 List<Participants> participantsList = new ArrayList<>();
@@ -271,11 +206,120 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
                     participants.setUserImage(participantObject.getString("photoUrl"));
                     participants.setUserName(participantObject.getString("firstname").concat(" ").concat(participantObject.getString("lastname")));
                     participantsList.add(participants);
-                    participantMarkers.put(participantObject.getString("id"),null);
+                    participantMarkers.put(participantObject.getString("id"), null);
                 }
                 runOnUiThread(() -> {
                     adapterParticipant = new adapterParticipant(participantsList);
                     rvParticipants.setAdapter(adapterParticipant);
+
+                    database = FirebaseDatabase.getInstance(getString(R.string.trackURL));
+                    myRef = database.getReference(eventId.concat("/").concat(LoggedUser.getLoggedUser().getUuid()));
+                    Log.d(Helper.getInstance().log_code, "onCreate: " + myRef.getRef().toString());
+                    eventRef = database.getReference(eventId);
+                    myRef.onDisconnect().removeValue();
+                    eventRef.onDisconnect().removeValue();
+                    eventRef.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            Object object = snapshot.getValue();
+                            String json = new Gson().toJson(object);
+                            try {
+                                JSONObject jObject = new JSONObject(json);
+                                Log.d("Firebase_Location", "onChildAdded: " + jObject);
+                                String uuid = jObject.getString("id");
+                                String name = jObject.getString("name");
+                                double _lat = jObject.getDouble("latitude");
+                                double _long = jObject.getDouble("longitude");
+                                if (participantMarkers != null) {
+                                    if (!participantMarkers.containsKey(uuid) && !uuid.equals(LoggedUser.getInstance().getUuid())) {
+                                        Marker newMarker = gMap.addMarker(new MarkerOptions()
+                                                .icon(BitmapDescriptorFactory.defaultMarker(hsv[0]))
+                                                .title(name)
+                                                .position(new LatLng(_lat, _long)));
+                                        ;
+                                        participantMarkers.put(uuid, newMarker);
+                                    } else {
+                                        Marker moveMarker = participantMarkers.get(uuid);
+                                        if (moveMarker == null) {
+                                            moveMarker = gMap.addMarker(new MarkerOptions()
+                                                    .icon(BitmapDescriptorFactory.defaultMarker(hsv[0]))
+                                                    .title(name)
+                                                    .position(new LatLng(_lat, _long)));
+                                        } else {
+                                            moveMarker.setPosition(new LatLng(_lat, _long));
+                                        }
+                                        participantMarkers.put(uuid, moveMarker);
+                                    }
+                                }
+
+                            } catch (JSONException e) {
+                                Log.d(Helper.getInstance().log_code, "onChildAdded error: " + e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            Object object = snapshot.getValue();
+                            String json = new Gson().toJson(object);
+                            try {
+                                JSONObject jObject = new JSONObject(json);
+                                Log.d("Firebase_Location", "onChildChanged: " + jObject);
+                                String uuid = jObject.getString("id");
+                                if (!uuid.equals(LoggedUser.getLoggedUser().getUuid())) {
+                                    double _lat = jObject.getDouble("latitude");
+                                    double _long = jObject.getDouble("longitude");
+                                    Marker moveMarker = participantMarkers.get(uuid);
+                                    if (moveMarker == null) {
+                                        moveMarker = gMap.addMarker(new MarkerOptions()
+                                                .icon(BitmapDescriptorFactory.defaultMarker(hsv[0]))
+                                                .position(new LatLng(_lat, _long))
+                                                .title(jObject.getString("name"))
+                                        );
+
+                                    } else {
+                                        Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                                    }
+                                    moveMarker.setPosition(new LatLng(_lat, _long));
+                                    if (!moveMarker.isInfoWindowShown())
+                                        moveMarker.showInfoWindow();
+                                    participantMarkers.put(uuid, moveMarker);
+                                    Log.d("Firebase_Location", "moveMarker: " + moveMarker.getPosition().latitude);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                            Object object = snapshot.getValue();
+                            String json = new Gson().toJson(object);
+                            try {
+                                JSONObject jObject = new JSONObject(json);
+                                Log.d("Firebase_Location", "onChildChanged: " + jObject);
+                                String uuid = jObject.getString("id");
+                                if(participantMarkers != null){
+                                    if(participantMarkers.get(uuid) != null){
+                                        Marker m = participantMarkers.get(uuid);
+                                        if(m!= null) m.remove();
+                                        participantMarkers.remove(uuid);
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 });
             } catch (Exception err) {
                 Log.d(Helper.getInstance().log_code, "loadParticipants: " + err.getMessage());
@@ -284,14 +328,15 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
             }
         }).start();
     }
-    public void navigateCyclist(String uuid){
-        double _lat,_long;
-        if(participantMarkers.get(uuid) != null){
+
+    public void navigateCyclist(String uuid) {
+        double _lat, _long;
+        if (participantMarkers.get(uuid) != null) {
             _lat = participantMarkers.get(uuid).getPosition().latitude;
             _long = participantMarkers.get(uuid).getPosition().longitude;
-            LatLng newLocation = new LatLng(_lat,_long);
+            LatLng newLocation = new LatLng(_lat, _long);
             gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 19.0f));
-        } else{
+        } else {
             Toast.makeText(f, "Cyclist is not yet participating in this event", Toast.LENGTH_LONG).show();
         }
     }
@@ -313,8 +358,36 @@ public class frmParticipate extends AppCompatActivity implements OnMapsSdkInitia
     protected void onDestroy() {
         super.onDestroy();
         fusedLocationClient.removeLocationUpdates(locationCallback);
-        database = null;
-        myRef = null;
-        eventRef = null;
+        myRef.removeValue();
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            try {
+                AdminHelper.getInstance().showMessageAlert(getSupportFragmentManager(), message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }
