@@ -15,6 +15,7 @@ import com.padyak.R;
 import com.padyak.activity.frmEventInfo;
 import com.padyak.activity.frmParticipate;
 import com.padyak.dto.CalendarEvent;
+import com.padyak.utility.Constants;
 import com.padyak.utility.Helper;
 import com.squareup.picasso.Picasso;
 
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class adapterCurrentEvent extends RecyclerView.Adapter<adapterCurrentEvent.viewHolder> {
     List<CalendarEvent> events;
-    String[] eventColors = new String[]{"#c0392b","#2980b9","#16a085","#8e44ad","#f1c40f","#7f8c8d"};
+    String[] eventColors = new String[]{"#c0392b", "#2980b9", "#16a085", "#8e44ad", "#f1c40f", "#7f8c8d"};
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
 
     public adapterCurrentEvent(List<CalendarEvent> events) {
@@ -65,11 +66,17 @@ public class adapterCurrentEvent extends RecyclerView.Adapter<adapterCurrentEven
             txEventDate = itemView.findViewById(R.id.txEventDate);
             imgEventImage = itemView.findViewById(R.id.imgEventImage);
 
+
             itemView.setOnClickListener(v -> {
+                int adapterIndex = getAdapterPosition();
+                while (adapterIndex > 5) {
+                    adapterIndex -= 5;
+                }
                 Intent intent = new Intent(itemView.getContext(), frmParticipate.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("eventId",events.get(getAdapterPosition()).getEventId());
-                bundle.putString("eventName",events.get(getAdapterPosition()).getEventName());
+                bundle.putString("eventId", events.get(getAdapterPosition()).getEventId());
+                bundle.putString("eventName", events.get(getAdapterPosition()).getEventName());
+                bundle.putString("eventColor", Constants.eventColors.get(adapterIndex));
                 intent.putExtras(bundle);
                 (itemView.getContext()).startActivity(intent);
 
