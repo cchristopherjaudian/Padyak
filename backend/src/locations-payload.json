@@ -1,353 +1,346 @@
-[
-  {
-    "type": "HOSPITAL",
-    "name": "Cecilia Hospital",
-    "latitude": "13.9595335677831",
-    "longitude": "121.340940815887",
-    "ratings": "3.7",
-    "contact": "(042) 545 1217",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=kfEEVRy17B596hfTq3M2Vw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=201.54822&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Hospital De Soledad",
-    "latitude": "13.9600595734057",
-    "longitude": "121.323844654089",
-    "ratings": "4.1",
-    "contact": "0923 554 4590",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=pBLcbzZqRqInZ6-EZjfX7w&cb_client=search.gws-prod.gps&w=408&h=240&yaw=218.32236&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "DRL Medical Clinic",
-    "latitude": "13.9603865611042",
-    "longitude": "121.321509154088",
-    "ratings": "N/A",
-    "contact": "0929 769 4010",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=DuvDisE4aU4h8nR-9mDCnA&cb_client=search.gws-prod.gps&w=408&h=240&yaw=228.91487&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "John Paul Clinical Laboratory",
-    "latitude": "13.9601278092096",
-    "longitude": "121.321858579225",
-    "ratings": "N/A",
-    "contact": "0921 638 5000",
-    "photoUrl": "https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/420146423_1085390332808824_658054180345343939_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeEGmItk0F9pi3nrr1xaDXqG5kXuITM6oOXmRe4hMzqg5XkBOkbS3Wpplo-S6GsfriIE3YwJBD8sFIdg8HgwB_Yz&_nc_ohc=1Zv7xrNV4S0AX8jo7Q1&_nc_ht=scontent-hkg1-2.xx&oh=00_AfAuOQKmYep5XbIUulLBGsH5seFUHodnzxoyPcmE-y7A7Q&oe=65AABA2E"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Liwag Medical Clinic Inc.",
-    "latitude": "13.9650583981268",
-    "longitude": "121.320726094082",
-    "ratings": "5",
-    "contact": "(042) 545 7672",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=0ASGoOVnVMGSYcBClsBLbQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=22.35937&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "United Candelaria Doctors Hospital",
-    "latitude": "13.9304061656505",
-    "longitude": "121.451551767581",
-    "ratings": "3.8",
-    "contact": "(042) 585 2114",
-    "photoUrl": "https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/419627512_1085391516142039_2170887299267413191_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeEXldsjQHvOg3XflVPp-u9q7k0F3KovQsruTQXcqi9Cyr7BGC1Xa0zhCWGgMOD82O3kygym2uayE9T8HjHvO_F1&_nc_ohc=nGcQgZpiTjwAX-iT2X6&_nc_ht=scontent-hkg4-1.xx&oh=00_AfAuaoUUtaVPxW0w71jEW092t8W_gknt5T1Ip9gsuYnNFA&oe=65AC05EA"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Candelaria District Hospital",
-    "latitude": "14.0447934940906",
-    "longitude": "121.397263635874",
-    "ratings": "4.5",
-    "contact": "(042) 784 5480",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=r5fm60Q4SRxaMF1zx6Pisw&cb_client=search.gws-prod.gps&w=408&h=240&yaw=76.206116&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Peter Paul Medical Center of Candelaria Inc.",
-    "latitude": "13.9266773961173",
-    "longitude": "121.423436265732",
-    "ratings": "3.6",
-    "contact": "(042) 585 4531",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipNaIEC0y3BYLG8wQAwn6OYo1eVCSz0IlTGTW2u8=w408-h306-k-no"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Greg Hospital",
-    "latitude": "13.963039599218",
-    "longitude": "121.522642425253",
-    "ratings": "3.4",
-    "contact": "(042) 710 0126",
-    "photoUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Sariaya%2CQuezonjf9733_23.JPG/2560px-Sariaya%2CQuezonjf9733_23.JPG"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Soler General Hospital",
-    "latitude": "13.961782212123",
-    "longitude": "121.523955369431",
-    "ratings": "5",
-    "contact": "(042) 651 1036",
-    "photoUrl": "https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/420177158_1085393279475196_4995752324858540801_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeGrc9TvkE4AI_1NzcDyZgi8Eq6_d8O3HUESrr93w7cdQe1qt4sZyokuQNmn5GJ4KLGhs1iN7jm99Fqhqi5ZtZpB&_nc_ohc=e55czL2Rkj4AX-8oPlw&_nc_ht=scontent-hkg4-1.xx&oh=00_AfBtIr-3LXGodcfCocWtVEIama7_wTxh7D89iN6i4Cd47Q&oe=65AB2F73"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Allied Care Experts (Ace) Medical Center Sariaya",
-    "latitude": "13.9666580545809",
-    "longitude": "121.542751815459",
-    "ratings": "4",
-    "contact": "",
-    "photoUrl": "https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/420144256_1085394009475123_7219240430970763644_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeHCrIquYEjqJ9vgeUNeB5BZZDe9PF5kZOdkN708XmRk57ZGGxRv-vYDbC2jzNNcHDVqSUer8OwQm_P-cwanZZ7w&_nc_ohc=tFDsBI7pDq0AX_dihJc&_nc_ht=scontent-hkg4-1.xx&oh=00_AfCJKweq1jqj3mEx51YmmWMlblVZ2FnRShgUTJtRhxT7Sw&oe=65AB290C"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Tayabas Community Hospital Inc.",
-    "latitude": "14.0209063980352",
-    "longitude": "121.597420454089",
-    "ratings": "3.4",
-    "contact": "(042) 793 2216",
-    "photoUrl": "https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/420159294_1085398146141376_6999639109261522147_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeEYtJnXKXWGilMuvLetcTbcDkOpXDORSt4OQ6lcM5FK3opromNQI8IyDbyLq9LQeYIwtftDoXzf9B1rBTrvZ0R-&_nc_ohc=4aIfdJfeFlsAX9-m7I8&_nc_ht=scontent-hkg4-1.xx&oh=00_AfCcyf89hwXQV2cScIXEiscEraYtq9aGDOJO5C_vaQAY0A&oe=65AB354F"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Mount Carmel Diocesan General Hospital",
-    "latitude": "13.9410829324399",
-    "longitude": "121.611106567581",
-    "ratings": "3.6",
-    "contact": "(042) 373 2026",
-    "photoUrl": "https://cdn-healthcare.hellohealthgroup.com/hospitals/ph/mount-carmel-diocesan-general-hospital-120220211.png"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Lucena United Doctors Hospital and Medical Center",
-    "latitude": "13.9474975868141",
-    "longitude": "121.585277267581",
-    "ratings": "3.2",
-    "contact": "(042) 373 6161",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipNsDzrQeC7b1vTthZj8xd3l4ZlideQBxSkfx2r_=w408-h306-k-no"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Camp Nakar Station Hospital",
-    "latitude": "13.9539194944052",
-    "longitude": "121.608854696417",
-    "ratings": "3.5",
-    "contact": "(042) 712 5331",
-    "photoUrl": "https://lh5.googleusercontent.com/tg8qHTHb8LeE5tx6Oi7TttcxuuHBWn6zqZcJojN4qBdAWuaacKT9EMGScUsuZb0=w426-h240-k-no"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Quezon Memorial Hospital",
-    "latitude": "13.9423249309259",
-    "longitude": "121.612726296417",
-    "ratings": "1.9",
-    "contact": "(042) 710 0113",
-    "photoUrl": "https://lh4.googleusercontent.com/J_IqQALZaNMKjbMhY_rthIfGFKxz9AcPa0BtwJe98gJ_36bYbDNr-NTIDJW6Hko=w426-h240-k-no"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "St. Anne General Hospital Inc.",
-    "latitude": "13.9377351938702",
-    "longitude": "121.618746869431",
-    "ratings": "3.1",
-    "contact": "(042) 710 2218",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMQaMjagROOtIaobReqPEcgtIMmH4PJEBA-dqw=w408-h306-k-no"
-  },
-  {
-    "type": "HOSPITAL",
-    "name": "Alilio's Medical Clinic and Saint Cecilia Hospital",
-    "latitude": "14.0155288131011",
-    "longitude": "121.402234454089",
-    "ratings": "5",
-    "contact": "(042) 545 9217",
-    "photoUrl": "https://scontent-hkg1-1.xx.fbcdn.net/v/t39.30808-6/420143111_1085401626141028_9052490283540826347_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeE4rqd8sf4UmFl-ReB8BnZlhmTMDkJb3nqGZMwOQlveeoCSLF5bIvF4Z9mC9UU--94wC_hJNfCxGxTzaE_nxe3W&_nc_ohc=rODU1UN4SYEAX-HzWKp&_nc_ht=scontent-hkg1-1.xx&oh=00_AfBfSVc2kAIuYTHQZGXlomMbSi6zQFLCG3Ev7lL9JK_eqA&oe=65AB87A7"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Ric Bikeshop",
-    "latitude": "13.9466684004956",
-    "longitude": "121.360787898241",
-    "ratings": "4.6",
-    "contact": "9617235024",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipN6GINCgULM9MMfIF_trOU6TTcMVw3Z1JKkBcXe=w424-h240-k-no"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Wild Bikes",
-    "latitude": "13.9582243151799",
-    "longitude": "121.320677467582",
-    "ratings": "4.9",
-    "contact": "9617235208",
-    "photoUrl": "data:image/jpeg;base64,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"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Cycle Republik",
-    "latitude": "13.9463403379639",
-    "longitude": "121.360753440595",
-    "ratings": "5",
-    "contact": "N/A",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMTXQQbamaqjBhKr5wMdx1P6ZSIS01JMBuBmZm1=w408-h306-k-no"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Century Bike",
-    "latitude": "13.9497365846026",
-    "longitude": "121.352035496417",
-    "ratings": "N/A",
-    "contact": "0921 638 5000",
-    "photoUrl": "https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/420156492_1085406102807247_8456997657847595281_n.jpg?stp=dst-jpg_s600x600&_nc_cat=104&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeEvkRKQpuQLis7HdWQdd_9WnWpy4d2FkQ2danLh3YWRDWbaMQUGvNOXaRjgz_6JVgXUvNn5Q1sGnwx8Dt82PkGi&_nc_ohc=pU_SaD8lHZQAX-KXUQL&_nc_ht=scontent-hkg1-2.xx&oh=00_AfByR6zY1C8lQSX0Q-Suy878MQcIvpUMyKSmIfmBsw8EKw&oe=65AB34B7"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Bike for Less",
-    "latitude": "13.9547522877028",
-    "longitude": "121.440448450983",
-    "ratings": "N/A",
-    "contact": "N/A",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=GcrNLY7gcNWgiuMgAAvvZQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=116.90683&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Win�s Bike",
-    "latitude": "13.9388764563737",
-    "longitude": "121.488330399383",
-    "ratings": "4.4",
-    "contact": "0966 304 7115",
-    "photoUrl": "https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/420197987_1085407289473795_1932951148371414746_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeE9PR7ZTIZxsd5PZQoS9Iwv2QuAMBTs99DZC4AwFOz30Ojy4Nn13i02CugiVc9D0NkpENBqDPEIV9gT9XjTKSnP&_nc_ohc=oLAPO-vesr8AX-o6VIU&_nc_ht=scontent-hkg4-1.xx&oh=00_AfDoPjwEGt-gw840W9eQQZXNqzKYByXbzQaA0CyRypeqDw&oe=65AC054D"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Erwin Catapang - Ebike Repair Shop",
-    "latitude": "13.9451622885024",
-    "longitude": "121.526269296417",
-    "ratings": "N/A",
-    "contact": "9156822941",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMvt86HSWjxsOItHZDeVinxdGn2c48KmjTPHm_M=w533-h240-k-no"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "V. Querubin Bicycle Parts & Accessories",
-    "latitude": "13.9317103511754",
-    "longitude": "121.611992669431",
-    "ratings": "4.4",
-    "contact": "427102733",
-    "photoUrl": "https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/420144489_1085408836140307_8139685347183432516_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeFsn6KMviwoK5AYcIKi5NseD5yjw4WXKakPnKPDhZcpqfbA00JPlj4fl4psLzmhSWybyqNItLV-8Bmtc-neC3Wl&_nc_ohc=Ch3ePrHlYSYAX8zPGnf&_nc_oc=AQm6P_9msUH8VAt3GD1trVdxwf5XrjiXrVujopDW7H_IrfaUAqPXZgPsvSmvb52zDxM&_nc_ht=scontent-hkg1-2.xx&oh=00_AfCDvqMHTuDpvntHQyq4mXMNOhHTMktIcaV8Y03361ZfFA&oe=65AB1B96"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Bike Shop ni Mang Gary",
-    "latitude": "13.9094023428068",
-    "longitude": "121.617599840595",
-    "ratings": "5",
-    "contact": "9275863842",
-    "photoUrl": "https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/419672008_1085409232806934_3024666826053797507_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeF4gnTmyBwZ630G-QZxiYd83QQ0mPsnYUPdBDSY-ydhQ2-gBtw_a-UXVyvmeWk6JrqSq87052z1iQ0bpRQAml6z&_nc_ohc=7VLwCCLcCIgAX_3Hx7p&_nc_ht=scontent-hkg1-2.xx&oh=00_AfAIkdUO0fopo7VYig8ucVBffOLKsi9TsJuarCXnBkpYzg&oe=65AB8099"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Yaoson Bike Shop",
-    "latitude": "13.9314535176667",
-    "longitude": "121.613109625253",
-    "ratings": "4.5",
-    "contact": "9950022262",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipMnUv8WN6IiQfbTuUmKUIl_vAkVahQoCYvtN8Nb=w408-h320-k-no"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Pechak Cycle Center",
-    "latitude": "13.9315165513502",
-    "longitude": "121.611855882924",
-    "ratings": "4.2",
-    "contact": "N/A",
-    "photoUrl": "https://scontent-hkg1-1.xx.fbcdn.net/v/t39.30808-6/419601154_1085409626140228_7158551505101096417_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeHzCLWzjo1WQzA0YZ2Lgo6Ci9tMa-tVLCSL20xr61UsJLLxxqJXcAMabNMZJHTQBAgu5wsvnAQ1GjI4hG-Y0OEh&_nc_ohc=8gPLvMSS6YAAX95IcD3&_nc_ht=scontent-hkg1-1.xx&oh=00_AfDuVogwX_gnsYskXjFxUlS-YrI-Favws6nPC_BFoRKv3Q&oe=65AB3A35"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Bike One",
-    "latitude": "13.9327300447245",
-    "longitude": "121.611325242445",
-    "ratings": "4.8",
-    "contact": "427108719",
-    "photoUrl": "https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/420164228_1085409886140202_3575700835057720831_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeGKX8jsVBUNZlBFc-kKyg6_UW7q32VaLRhRburfZVotGAlrEbKZZPVz48ir9Pvm_A6EaXvrD5yFMdPGbOAV6drT&_nc_ohc=AN_bOh0hq4oAX_6-3LX&_nc_ht=scontent-hkg1-2.xx&oh=00_AfC5HYJx48rCNqSJk3QC1pNZvZwjI33qWP-aRh4NHs2nQg&oe=65AB42B1"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Bikeyard Bicycle Shop",
-    "latitude": "13.9439484893798",
-    "longitude": "121.627600854088",
-    "ratings": "4",
-    "contact": "427970564",
-    "photoUrl": "https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/420179819_1085410116140179_2181745416484248073_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeEzMIi_zE9XVLl8v_767pfd2TP2_6GB6vLZM_b_oYHq8nSN1LfwZ7zJOb8XLu6AtGzOjmvgIxKpIwHb4nfrm453&_nc_ohc=KIdbIohzpPQAX9snCsg&_nc_ht=scontent-hkg1-2.xx&oh=00_AfCleuChJki9P1XRna9uIvPmEa16M1wdrjT_ElaK-5wKvw&oe=65AB4CBB"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Bikexzone",
-    "latitude": "13.9424099160023",
-    "longitude": "121.604468796417",
-    "ratings": "5",
-    "contact": "N/A",
-    "photoUrl": "https://scontent-hkg1-1.xx.fbcdn.net/v/t39.30808-6/419642414_1085410289473495_3369298560211499617_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeF7ooNfFh8ZAMjfmyQ9vTDZ8hhk-HDjM5_yGGT4cOMzn0v2DEpSikW-MUpPdS9fFp0j0ejY4Ja0RbojEsyJm74j&_nc_ohc=3eORnOGx2IoAX8OwMIm&_nc_ht=scontent-hkg1-1.xx&oh=00_AfAt9kACQJvN2D17Plc4Z0ZjIlqer1Yc9zWv2hm1gtKqYw&oe=65ABDBED"
-  },
-  {
-    "type": "REPAIR_SHOP",
-    "name": "Bikepunx Bike Shop",
-    "latitude": "13.9403864589921",
-    "longitude": "121.596498296417",
-    "ratings": "5",
-    "contact": "N/A",
-    "photoUrl": "https://scontent-hkg1-2.xx.fbcdn.net/v/t39.30808-6/358048790_740520394750984_666332581427304384_n.jpg?stp=cp6_dst-jpg_p526x296&_nc_cat=103&ccb=1-7&_nc_sid=dd5e9f&_nc_eui2=AeFo6Qh8cLLzRSODDx_-IUPaMhNyzDZmoxIyE3LMNmajEmB_PaixblrobKIYb19XX4XqKqgmuExWKff0K8LO2fS9&_nc_ohc=Jn55ilSwmV4AX-mD57h&_nc_oc=AQm_LPdnlISetPQxUeRGdjpYQWmLYKc774k7pVpCNAO07bBNuDge8TbdRQEVml07exs&_nc_ht=scontent-hkg1-2.xx&oh=00_AfCtfQ3e4qLUa873braJ8oizBOENxCJIUj6PBOhxJg8O8g&oe=65AC5F20"
-  },
-  {
-    "type": "",
-    "name": "",
-    "latitude": "",
-    "longitude": "",
-    "ratings": "",
-    "contact": "",
-    "photoUrl": ""
-  },
-  {
-    "type": "POLICE_STATION",
-    "name": "Tiaong Police Station",
-    "latitude": "13.9649296170506",
-    "longitude": "121.323180193752",
-    "ratings": "5",
-    "contact": "0977 704 2440",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=Sj-VQliQE-cC7wbv-yApxg&cb_client=search.gws-prod.gps&w=408&h=240&yaw=236.75836&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "POLICE_STATION",
-    "name": "Candelaria Police Station",
-    "latitude": "13.9286106412407",
-    "longitude": "121.424288744629",
-    "ratings": "4.6",
-    "contact": "0947 347 8094.",
-    "photoUrl": "https://lh5.googleusercontent.com/p/AF1QipOD_k3JIAnkB2j-8SZqhfjS1Xl3YaCVvi5kSCeW=w408-h544-k-no"
-  },
-  {
-    "type": "POLICE_STATION",
-    "name": "Sariaya Police Station",
-    "latitude": "13.935110779825",
-    "longitude": "121.490477035299",
-    "ratings": "4.5",
-    "contact": "0919 730 2113",
-    "photoUrl": "https://scontent-hkg4-1.xx.fbcdn.net/v/t39.30808-6/419589536_1085413459473178_4953593593200258661_n.jpg?stp=dst-jpg_p843x403&_nc_cat=110&ccb=1-7&_nc_sid=3635dc&_nc_eui2=AeE9ZX4SGatodC-eItRFMmmLdc2sjc969mZ1zayNz3r2Zj7t1HoOjXI1JZb5a1S_ejnVL9SCF1oebpz9gwXs8ELI&_nc_ohc=FMQqvxWHGVoAX-R1Gcq&_nc_ht=scontent-hkg4-1.xx&oh=00_AfBV_qLua08nZ0nAr36DwFSvgYewv9wurzhtSQ4b50cMXA&oe=65AB21B4"
-  },
-  {
-    "type": "POLICE_STATION",
-    "name": "Tayabas City Police Station",
-    "latitude": "14.020384497075",
-    "longitude": "121.584231869432",
-    "ratings": "1.3",
-    "contact": "0933 036 9883",
-    "photoUrl": "https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid=akYGvuwFh_xAI7wQ-rwHaQ&cb_client=search.gws-prod.gps&w=408&h=240&yaw=3.0110617&pitch=0&thumbfov=100"
-  },
-  {
-    "type": "POLICE_STATION",
-    "name": "Lucena City Police Station",
-    "latitude": "13.937044351",
-    "longitude": "121.611715264855",
-    "ratings": "4",
-    "contact": "(042) 710 0119",
-    "photoUrl": "https://lh4.googleusercontent.com/dSDQ2oU3krhCBLyfCBc8X63qyK4qhWnLNnlr-ZsjWH6eMIco2k6rC2Jfc65qsiFrdQ=w408-h654-k-no"
-  }
-]
+{
+  "data": [
+    {
+      "type": "Hospital",
+      "name": "Cecilia Hospital",
+      "latitude": "13.9595335677831",
+      "longitude": "121.340940815887",
+      "ratings": "3.7",
+      "contact": "(042) 545 1217",
+      "photoUrl": "https://i.imgur.com/S7o1sti.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Hospital De Soledad",
+      "latitude": "13.9600595734057",
+      "longitude": "121.323844654089",
+      "ratings": "4.1",
+      "contact": "0923 554 4590",
+      "photoUrl": "https://i.imgur.com/mDMU1pn.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "DRL Medical Clinic",
+      "latitude": "13.9603865611042",
+      "longitude": "121.321509154088",
+      "ratings": "0",
+      "contact": "0929 769 4010",
+      "photoUrl": "https://i.imgur.com/bRHLe66.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "John Paul Clinical Laboratory",
+      "latitude": "13.9601278092096",
+      "longitude": "121.321858579225",
+      "ratings": "0",
+      "contact": "0921 638 5000",
+      "photoUrl": "https://i.imgur.com/bRHLe66.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Liwag Medical Clinic Inc.",
+      "latitude": "13.9650583981268",
+      "longitude": "121.320726094082",
+      "ratings": "5",
+      "contact": "(042) 545 7672",
+      "photoUrl": "https://i.imgur.com/8BavfSE.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "United Candelaria Doctors Hospital",
+      "latitude": "13.9304061656505",
+      "longitude": "121.451551767581",
+      "ratings": "3.8",
+      "contact": "(042) 585 2114",
+      "photoUrl": "https://i.imgur.com/qu5rgRq.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Candelaria District Hospital",
+      "latitude": "14.0447934940906",
+      "longitude": "121.397263635874",
+      "ratings": "4.5",
+      "contact": "(042) 784 5480",
+      "photoUrl": "https://i.imgur.com/tosxVM4.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Peter Paul Medical Center of Candelaria Inc.",
+      "latitude": "13.9266773961173",
+      "longitude": "121.423436265732",
+      "ratings": "3.6",
+      "contact": "(042) 585 4531",
+      "photoUrl": "https://i.imgur.com/gFWPR1W.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Greg Hospital",
+      "latitude": "13.963039599218",
+      "longitude": "121.522642425253",
+      "ratings": "3.4",
+      "contact": "(042) 710 0126",
+      "photoUrl": "https://i.imgur.com/dBt5b8T.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Soler General Hospital",
+      "latitude": "13.961782212123",
+      "longitude": "121.523955369431",
+      "ratings": "5",
+      "contact": "(042) 651 1036",
+      "photoUrl": "https://i.imgur.com/Z5xDYMH.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Allied Care Experts (Ace) Medical Center Sariaya",
+      "latitude": "13.9666580545809",
+      "longitude": "121.542751815459",
+      "ratings": "4",
+      "contact": "N/A",
+      "photoUrl": "https://i.imgur.com/yzHsj96.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Tayabas Community Hospital Inc.",
+      "latitude": "14.0209063980352",
+      "longitude": "121.597420454089",
+      "ratings": "3.4",
+      "contact": "(042) 793 2216",
+      "photoUrl": "https://i.imgur.com/SeDs0oO.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Mount Carmel Diocesan General Hospital",
+      "latitude": "13.9410829324399",
+      "longitude": "121.611106567581",
+      "ratings": "3.6",
+      "contact": "(042) 373 2026",
+      "photoUrl": "https://i.imgur.com/X8Dkm3U.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Lucena United Doctors Hospital and Medical Center",
+      "latitude": "13.9474975868141",
+      "longitude": "121.585277267581",
+      "ratings": "3.2",
+      "contact": "(042) 373 6161",
+      "photoUrl": "https://i.imgur.com/RImUpQD.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Camp Nakar Station Hospital",
+      "latitude": "13.9539194944052",
+      "longitude": "121.608854696417",
+      "ratings": "3.5",
+      "contact": "(042) 712 5331",
+      "photoUrl": "https://i.imgur.com/6l2UBa0.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Quezon Memorial Hospital",
+      "latitude": "13.9423249309259",
+      "longitude": "121.612726296417",
+      "ratings": "1.9",
+      "contact": "(042) 710 0113",
+      "photoUrl": "https://i.imgur.com/H6Pqf9Y.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "St. Anne General Hospital Inc.",
+      "latitude": "13.9377351938702",
+      "longitude": "121.618746869431",
+      "ratings": "3.1",
+      "contact": "(042) 710 2218",
+      "photoUrl": "https://i.imgur.com/bHazTEj.png"
+    },
+    {
+      "type": "Hospital",
+      "name": "Alilio's Medical Clinic and Saint Cecilia Hospital",
+      "latitude": "14.0155288131011",
+      "longitude": "121.402234454089",
+      "ratings": "5",
+      "contact": "(042) 545 9217",
+      "photoUrl": "https://i.imgur.com/AZzA3RH.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Ric Bikeshop",
+      "latitude": "13.9466684004956",
+      "longitude": "121.360787898241",
+      "ratings": "4.6",
+      "contact": "9617235024",
+      "photoUrl": "https://i.imgur.com/kBb1lQ8.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Wild Bikes",
+      "latitude": "13.9582243151799",
+      "longitude": "121.320677467582",
+      "ratings": "4.9",
+      "contact": "9617235208",
+      "photoUrl": "https://i.imgur.com/DyMGPjX.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Cycle Republik",
+      "latitude": "13.9463403379639",
+      "longitude": "121.360753440595",
+      "ratings": "5",
+      "contact": "N/A",
+      "photoUrl": "https://i.imgur.com/TkYhFG6.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Century Bike",
+      "latitude": "13.9497365846026",
+      "longitude": "121.352035496417",
+      "ratings": "0",
+      "contact": "0921 638 5000",
+      "photoUrl": "https://i.imgur.com/7XMAk9d.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Bike for Less",
+      "latitude": "13.9547522877028",
+      "longitude": "121.440448450983",
+      "ratings": "0",
+      "contact": "N/A",
+      "photoUrl": "https://i.imgur.com/SmHBFyP.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Win�s Bike",
+      "latitude": "13.9388764563737",
+      "longitude": "121.488330399383",
+      "ratings": "4.4",
+      "contact": "0966 304 7115",
+      "photoUrl": "https://i.imgur.com/LpdEVsH.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Erwin Catapang - Ebike Repair Shop",
+      "latitude": "13.9451622885024",
+      "longitude": "121.526269296417",
+      "ratings": "0",
+      "contact": "9156822941",
+      "photoUrl": "https://i.imgur.com/48BJ8QV.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "V. Querubin Bicycle Parts & Accessories",
+      "latitude": "13.9317103511754",
+      "longitude": "121.611992669431",
+      "ratings": "4.4",
+      "contact": "427102733",
+      "photoUrl": "https://i.imgur.com/2Qvzfiq.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Bike Shop ni Mang Gary",
+      "latitude": "13.9094023428068",
+      "longitude": "121.617599840595",
+      "ratings": "5",
+      "contact": "9275863842",
+      "photoUrl": "https://i.imgur.com/NqV98Hm.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Yaoson Bike Shop",
+      "latitude": "13.9314535176667",
+      "longitude": "121.613109625253",
+      "ratings": "4.5",
+      "contact": "9950022262",
+      "photoUrl": "https://i.imgur.com/qFqYk6h.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Pechak Cycle Center",
+      "latitude": "13.9315165513502",
+      "longitude": "121.611855882924",
+      "ratings": "4.2",
+      "contact": "N/A",
+      "photoUrl": "https://i.imgur.com/vOkm4CJ.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Bike One",
+      "latitude": "13.9327300447245",
+      "longitude": "121.611325242445",
+      "ratings": "4.8",
+      "contact": "427108719",
+      "photoUrl": "https://i.imgur.com/xWNTmHh.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Bikeyard Bicycle Shop",
+      "latitude": "13.9439484893798",
+      "longitude": "121.627600854088",
+      "ratings": "4",
+      "contact": "427970564",
+      "photoUrl": "https://i.imgur.com/JCn754E.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Bikexzone",
+      "latitude": "13.9424099160023",
+      "longitude": "121.604468796417",
+      "ratings": "5",
+      "contact": "N/A",
+      "photoUrl": "https://i.imgur.com/a8ndNzT.png"
+    },
+    {
+      "type": "Repair_Shop",
+      "name": "Bikepunx Bike Shop",
+      "latitude": "13.9403864589921",
+      "longitude": "121.596498296417",
+      "ratings": "5",
+      "contact": "N/A",
+      "photoUrl": "https://imgur.com/DyMGPjX.png"
+    },
+    {
+      "type": "Police_Station",
+      "name": "Tiaong Police Station",
+      "latitude": "13.9649296170506",
+      "longitude": "121.323180193752",
+      "ratings": "5",
+      "contact": "0977 704 2440",
+      "photoUrl": "https://i.imgur.com/QIxNqHu.png"
+    },
+    {
+      "type": "Police_Station",
+      "name": "Candelaria Police Station",
+      "latitude": "13.9286106412407",
+      "longitude": "121.424288744629",
+      "ratings": "4.6",
+      "contact": "0947 347 8094.",
+      "photoUrl": "https://i.imgur.com/7opWQsk.png"
+    },
+    {
+      "type": "Police_Station",
+      "name": "Sariaya Police Station",
+      "latitude": "13.935110779825",
+      "longitude": "121.490477035299",
+      "ratings": "4.5",
+      "contact": "0919 730 2113",
+      "photoUrl": "https://i.imgur.com/Ni5xlwq.png"
+    },
+    {
+      "type": "Police_Station",
+      "name": "Tayabas City Police Station",
+      "latitude": "14.020384497075",
+      "longitude": "121.584231869432",
+      "ratings": "1.3",
+      "contact": "0933 036 9883",
+      "photoUrl": "https://i.imgur.com/EoU4MBv.png"
+    },
+    {
+      "type": "Police_Station",
+      "name": "Lucena City Police Station",
+      "latitude": "13.937044351",
+      "longitude": "121.611715264855",
+      "ratings": "4",
+      "contact": "(042) 710 0119",
+      "photoUrl": "https://i.imgur.com/5bt3vk9.png"
+    }
+  ]
+}
