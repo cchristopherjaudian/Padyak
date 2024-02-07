@@ -134,6 +134,46 @@ class UserAlerts {
       throw error;
     }
   }
+
+  public async sendPassThrough(sms: ISmsAlert, payload: TRawSendAlert) {
+    console.log('payload', payload);
+    try {
+      const alert = await this._alert.getAlert(payload.level);
+      const sender = JSON.parse(payload.sender as string) as TSender;
+      payload.level =
+        typeof payload.level === 'string'
+          ? parseInt(payload.level)
+          : payload.level;
+      payload.displayName = `${sender.firstname} ${sender.lastname}`;
+      const message = `${this.baseMessage(payload)} ${alert.message} ${
+        payload.location
+      }`;
+
+      const mappedUserAlert = await this._mapper.createUserAlert({
+        to: payload.to.split(',').map((k) => '63' + k.substring(1)),
+        uid: payload.uid,
+        level: payload.level,
+        location: payload.location,
+        longitude: parseFloat(payload.longitude as string),
+        latitude: parseFloat(payload.latitude as string),
+        status: payload.status,
+        sender,
+      });
+
+      await this._repository.create(mappedUserAlert);
+      // const users = payload.to.split(',');
+      // await this._alert.sendAlert(sms, {
+      //   to: users.map((k) => '63' + k.substring(1)),
+      //   message: message,
+      // });
+
+      return {
+        msg: 'message(s) sent!.',
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 class AlertService implements IAlertService {

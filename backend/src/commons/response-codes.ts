@@ -15,6 +15,8 @@ class ResponseCodes {
   static UNAUTHORIZE = 'UNAUTHORIZE';
 
   static ALERT_CREATED = 'ALERT_CREATED';
+
+  static SMS_SENT = 'SMS_SENT';
 }
 
 export default ResponseCodes;

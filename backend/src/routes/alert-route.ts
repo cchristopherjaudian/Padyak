@@ -22,6 +22,15 @@ router.post(
 );
 
 router.post(
+  '/passthrough',
+  [
+    tokenMiddleware.endUserValidate as any,
+    requestSchemaValidate(sendAlertSchema),
+  ],
+  alertController.sendPassThrough
+);
+
+router.post(
   '/admin/notify',
   [
     tokenMiddleware.endUserValidate as any,

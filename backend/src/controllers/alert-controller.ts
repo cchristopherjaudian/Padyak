@@ -27,6 +27,21 @@ const sendAlert = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const sendPassThrough = catchAsync(async (req: Request, res: Response) => {
+  const request = req as IRequestWithUser;
+  const alert = await userAlertsService.sendPassThrough(smsInstance, {
+    ...req.body,
+    uid: request.user.id,
+  });
+
+  responseObject.createResponse(
+    res,
+    httpStatus.OK,
+    ResponseCodes.SMS_SENT,
+    alert
+  );
+});
+
 const updateAlertStatus = catchAsync(async (req: Request, res: Response) => {
   const alert = await userAlertsService.updateStatus({
     ...req.body,
@@ -87,4 +102,5 @@ export default {
   getUserAlerts,
   notifyAdmin,
   sendNotification,
+  sendPassThrough,
 };
