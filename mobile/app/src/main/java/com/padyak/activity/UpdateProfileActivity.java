@@ -5,10 +5,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +38,7 @@ import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.dto.EmergencyContact;
 import com.padyak.dto.GroupContact;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.Prefs;
@@ -459,10 +464,30 @@ public class UpdateProfileActivity extends AppCompatActivity {
             });
         }).start();
     }
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
         loadEmergencyContacts();
     }
+
 }

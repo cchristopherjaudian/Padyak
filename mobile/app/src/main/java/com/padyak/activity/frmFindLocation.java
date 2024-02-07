@@ -3,10 +3,14 @@ package com.padyak.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +38,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.padyak.R;
 import com.padyak.dto.FindLocation;
 import com.padyak.dto.Location;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -187,8 +192,8 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
                                             .getJSONObject("duration");
 
                                     computed = distance.getDouble("value") / 1000;
-                                    distanceTimeRaw = duration.getInt("value") / 60 / 60;
-                                    distanceTime = "<" + String.format("%.1f", distanceTimeRaw) + " hr(s)";
+                                    distanceTimeRaw = duration.getInt("value") / 60; // / 60;
+                                    distanceTime = "<" + String.format("%.1f", distanceTimeRaw) + " min(s)";
                                     if (computed <= 15d) {
                                         findLocationList.add(
                                                 new FindLocation(l.getLatitude(), l.getLongitude(), l.getName(), l.getPhotoUrl(), distanceTime, l.getId(), computed, l.getRating(), l.getContact())
@@ -257,16 +262,17 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
         for (int i = 0; i < ratingList.size(); i++) {
             ratingList.get(i).setVisibility(View.INVISIBLE);
         }
-        int ratings = Integer.parseInt(location.getRating());
+        double dratings = Double.parseDouble(location.getRating());
+        int ratings = (int)dratings;
         LatLng findLatLng = new LatLng(location.getLatitude(),location.getLongitude());
         Picasso.get().load(location.getPhotoUrl()).into(imgNearestImage);
         txNearestDistance.setText(distance.concat("km"));
         txNearestTime.setText(travelTime);
         txFindNearestTitle.setText(location.getLocationName());
-        txNearestRating.setText(String.valueOf(ratings));
+        txNearestRating.setText(String.valueOf(dratings));
         txNearestContact.setText(location.getContact());
         nearestLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        for (int i = 0; i < Integer.parseInt(location.getRating()); i++) {
+        for (int i = 0; i < ratings; i++) {
             ratingList.get(i).setVisibility(View.VISIBLE);
         }
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(findLatLng, 15f));
@@ -305,5 +311,29 @@ public class frmFindLocation extends AppCompatActivity implements OnMapsSdkIniti
     @Override
     public void onMapsSdkInitialized(@NonNull MapsInitializer.Renderer renderer) {
 
+    }
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
     }
 }

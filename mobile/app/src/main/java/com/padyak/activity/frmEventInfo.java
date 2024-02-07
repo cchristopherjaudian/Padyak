@@ -2,11 +2,15 @@ package com.padyak.activity;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,12 +23,14 @@ import com.padyak.R;
 import com.padyak.adapter.adapterParticipant;
 import com.padyak.dto.CalendarEvent;
 import com.padyak.dto.Participants;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDate;
@@ -118,12 +124,6 @@ public class frmEventInfo extends AppCompatActivity {
         loadEventInfo();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     public void loadEventInfo() {
         progressDialog = Helper.getInstance().progressDialog(frmEventInfo.this, "Retrieving event information.");
         progressDialog.show();
@@ -204,7 +204,29 @@ public class frmEventInfo extends AppCompatActivity {
                 runOnUiThread(() -> progressDialog.dismiss());
             }
         }).start();
+    }
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
     }
 }

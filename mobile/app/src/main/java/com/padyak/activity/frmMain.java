@@ -42,6 +42,7 @@ import com.padyak.fragment.AlertCancelFragment;
 import com.padyak.fragment.AlertSendFragment;
 import com.padyak.fragment.StaticAlertFragment;
 import com.padyak.fragment.fragmentAlertLevel;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -93,7 +94,7 @@ public class frmMain extends AppCompatActivity {
             String message = intent.getStringExtra("message");
             Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
             try {
-                showMessageAlert(message);
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
                 Log.d(Helper.getInstance().log_code, "onReceive: " + message);
@@ -142,14 +143,8 @@ public class frmMain extends AppCompatActivity {
         rlRepair = findViewById(R.id.rlRepair);
         rlPolice = findViewById(R.id.rlPolice);
         rlRiding = findViewById(R.id.rlRiding);
-
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(rvCoverPhoto);
-
-
-
-
-
         bottomBar.setOnItemSelectedListener((OnItemSelectedListener) i -> {
             if (i == 0) {
                 loadCoverPhoto();
@@ -208,8 +203,6 @@ public class frmMain extends AppCompatActivity {
             intent = new Intent(frmMain.this, frmEventCalendar.class);
             startActivity(intent);
         });
-
-        loadCoverPhoto();
     }
 
     public void notifyNewsfeed() {
@@ -374,9 +367,10 @@ public class frmMain extends AppCompatActivity {
 
             switch (showAlert){
                 case 1: //Alert Success Sent
-                    showAlertSuccess();
+                    CyclistHelper.getInstance().showAlertSuccess(frmMain);
                     break;
             }
+            showAlert = 0;
         } catch (Exception e) {
             finish();
         }
@@ -391,32 +385,5 @@ public class frmMain extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
     }
-    public void showMessageAlert(String message) throws JSONException {
-        FragmentManager fm = getSupportFragmentManager();
-        DialogFragment dialogFragment;
-        Log.d(Helper.getInstance().log_code, "showMessageAlert: " + message);
-        if(message.contains("receivers")){
-            Type type = new TypeToken<Map<String, Object>>(){}.getType();
-            JSONObject jsonObject = new JSONObject(message);
-            String messageObject = jsonObject.getString("message");
-            Map<String, Object> messageMap = new Gson().fromJson(messageObject,type);
-            String receivers = messageMap.get("receivers").toString();
-            if(!receivers.contains(LoggedUser.getLoggedUser().getPhoneNumber())) return;
-            dialogFragment = StaticAlertFragment.newInstance(messageMap.get("message").toString());
-            //dialogFragment = fragmentAlertLevel.newInstance(messageMap.get("message").toString());
-        } else{
-            dialogFragment = StaticAlertFragment.newInstance(message);
-        }
 
-        if(dialogFragment == null) return;
-        dialogFragment.setCancelable(false);
-        dialogFragment.show(fm, "dialogFragment");
-    }
-    public void showAlertSuccess(){
-        showAlert = 0;
-        FragmentManager fm = getSupportFragmentManager();
-        AlertSendFragment alertSendFragment = AlertSendFragment.newInstance("PADYAK ALERT SENT SUCCESSFULLY!");
-        alertSendFragment.setCancelable(false);
-        alertSendFragment.show(fm, "AlertSendFragment");
-    }
 }

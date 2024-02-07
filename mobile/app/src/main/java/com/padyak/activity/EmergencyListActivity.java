@@ -8,11 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,6 +35,7 @@ import com.padyak.adapter.adapterEmergencyContact;
 import com.padyak.dto.EmergencyContact;
 import com.padyak.fragment.ContactSelectFragment;
 import com.padyak.fragment.fragmentViewQR;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.Prefs;
 import com.padyak.utility.VolleyHttp;
@@ -139,11 +144,6 @@ public class EmergencyListActivity extends AppCompatActivity {
             rvEmergencyList.setVisibility(View.VISIBLE);
         }
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateEmergencyList();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -230,5 +230,30 @@ public class EmergencyListActivity extends AppCompatActivity {
                 browseContacts();
             }
         }
+    }
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
+        updateEmergencyList();
     }
 }

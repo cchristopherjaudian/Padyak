@@ -2,13 +2,22 @@ package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.padyak.R;
 import com.padyak.dto.AlertLevel;
+import com.padyak.utility.CyclistHelper;
+import com.padyak.utility.Helper;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +28,19 @@ public class frmAlertInfo extends AppCompatActivity {
     Intent intent;
     Bundle bundle;
     public static frmAlertInfo frmAlertInfo;
-
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +91,18 @@ public class frmAlertInfo extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
     }
 }
 

@@ -5,12 +5,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -48,6 +52,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.service.TrackingService;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 
@@ -93,6 +98,20 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
     boolean isPaused = false;
     String notifDistance = "";
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,11 +198,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
             startTracking = false;
             endPosLat = marker.getPosition().latitude;
             endPosLong = marker.getPosition().longitude;
-            if(database != null) database.goOffline();
 
-            myRef = null;
-            database = null;
-            eventRef = null;
             Bundle b = new Bundle();
             b.putInt("rideDuration", (int) (Duration.ofSeconds(instantInterval).toMillis() / 1000));
             b.putDouble("rideDistance", rideDistance);
@@ -229,6 +244,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
                 eventRef = database.getReference(eventId);
                 myRef = database.getReference(eventId.concat("/").concat(LoggedUser.loggedUser.getUuid()));
                 myRef.onDisconnect().removeValue();
+                eventRef.onDisconnect().removeValue();
                 eventRef.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -276,7 +292,22 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
                     @Override
                     public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
+                        Object object = snapshot.getValue();
+                        String json = new Gson().toJson(object);
+                        try {
+                            JSONObject jObject = new JSONObject(json);
+                            Log.d("Firebase_Location", "onChildChanged: " + jObject);
+                            String uuid = jObject.getString("id");
+                            if(participantMarkers != null){
+                                if(participantMarkers.get(uuid) != null){
+                                    Marker m = participantMarkers.get(uuid);
+                                    if(m!= null) m.remove();
+                                    participantMarkers.remove(uuid);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -286,7 +317,8 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        Toast.makeText(frmRide.this, "Failed to connected to tracking service. Please try again.", Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 });
             }
@@ -418,6 +450,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
 
     @Override
     protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onPause();
         Log.d(Helper.getInstance().log_code, "onUserLeaveHint: Minimized");
         isMinimized = true;
@@ -426,6 +459,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     @Override
     protected void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
         isMinimized = false;
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(Integer.parseInt(getString(R.string.foreground_notif_channel)));
@@ -435,9 +469,6 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     protected void onDestroy() {
         super.onDestroy();
         fusedLocationClient.removeLocationUpdates(locationCallback);
-
-        database = null;
-        myRef = null;
-        eventRef = null;
+        myRef.removeValue();
     }
 }

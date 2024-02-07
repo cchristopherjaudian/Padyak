@@ -26,6 +26,7 @@ import com.padyak.fragment.ContactSelectFragment;
 import com.padyak.fragment.StaticAlertFragment;
 import com.padyak.fragment.fragmentAlertAck;
 import com.padyak.fragment.fragmentAlertLevel;
+import com.padyak.utility.AdminHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -53,7 +54,8 @@ public class AdminMainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             try {
-                showDialog(message);
+
+                AdminHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
             } catch (JSONException e) {
                 Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
                 Log.d(Helper.getInstance().log_code, "onReceive: " + message);
@@ -150,29 +152,10 @@ public class AdminMainActivity extends AppCompatActivity {
         String dayToday = dateNow.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy");
         txProfileDay.setText(dayToday.toUpperCase().concat("|").concat(dateNow.format(formatter)));
-        if(showMessage == 1){
-            showMessage();
-        }
+//        if(showMessage == 1){
+//            AdminHelper.getInstance().showAlertSuccess(AdminMainActivity.this);
+//        }
+//        showMessage = 0;
     }
 
-    public void showDialog(String message) throws JSONException {
-        FragmentManager fm = getSupportFragmentManager();
-        DialogFragment dialogFragment = null;
-        if(message.contains("receivers")) {
-            dialogFragment = fragmentAlertLevel.newInstance(message);
-        }
-//        } else{
-//            dialogFragment = StaticAlertFragment.newInstance(message);
-//        }
-        if(dialogFragment == null) return;
-        dialogFragment.setCancelable(false);
-        dialogFragment.show(fm, "dialogFragment");
-    }
-    public void showMessage(){
-        showMessage = 0;
-        FragmentManager fm = getSupportFragmentManager();
-        AlertSendFragment alertSendFragment = AlertSendFragment.newInstance("Acknowledgement Successfully Sent");
-        alertSendFragment.setCancelable(false);
-        alertSendFragment.show(fm, "AlertSendFragment");
-    }
 }

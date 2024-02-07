@@ -2,10 +2,14 @@ package com.padyak.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +25,7 @@ import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.dto.CalendarEvent;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -117,15 +122,6 @@ public class frmEventCalendar extends AppCompatActivity {
 
 
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgDP);
-        loadCalendar();
-
-    }
-
     private void loadEvent(Date d) {
         selectedCalendarDate = simpleDateFormat.format(d);
         List<CalendarEvent> filteredList = calendarEventList.stream()
@@ -205,5 +201,31 @@ public class frmEventCalendar extends AppCompatActivity {
 
             }
         }).start();
+    }
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
+        Picasso.get().load(LoggedUser.getInstance().getImgUrl()).into(imgDP);
+        loadCalendar();
     }
 }

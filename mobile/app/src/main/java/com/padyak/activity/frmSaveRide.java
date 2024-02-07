@@ -4,11 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,6 +43,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.padyak.R;
+import com.padyak.utility.CyclistHelper;
 import com.padyak.utility.Helper;
 import com.padyak.utility.LoggedUser;
 import com.padyak.utility.VolleyHttp;
@@ -68,7 +73,21 @@ public class frmSaveRide extends AppCompatActivity implements OnMapsSdkInitializ
     FirebaseStorage storage;
     StorageReference storageRef, rideRef;
     UploadTask uploadTask;
-ProgressDialog progressDialog;
+    ProgressDialog progressDialog;
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.d(Helper.getInstance().log_code, "FCM_Message: " + message);
+            try {
+                CyclistHelper.getInstance().showMessageAlert(getSupportFragmentManager(), message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,7 +121,7 @@ ProgressDialog progressDialog;
             alertDialog.setCancelable(false);
             alertDialog.setMessage("Are you sure you want to discard this ride detail?");
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
-                    (d,w)->{
+                    (d, w) -> {
                         frmRide.instance.finish();
                         Intent rideIntent = new Intent(this, frmMain.class);
                         rideIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -116,20 +135,19 @@ ProgressDialog progressDialog;
 
         });
         btnRideRegister.setOnClickListener(v -> {
-            if(etRideTitle.getText().toString().trim().isEmpty()){
+            if (etRideTitle.getText().toString().trim().isEmpty()) {
                 Toast.makeText(this, "Please provide a ride detail for this post.", Toast.LENGTH_LONG).show();
                 return;
             }
-            if(etRideCaption.getText().toString().trim().isEmpty()){
+            if (etRideCaption.getText().toString().trim().isEmpty()) {
                 Toast.makeText(this, "Please provide a ride caption for this post.", Toast.LENGTH_LONG).show();
                 return;
             }
 
 
-
-            progressDialog = Helper.getInstance().progressDialog(frmSaveRide.this,"Saving ride details.");
+            progressDialog = Helper.getInstance().progressDialog(frmSaveRide.this, "Saving ride details.");
             progressDialog.show();
-            new Thread(()->{
+            new Thread(() -> {
                 if (bitmapRide != null) {
                     String ref = "rides/" + LoggedUser.getInstance().getUuid() + "/" + LocalDateTime.now().toString() + ".bmp";
                     FirebaseApp.initializeApp(this);
@@ -181,8 +199,8 @@ ProgressDialog progressDialog;
 
     private void saveRide(String imgURL) {
         try {
-            if(imgURL.isEmpty()){
-                runOnUiThread(()->{
+            if (imgURL.isEmpty()) {
+                runOnUiThread(() -> {
                     progressDialog.dismiss();
                     Toast.makeText(this, "Failed to upload image. Please try again.", Toast.LENGTH_LONG).show();
                     return;
@@ -221,21 +239,21 @@ ProgressDialog progressDialog;
             JSONObject reader = new JSONObject(response);
             int responseStatus = reader.getInt("status");
             if (responseStatus == 200) {
-                runOnUiThread(()->{
+                runOnUiThread(() -> {
                     progressDialog.dismiss();
                     Toast.makeText(frmSaveRide.this, "Ride details successfully posted.", Toast.LENGTH_LONG).show();
                     frmRide.instance.finish();
                     finish();
                 });
             } else {
-                runOnUiThread(()->{
+                runOnUiThread(() -> {
                     progressDialog.dismiss();
                     Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_LONG).show();
                 });
             }
         } catch (Exception e) {
             Log.d(Helper.getInstance().log_code, "saveRide JSONException: " + e.getMessage());
-            runOnUiThread(()->{
+            runOnUiThread(() -> {
                 progressDialog.dismiss();
                 Toast.makeText(frmSaveRide.this, "Failed to submit ride details. Please try again", Toast.LENGTH_LONG).show();
             });
@@ -288,5 +306,17 @@ ProgressDialog progressDialog;
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
     }
 }

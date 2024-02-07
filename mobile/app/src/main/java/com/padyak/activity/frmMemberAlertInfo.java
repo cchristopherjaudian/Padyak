@@ -4,8 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +33,7 @@ import com.google.gson.Gson;
 import com.padyak.R;
 import com.padyak.dto.UserAlertLevel;
 import com.padyak.fragment.AlertSendFragment;
+import com.padyak.utility.AdminHelper;
 import com.padyak.utility.Constants;
 import com.padyak.utility.Helper;
 import com.padyak.utility.VolleyHttp;
@@ -61,6 +67,25 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getApplicationContext(), MapsInitializer.Renderer.LATEST, frmMemberAlertInfo.this);
         setContentView(R.layout.activity_frm_member_alert_info);
+
+
+
+        SupportMapFragment mapFragment = (SupportMapFragment)
+                getSupportFragmentManager().findFragmentById(R.id.mapAlertInfo);
+        mapFragment.getMapAsync(this);
+
+        btnConfirmAlert = findViewById(R.id.btnConfirmAlert);
+        btnCancelAlert = findViewById(R.id.btnCancelAlert);
+
+        txAlertName = findViewById(R.id.txAlertName);
+        txAlertTime = findViewById(R.id.txAlertTime);
+        txAlertAddress = findViewById(R.id.txAlertAddress);
+
+        txAlertLevel = findViewById(R.id.txAlertLevel);
+        txAlertDescription = findViewById(R.id.txAlertDescription);
+
+        imgDP = findViewById(R.id.imgDP);
+
         if(getIntent().hasExtra("message")){
             Gson gson = new Gson();
             userAlertLevel = gson.fromJson(getIntent().getStringExtra("message"), UserAlertLevel.class);
@@ -84,24 +109,6 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
             alertLevel = getIntent().getIntExtra("level", 0) + 1;
             btnConfirmAlert.setVisibility(View.INVISIBLE);
         }
-
-
-        SupportMapFragment mapFragment = (SupportMapFragment)
-                getSupportFragmentManager().findFragmentById(R.id.mapAlertInfo);
-        mapFragment.getMapAsync(this);
-
-        btnConfirmAlert = findViewById(R.id.btnConfirmAlert);
-        btnCancelAlert = findViewById(R.id.btnCancelAlert);
-
-        txAlertName = findViewById(R.id.txAlertName);
-        txAlertTime = findViewById(R.id.txAlertTime);
-        txAlertAddress = findViewById(R.id.txAlertAddress);
-
-        txAlertLevel = findViewById(R.id.txAlertLevel);
-        txAlertDescription = findViewById(R.id.txAlertDescription);
-
-        imgDP = findViewById(R.id.imgDP);
-
 
         txAlertName.setText(memberName);
         txAlertTime.setText(alertTime);
@@ -213,5 +220,27 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
 
         }).start();
 
+    }
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            try {
+                AdminHelper.getInstance().showMessageAlert(getSupportFragmentManager(),message);
+            } catch (JSONException e) {
+                Log.d(Helper.getInstance().log_code, "onReceive: " + e.getMessage());
+                Log.d(Helper.getInstance().log_code, "onReceive: " + message);
+            }
+        }
+    };
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("FCMIntentService"));
     }
 }
