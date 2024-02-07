@@ -161,7 +161,7 @@ class UserAlerts {
       });
 
       await this._repository.create(mappedUserAlert);
-      // const users = payload.to.split(',');
+      const users = payload.to.split(',');
       // await this._alert.sendAlert(sms, {
       //   to: users.map((k) => '63' + k.substring(1)),
       //   message: message,
