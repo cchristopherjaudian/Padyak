@@ -151,10 +151,18 @@ public class frmMemberAlertInfo extends AppCompatActivity implements OnMapsSdkIn
         progressDialog = Helper.getInstance().progressDialog(frmMemberAlertInfo.this,"Acknowledging Alert.");
         progressDialog.show();
         new Thread(()->{
-
+            String[] memberNameSplit = memberName.split(" ");
+            String fn = memberName;
+            String ln = "cyclist";
+            try{
+                fn = memberNameSplit[0];
+                ln = memberNameSplit[memberNameSplit.length -1];
+            }catch (Exception errx){
+                Log.d(Helper.getInstance().log_code, "acknowledgeAlert: " + errx.getMessage());
+            }
             Map<String, String> userPayload = new HashMap<>();
-            userPayload.put("firstname", memberName );
-            userPayload.put("lastname","test");
+            userPayload.put("firstname", fn );
+            userPayload.put("lastname",ln);
             userPayload.put("photoUrl",photoUrl);
             userPayload.put("id", LocalDateTime.now().toString());
 

@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class TriggerActivity extends AppCompatActivity {
 
@@ -122,6 +123,36 @@ public class TriggerActivity extends AppCompatActivity {
 
                 String userAlertPayload = new Gson().toJson(userAlert);
                 List<EmergencyContact> emergencyContacts = Helper.getInstance().getTempEmergencySet();
+
+                String receiverNumbers = emergencyContacts.stream()
+                        .map(rg -> rg.getContact())
+                        .collect(Collectors.joining(","));
+
+                String fn = LoggedUser.getInstance().getFirstName();
+                String ln = LoggedUser.getInstance().getLastName();
+                String photoUrl = LoggedUser.getInstance().getImgUrl();
+
+                Map<String, String> userPayload = new HashMap<>();
+                userPayload.put("firstname", fn );
+                userPayload.put("lastname",ln);
+                userPayload.put("photoUrl",photoUrl);
+                userPayload.put("id", LocalDateTime.now().toString());
+
+                StringBuffer sbf = new StringBuffer();
+                sbf.append("PADYAK ALERT: ");
+                sbf.append(userAlert.getAlertDate());
+                sbf.append(" At ").append(userAlert.getAlertTime());
+                sbf.append(".This is ").append(userAlert.getUserName());
+                sbf.append(". I have an accident. I need help!!");
+                sbf.append(" Here\'s my location ").append(userAlert.getAddressName());
+
+                Map<String, Object> alertPayload = new HashMap<>();
+                alertPayload.put("to",receiverNumbers);
+                alertPayload.put("message",sbf.toString());
+
+                VolleyHttp alertVolley = new VolleyHttp("/passthrough",alertPayload,"alert", TriggerActivity.this);
+                JSONObject responseJSON = alertVolley.getJsonResponse(true);
+
                 emergencyContacts.forEach(em->{
                     Map<String, Object> payload = new HashMap<>();
                     payload.put("message",userAlertPayload);
