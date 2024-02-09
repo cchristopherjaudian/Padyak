@@ -468,7 +468,7 @@ public class frmRide extends AppCompatActivity implements OnMapsSdkInitializedCa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        fusedLocationClient.removeLocationUpdates(locationCallback);
-        myRef.removeValue();
+        if(fusedLocationClient != null && locationCallback != null) fusedLocationClient.removeLocationUpdates(locationCallback);
+        if(myRef != null) myRef.removeValue();
     }
 }
